@@ -1,0 +1,20 @@
+# Dependências e build
+node_modules/
+dist/
+dist-ssr/
+
+# Logs
+*.log
+
+# Editor e sistema
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.local
+
+# Python
+__pycache__/
+
+# Anotações e prévias de trabalho (ficam só na máquina)
+docs/
