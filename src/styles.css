@@ -745,6 +745,12 @@ button {
   color: var(--muted);
 }
 
+.resume__updated {
+  margin: 4px 0 0;
+  font-size: 0.875em;
+  color: var(--muted);
+}
+
 .resume__actions {
   display: flex;
   gap: 16px;
@@ -943,6 +949,7 @@ button {
 
   .resume__headline,
   .resume__contact,
+  .resume__updated,
   .job__role,
   .job__period {
     color: #444;

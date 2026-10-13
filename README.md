@@ -57,6 +57,22 @@ A publicação é automática: cada push na `main` faz o build e publica no GitH
   (`dist/en/curriculo/`) e o `dist/sitemap.xml`, com todas as páginas e as alternativas de
   idioma. O build falha se alguma fala estiver sem texto ou se faltar algum sprite. No
   navegador, o React hidrata o HTML que já veio pronto.
+- Cada página leva dados estruturados (JSON-LD do schema.org) no idioma dela, gerados no build
+  (`src/content/structuredData.ts`): o site (`WebSite`), a página (`ProfilePage` na home e no
+  currículo, `WebPage` na história e nos créditos), a pessoa (`Person`, com cargo, empresa,
+  competências e idiomas tirados dos locales) e, nas subpáginas, o caminho de volta para a home
+  (`BreadcrumbList`).
+- O build também grava o `/llms.txt` (quem é o Daniel e todas as páginas, nos dois idiomas, com
+  a descrição de cada uma) e o `/llms-full.txt` (o currículo inteiro em Markdown, em inglês e
+  em português), para ferramentas de IA, a partir dos mesmos locales
+  (`src/content/llms.ts`, convenção de [llmstxt.org](https://llmstxt.org)).
+- Data de atualização: o `vite.config.ts` pega a data do último commit que mexeu em
+  `src/i18n/locales` (ou a data do build, sem git; nunca uma data futura) e a passa como
+  constante de build. Ela aparece no currículo ("Atualizado em …"), no `dateModified` dos dados
+  estruturados e no `lastmod` do sitemap. No CI o checkout é raso, então vale a data do commit
+  que está sendo publicado.
+- Títulos e descrições das páginas (`meta` nos locales): o build falha se um título tiver menos
+  de 15 ou mais de 70 caracteres, ou uma descrição menos de 70 ou mais de 160.
 
 ## Métricas
 

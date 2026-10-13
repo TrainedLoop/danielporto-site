@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { CONTENT_DATE, formatContentDate } from "../content/pages";
 import { href, type Lang } from "../lib/route";
 
 /** Opens the print dialog; the title becomes the suggested PDF name and is restored afterwards. */
@@ -42,6 +43,9 @@ export function Resume() {
               <a href={link.href}>{link.label}</a>
             </span>
           ))}
+        </p>
+        <p className="resume__updated">
+          <time dateTime={CONTENT_DATE}>{t("resume.updated", { date: formatContentDate(lang) })}</time>
         </p>
         <p className="resume__actions no-print">
           <a href={href("story", lang)}>{t("resume.playStory")}</a>
