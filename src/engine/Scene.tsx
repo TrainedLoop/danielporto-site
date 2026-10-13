@@ -35,7 +35,6 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
   const [beat, setBeat] = useState(0);
   const [typed, setTyped] = useState(0);
   const [animating, setAnimating] = useState(false);
-  const [loaded, setLoaded] = useState(false);
   const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)",
   ).matches;
@@ -52,22 +51,6 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     },
     [phase, onItem],
   );
-
-  useEffect(() => {
-    let cancelled = false;
-    loadSprites(phase.sprites).then((sprites) => {
-      if (cancelled) return;
-      spritesRef.current = sprites;
-      render(reduceMotion ? phase.staticAt : 0);
-      if (reduceMotion) setStatus("done");
-      setLoaded(true);
-    });
-    return () => {
-      cancelled = true;
-      animRef.current?.kill();
-      typeRef.current?.kill();
-    };
-  }, [phase, render, reduceMotion]);
 
   // Só a fase que está na tela responde ao teclado.
   useEffect(() => {
@@ -117,10 +100,29 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     startBeat(0);
   }, [render, startBeat]);
 
-  // Vindo da fase anterior, não precisa de outro "PRESS START".
+  // Carrega as imagens e só então desenha (ou começa a fase): o início automático
+  // acontece no retorno do carregamento, não direto no corpo do efeito.
   useEffect(() => {
-    if (loaded && autoStart && !reduceMotion && status === "idle") start();
-  }, [loaded, autoStart, reduceMotion, status, start]);
+    let cancelled = false;
+    loadSprites(phase.sprites).then((sprites) => {
+      if (cancelled) return;
+      spritesRef.current = sprites;
+      if (reduceMotion) {
+        render(phase.staticAt);
+        setStatus("done");
+      } else if (autoStart) {
+        // Vindo da fase anterior, não precisa de outro "PRESS START".
+        start();
+      } else {
+        render(0);
+      }
+    });
+    return () => {
+      cancelled = true;
+      animRef.current?.kill();
+      typeRef.current?.kill();
+    };
+  }, [phase, render, reduceMotion, autoStart, start]);
 
   /** Avança para a próxima fala, mas só depois que o texto e a animação da atual terminam. */
   const advance = useCallback(() => {
