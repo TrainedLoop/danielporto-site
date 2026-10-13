@@ -617,6 +617,22 @@ button {
   margin-top: 16px;
 }
 
+.resume__pdf {
+  padding: 8px 12px;
+  font-size: 10px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--panel-border);
+  cursor: pointer;
+}
+
+.resume__pdf:hover,
+.resume__pdf:focus-visible {
+  color: var(--bg);
+  background: var(--accent);
+  outline: none;
+}
+
 .resume__section {
   margin-top: 40px;
 }
@@ -641,6 +657,14 @@ button {
 
 .resume li + li {
   margin-top: 6px;
+}
+
+.resume .chips {
+  padding-left: 0;
+}
+
+.resume .chips li + li {
+  margin-top: 0;
 }
 
 .job + .job {
@@ -706,13 +730,19 @@ button {
 /* ---------------------------------------------------------------- Impressão (se alguém imprimir o currículo pelo navegador) */
 
 @media print {
+  @page {
+    size: A4;
+    margin: 16mm 15mm;
+  }
+
   .no-print {
     display: none !important;
   }
 
+  /* O index.html pinta o body de escuro inline (para o conteúdo de reserva); no papel, fundo branco. */
   html,
   body {
-    background: #fff;
+    background: #fff !important;
     color: #111;
   }
 
@@ -723,8 +753,48 @@ button {
     line-height: 1.45;
   }
 
-  .resume a {
+  /* O id vence a regra `#root > main a` do index.html, que pinta os links de amarelo. */
+  #root .resume a {
     color: #111;
+    text-decoration: none;
+  }
+
+  /* No papel o link não clica: mostra o endereço ao lado do nome. */
+  .resume__contact a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.9em;
+    color: #444;
+  }
+
+  .resume__header h1 {
+    font-size: 20pt;
+  }
+
+  .resume__role {
+    font-size: 12pt;
+  }
+
+  .resume__section {
+    margin-top: 18pt;
+  }
+
+  .resume__section h2 {
+    font-size: 10pt;
+    border-bottom-color: #bbb;
+    break-after: avoid;
+  }
+
+  .resume__section h3 {
+    font-size: 11.5pt;
+    break-after: avoid;
+  }
+
+  .job + .job {
+    margin-top: 12pt;
+  }
+
+  .job__period {
+    font-size: 10pt;
   }
 
   .resume__header h1,
@@ -740,6 +810,7 @@ button {
   }
 
   .chips li {
+    font-size: 9.5pt;
     background: none;
     border: 1px solid #999;
   }
