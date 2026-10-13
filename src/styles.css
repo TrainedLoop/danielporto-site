@@ -50,6 +50,30 @@ a {
   gap: 16px;
 }
 
+/* Seletor de idioma (PT · EN): o idioma atual fica destacado. */
+.topbar__lang {
+  color: var(--ink);
+  opacity: 0.8;
+}
+
+.topbar a,
+.topbar__lang {
+  white-space: nowrap;
+}
+
+/* No celular, o topo com o seletor de idioma precisa caber numa linha. */
+@media (max-width: 420px) {
+  .topbar {
+    padding: 12px;
+    font-size: 8px;
+  }
+
+  .topbar__nav {
+    gap: 10px;
+  }
+}
+
+.topbar__lang a[aria-current='true'],
 .topbar__nav a[aria-current='page'],
 .topbar a:hover,
 .topbar a:focus-visible {

@@ -1,14 +1,16 @@
-import { experience, languages, profile, skills, summary } from "../content/profile";
+import type { Content } from "../content/profile";
 import { href } from "../lib/route";
 
 /** A versão em texto: o currículo completo, da experiência atual para a mais antiga. */
-export function Resume() {
+export function Resume({ content }: { content: Content }) {
+  const { profile, summary, experience, skills, languages } = content;
+  const t = content.ui.resume;
   return (
     <main className="resume">
       <header className="resume__header">
         <h1>{profile.name}</h1>
         <p className="resume__role">
-          {profile.role} na {profile.company}
+          {profile.role} {t.roleAt} {profile.company}
         </p>
         <p className="resume__headline">{profile.headline}</p>
         <p className="resume__contact">
@@ -21,12 +23,12 @@ export function Resume() {
           ))}
         </p>
         <p className="resume__actions no-print">
-          <a href={href("historia")}>▶ jogar a história</a>
+          <a href={href("historia")}>{t.playStory}</a>
         </p>
       </header>
 
       <section className="resume__section">
-        <h2>Resumo</h2>
+        <h2>{t.summary}</h2>
         <p>{profile.intro}</p>
         <h3>{summary.aiProjectsTitle}</h3>
         <ul>
@@ -39,7 +41,7 @@ export function Resume() {
       </section>
 
       <section className="resume__section">
-        <h2>Experiência</h2>
+        <h2>{t.experience}</h2>
         {experience.map((job) => (
           <article key={`${job.company}-${job.role}`} className="job">
             <header className="job__header">
@@ -59,7 +61,7 @@ export function Resume() {
       </section>
 
       <section className="resume__section">
-        <h2>Competências</h2>
+        <h2>{t.skills}</h2>
         <ul className="chips">
           {skills.map((skill) => (
             <li key={skill}>{skill}</li>
@@ -68,7 +70,7 @@ export function Resume() {
       </section>
 
       <section className="resume__section">
-        <h2>Idiomas</h2>
+        <h2>{t.languages}</h2>
         <p>{languages.map((language) => `${language.name} (${language.level})`).join(" · ")}</p>
       </section>
     </main>
