@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { pageMeta } from "../content/pages";
+import { trackPageview } from "./analytics";
 
 export type Route = "home" | "historia" | "curriculo" | "creditos";
 
@@ -75,6 +76,7 @@ export function useRoute(initial: Page): Page {
       setPage(next);
       document.title = pageMeta(next).title;
       window.scrollTo(0, 0);
+      trackPageview();
     };
 
     const onPopState = () => show(pageFromPath(window.location.pathname) ?? { route: "home", lang: "pt" });

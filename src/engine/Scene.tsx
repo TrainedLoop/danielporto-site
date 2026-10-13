@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
+import { trackFase } from "../lib/analytics";
 import { jobHref } from "../lib/route";
 import { loadSprites, type SpriteMap } from "../lib/sprites";
 import {
@@ -123,7 +124,8 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     render(0);
     setStatus("playing");
     startBeat(0);
-  }, [render, startBeat]);
+    trackFase("fase_iniciada", phase.id);
+  }, [render, startBeat, phase.id]);
 
   // Carrega as imagens e só então desenha (ou começa a fase): o início automático
   // acontece no retorno do carregamento, não direto no corpo do efeito.
@@ -162,14 +164,16 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
       startBeat(beat + 1);
     } else {
       setStatus("done");
+      trackFase("fase_concluida", phase.id);
     }
-  }, [status, beat, beats, typed, animating, startBeat]);
+  }, [status, beat, beats, typed, animating, startBeat, phase.id]);
 
   const skip = () => {
     animRef.current?.kill();
     typeRef.current?.kill();
     render(1);
     setStatus("done");
+    trackFase("fase_pulada", phase.id);
   };
 
   // Enter ou espaço fazem o mesmo que clicar: começar ou avançar.

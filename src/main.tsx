@@ -3,6 +3,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App'
 import { pageMeta } from './content/pages'
 import { pageFromPath, pageKey, pathFromLegacyHash } from './lib/route'
+import { initAnalytics } from './lib/analytics'
 import './styles.css'
 
 // Links antigos (#/curriculo) vão para a página de verdade (/curriculo/), que já vem pronta do build.
@@ -11,6 +12,7 @@ const legacy = pathFromLegacyHash(window.location.hash)
 if (legacy) {
   window.location.replace(legacy)
 } else {
+  initAnalytics()
   const container = document.getElementById('root')!
   const page = pageFromPath(window.location.pathname) ?? { route: 'home', lang: 'pt' }
   const app = (
