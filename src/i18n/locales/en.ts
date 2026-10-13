@@ -145,8 +145,8 @@ const skills = [
 ];
 
 const languages = [
-  { name: "Portuguese", level: "native" },
-  { name: "English", level: "intermediate" },
+  { name: "Portuguese", level: "native", code: "pt-BR" },
+  { name: "English", level: "intermediate", code: "en" },
 ];
 
 /** Fixed UI texts (top bar, home, résumé and credits). */
@@ -174,6 +174,7 @@ const ui = {
     experience: "Experience",
     skills: "Skills",
     languages: "Languages",
+    updated: "Updated {{date}}",
   },
   credits: {
     title: "Credits",
@@ -322,21 +323,25 @@ const story = { ...storyUi, phases };
 /** Title and description of each page, written into each route's static HTML at build time. */
 const meta = {
   home: {
+    name: "Home",
     title: "Daniel Porto · Senior Full Stack Developer · Applied AI",
     description:
-      "Senior full stack developer at Purple Metrics. I take AI to production: LLMs, agents and computer vision, with React, TypeScript and C#/.NET. Résumé and my story in pixel art.",
+      "Senior full stack developer at Purple Metrics: LLMs, agents and computer vision in production, React, TypeScript and C#/.NET. Résumé and pixel-art story.",
   },
   resume: {
+    name: "Résumé",
     title: "Résumé · Daniel Porto · Senior Full Stack Developer",
     description:
-      "Daniel Porto's résumé: senior full stack developer at Purple Metrics, with AI in production (LLMs, MCP, agents and computer vision), React, TypeScript, C#/.NET and over 10 years of experience.",
+      "Résumé of Daniel Porto, senior full stack developer at Purple Metrics: AI in production, React, TypeScript, C#/.NET and over 10 years of experience.",
   },
   story: {
+    name: "Story",
     title: "The story in pixel art · Daniel Porto",
     description:
       "Daniel Porto's career told as a pixel-art game: 8 levels, from his grandmother's house to AI in production at Purple Metrics.",
   },
   credits: {
+    name: "Credits",
     title: "Sprite and font credits · Daniel Porto",
     description:
       "Authors and licenses of the pixel art on Daniel Porto's site: sprites from the Liberated Pixel Cup and OpenGameArt, and the Press Start 2P font.",
@@ -348,5 +353,17 @@ const share = {
   imageAlt: "Pixel-art card with Daniel Porto's avatar, his role and the items from the story.",
 };
 
-const en: Messages = { ...ui, meta, share, story, profile, summary, highlights, experience, skills, languages };
+/** Texts of /llms.txt and /llms-full.txt (src/content/llms.ts). */
+const llms = {
+  languageName: "English",
+  pages: "Pages in English",
+  contact: "Contact",
+  email: "Email",
+  fullResume: "Full résumé in Markdown",
+  fullResumeHint: "the whole résumé as text, in English and in Portuguese",
+  fullIntro: "Daniel Porto's full résumé, generated from the same content as the site.",
+  online: "Online version",
+};
+
+const en: Messages = { ...ui, meta, share, llms, story, profile, summary, highlights, experience, skills, languages };
 export default en;

@@ -155,8 +155,9 @@ const skills = [
 ];
 
 const languages = [
-  { name: "Português", level: "nativo" },
-  { name: "Inglês", level: "intermediário" },
+  // code: BCP 47, for the structured data (knowsLanguage); not shown on the page.
+  { name: "Português", level: "nativo", code: "pt-BR" },
+  { name: "Inglês", level: "intermediário", code: "en" },
 ];
 
 /** Fixed UI texts (top bar, home, résumé and credits), translated along with the content. */
@@ -184,6 +185,8 @@ const ui = {
     experience: "Experiência",
     skills: "Competências",
     languages: "Idiomas",
+    // {{date}}: the date the content last changed, in the page's language (src/content/pages.ts).
+    updated: "Atualizado em {{date}}",
   },
   credits: {
     title: "Créditos",
@@ -336,24 +339,32 @@ const phases = {
 
 const story = { ...storyUi, phases };
 
-/** Title and description of each page, written into each route's static HTML at build time. */
+/**
+ * Title and description of each page, written into each route's static HTML at build time.
+ * The build fails if a title is outside 15–70 characters or a description outside 70–160
+ * (scripts/prerender.js). `name` is the short name used in breadcrumbs and in llms.txt.
+ */
 const meta = {
   home: {
+    name: "Início",
     title: "Daniel Porto · Desenvolvedor Full Stack Sênior · IA aplicada",
     description:
-      "Desenvolvedor full stack sênior na Purple Metrics. Levo IA para produção: LLMs, agentes e visão computacional, com React, TypeScript e C#/.NET. Currículo e a minha história em pixel art.",
+      "Desenvolvedor full stack sênior na Purple Metrics: LLMs, agentes e visão computacional em produção, React e C#/.NET. Currículo e história em pixel art.",
   },
   story: {
+    name: "História",
     title: "A história em pixel art · Daniel Porto",
     description:
       "A trajetória do Daniel Porto contada como um jogo em pixel art: 8 fases, da casa da avó até a IA em produção na Purple Metrics.",
   },
   resume: {
+    name: "Currículo",
     title: "Currículo · Daniel Porto · Desenvolvedor Full Stack Sênior",
     description:
-      "Currículo do Daniel Porto: desenvolvedor full stack sênior na Purple Metrics, com IA em produção (LLMs, MCP, agentes e visão computacional), React, TypeScript, C#/.NET e mais de 10 anos de experiência.",
+      "Currículo do Daniel Porto, desenvolvedor full stack sênior na Purple Metrics: IA em produção, React, TypeScript, C#/.NET e mais de 10 anos de experiência.",
   },
   credits: {
+    name: "Créditos",
     title: "Créditos dos sprites e da fonte · Daniel Porto",
     description:
       "Autores e licenças da arte em pixel art do site do Daniel Porto: sprites do Liberated Pixel Cup e do OpenGameArt e a fonte Press Start 2P.",
@@ -365,7 +376,19 @@ const share = {
   imageAlt: "Cartão em pixel art com o avatar do Daniel Porto, o cargo e os itens da história.",
 };
 
-const pt = { ...ui, meta, share, story, profile, summary, highlights, experience, skills, languages };
+/** Texts of /llms.txt and /llms-full.txt, the plain-text versions of the site for AI tools (src/content/llms.ts). */
+const llms = {
+  languageName: "Português",
+  pages: "Páginas em português",
+  contact: "Contato",
+  email: "E-mail",
+  fullResume: "Currículo completo em Markdown",
+  fullResumeHint: "o currículo inteiro em texto, em inglês e em português",
+  fullIntro: "Currículo completo do Daniel Porto, gerado a partir do mesmo conteúdo do site.",
+  online: "Versão on-line",
+};
+
+const pt = { ...ui, meta, share, llms, story, profile, summary, highlights, experience, skills, languages };
 
 /** The shape of the messages: en.ts must have exactly the same keys. */
 export type Messages = typeof pt;

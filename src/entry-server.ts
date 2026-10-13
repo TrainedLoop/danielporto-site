@@ -1,12 +1,30 @@
 import { createElement, StrictMode } from 'react'
 import { renderToString } from 'react-dom/server'
 import App from './App'
-import { pageMeta, SITE_URL } from './content/pages'
+import { llmsFullTxt, llmsTxt } from './content/llms'
+import { CONTENT_DATE, LANG_CODE, ogImage, pageMeta, pageUrl, SITE_URL } from './content/pages'
+import { structuredData } from './content/structuredData'
 import { i18n, setLang } from './i18n'
 import { href, LANGS, LEGACY_PATHS, PAGES, pageKey, routePath, type Page } from './lib/route'
 import { PHASES } from './phases'
 
-export { href, LANGS, LEGACY_PATHS, pageKey, pageMeta, PAGES, routePath, SITE_URL }
+export {
+  CONTENT_DATE,
+  href,
+  LANG_CODE,
+  LANGS,
+  LEGACY_PATHS,
+  llmsFullTxt,
+  llmsTxt,
+  ogImage,
+  pageKey,
+  pageMeta,
+  PAGES,
+  pageUrl,
+  routePath,
+  SITE_URL,
+  structuredData,
+}
 
 /** Used only by the build (scripts/prerender.js): renders each page's HTML from the components. */
 export function render(page: Page) {
