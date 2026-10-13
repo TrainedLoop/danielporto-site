@@ -1,10 +1,11 @@
-"""Desenha em pixel art os objetos da fase 1 (o primeiro PC, 2004).
+"""Draws the phase 1 objects in pixel art (the first PC, 2004).
 
-Uso:
-    python -I tools/build_props_phase1.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props_phase1.py <output-dir> [--lang en]
 
-Mesma escala e mesmas regras da fase 0. As telas "de perto" (close-up do monitor)
-usam a fonte Press Start 2P (licença OFL, em tools/fonts) sem suavização.
+Same scale and rules as phase 0. The close-up screens (monitor close-up) use the
+Press Start 2P font (OFL license, in tools/fonts) without antialiasing.
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text.
 """
 
 import sys
@@ -26,6 +27,8 @@ from build_props import (  # noqa: E402
     box,
     canvas,
     rect,
+    run,
+    tr,
 )
 
 FONT = ImageFont.truetype(str(Path(__file__).parent / "fonts" / "PressStart2P-Regular.ttf"), 8)
@@ -238,7 +241,7 @@ def xp_window(d, x, y, w, h, title):
 def close_desktop():
     img, d = canvas(CLOSE_W, CLOSE_H)
     bliss(d, CLOSE_W, CLOSE_H, True)
-    text(d, 4, CLOSE_H - 9, "iniciar", WHITE)
+    text(d, 4, CLOSE_H - 9, tr("iniciar", "start"), WHITE)
     text(d, CLOSE_W - 42, CLOSE_H - 9, "20:04", WHITE)
     return img
 
@@ -293,10 +296,10 @@ def close_site():
     text(d, 9, 17, "C:\\site\\index", (60, 60, 60))
     rect(d, 7, 27, CLOSE_W - 14, CLOSE_H - 42, (8, 8, 40))
     text(d, 36, 30, "Final Fantasy", (250, 220, 90))
-    text(d, 60, 40, "fã-site", (200, 200, 220))
+    text(d, tr(60, 56), 40, tr("fã-site", "fan site"), (200, 200, 220))
     crystal(d, CLOSE_W // 2, 50)
     rect(d, 46, 84, 84, 9, (40, 40, 70))
-    text(d, 48, 85, "visitas:1", (120, 250, 120))
+    text(d, 48, 85, tr("visitas:1", "visits:1"), (120, 250, 120))
     return img
 
 
@@ -305,12 +308,14 @@ def close_alert():
     from PIL import ImageDraw
 
     d = ImageDraw.Draw(img)
-    x, y, w, h = 30, 18, 116, 50
+    # "Hello, world!" is longer: the English alert is a bit wider.
+    x, w = tr((30, 116), (22, 132))
+    y, h = 18, 50
     rect(d, x + 3, y + 3, w, h, (0, 0, 0, 90))
-    xp_window(d, x, y, w, h, "Alerta")
+    xp_window(d, x, y, w, h, tr("Alerta", "Alert"))
     d.polygon([(x + 12, y + 18), (x + 6, y + 30), (x + 18, y + 30)], fill=(250, 200, 30), outline=OUTLINE)
     text(d, x + 10, y + 21, "!", OUTLINE)
-    text(d, x + 24, y + 22, "Olá, mundo!", OUTLINE)
+    text(d, x + tr(24, 22), y + 22, tr("Olá, mundo!", "Hello, world!"), OUTLINE)
     box(d, x + w // 2 - 14, y + 35, 28, 12, (236, 233, 216), WHITE, (160, 160, 150))
     text(d, x + w // 2 - 8, y + 37, "OK", OUTLINE)
     return img
@@ -329,8 +334,8 @@ def msn_toast():
     d.ellipse((5, 12, 11, 18), fill=XP_GREEN, outline=OUTLINE)
     rect(d, 4, 18, 9, 7, XP_GREEN)
     rect(d, 4, 18, 9, 1, OUTLINE)
-    text(d, 16, 12, "Amigo", OUTLINE)
-    text(d, 16, 21, "entrou", (40, 80, 160))
+    text(d, 16, 12, tr("Amigo", "Friend"), OUTLINE)
+    text(d, 16, 21, tr("entrou", "online"), (40, 80, 160))
     return img
 
 
@@ -377,9 +382,7 @@ def apostila(size):
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+def build():
     sprites = {
         "room": living_room(),
         "desk": computer_desk(),
@@ -403,10 +406,8 @@ def main(out_dir):
     }
     for lines in range(len(NOTEPAD_LINES) + 1):
         sprites[f"close-notepad-{lines}"] = close_notepad(lines)
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", len(sprites), "sprites")
+    return sprites
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

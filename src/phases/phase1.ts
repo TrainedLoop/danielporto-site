@@ -1,6 +1,6 @@
 import { drawEmptySeat, drawSeated, drawWalk } from "../engine/character";
 import { definePhase } from "../engine/types";
-import { segment } from "../lib/sprites";
+import { segment, withText } from "../lib/sprites";
 
 const BASE = import.meta.env.BASE_URL;
 const P = `${BASE}sprites/phase1`;
@@ -40,9 +40,6 @@ const easeOut = (t: number) => 1 - (1 - t) ** 3;
 
 export const phase1 = definePhase({
   id: "phase1",
-  title: "Fase 1: o primeiro PC",
-  description:
-    "Um adolescente sentado em frente ao computador com Windows XP na sala de casa. Um amigo entrega uma apostila de HTML. Na tela, um fã-site de Final Fantasy feito em casa e um alerta escrito Olá, mundo.",
   sprites: {
     room: `${P}/room.png`,
     desk: `${P}/desk.png`,
@@ -56,10 +53,10 @@ export const phase1 = definePhase({
     screenDesktop: `${P}/screen-desktop.png`,
     screenMsn: `${P}/screen-msn.png`,
     closeFrame: `${P}/close-frame.png`,
-    closeDesktop: `${P}/close-desktop.png`,
-    closeSite: `${P}/close-site.png`,
-    closeAlert: `${P}/close-alert.png`,
-    msnToast: `${P}/msn-toast.png`,
+    closeDesktop: withText(`${P}/close-desktop.png`),
+    closeSite: withText(`${P}/close-site.png`),
+    closeAlert: withText(`${P}/close-alert.png`),
+    msnToast: withText(`${P}/msn-toast.png`),
     note: `${P}/note.png`,
     apostila: `${P}/apostila.png`,
     notepad0: `${P}/close-notepad-0.png`,
@@ -75,40 +72,36 @@ export const phase1 = definePhase({
     danielSit: `${BASE}sprites/character/teen-sit.png`,
     friend: `${BASE}sprites/character/friend-walk.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase1.beats), under the same ids.
+  beats: {
+    firstPc: {
       to: TIMELINE.desktop[1],
       seconds: 2.2,
       speed: 0.5,
       textSpeed: 1,
-      text: "2004. Meu primeiro PC, na sala de casa. Bem parecido com o do meu tio, mas agora com Windows XP.",
     },
-    {
+    workbook: {
       to: TIMELINE.friendOut[1],
       seconds: 2.6,
       speed: 1,
       textSpeed: 1,
-      text: "Um amigo me emprestou uma apostila de HTML do colégio dele.",
     },
-    {
+    firstSites: {
       to: TIMELINE.site[1],
       seconds: 3,
       speed: 1,
       textSpeed: 1,
-      text: "Comecei a fazer os meus primeiros sites, como um fã-site de Final Fantasy que nunca chegou a ir pro ar.",
     },
-    {
+    javascript: {
       to: 1,
       seconds: 2.6,
       speed: 1,
       textSpeed: 1,
-      text: "Depois veio o JavaScript, com o primeiro alert(). E o som do MSN tocando o tempo todo.",
     },
-  ],
+  },
   item: {
     id: "apostila",
-    label: "Apostila de HTML",
     src: `${P}/item-apostila.png`,
     at: TIMELINE.item,
   },

@@ -1,10 +1,11 @@
-"""Desenha em pixel art os objetos da fase 6 (Fu2re, visão computacional).
+"""Draws the phase 6 objects in pixel art (Fu2re, computer vision).
 
-Uso:
-    python -I tools/build_props_phase6.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props_phase6.py <output-dir> [--lang en]
 
-O escritório (parecido com o da Fulllab, com um aquário), a tela da SmartVision,
-a rua com os postes da Light e o carro com a câmera no teto, e a caixa-preta.
+The office (similar to Fulllab's, with a fish tank), the SmartVision screen, the street
+with Light's utility poles and the car with the roof camera, and the black box.
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text.
 """
 
 import sys
@@ -12,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from build_props import H, OUTLINE, W, WHITE, box, canvas, rect  # noqa: E402
+from build_props import H, OUTLINE, W, WHITE, box, canvas, rect, run, tr  # noqa: E402
 from build_props_phase1 import CLOSE_H, CLOSE_W, PLANT, text  # noqa: E402
 from build_props_phase5 import office as fulllab_office  # noqa: E402
 
@@ -55,8 +56,8 @@ def close_smartvision():
     rect(d, 0, 0, CLOSE_W, 12, SV_BLUE[0])
     text(d, 4, 2, "SmartVision", WHITE)
     # Fila de treino.
-    text(d, 4, 16, "Fila", SV_BLUE[2])
-    for i, name in enumerate(("postes", "placas", "fios")):
+    text(d, 4, 16, tr("Fila", "Queue"), SV_BLUE[2])
+    for i, name in enumerate(tr(("postes", "placas", "fios"), ("poles", "signs", "wires"))):
         y = 28 + i * 18
         box(d, 4, y, 78, 16, WHITE, None, (200, 204, 216))
         text(d, 7, y + 2, name, (40, 44, 60))
@@ -142,7 +143,7 @@ def flash():
 def detect_label():
     img, d = canvas(42, 10)
     rect(d, 0, 0, 42, 10, DETECT)
-    text(d, 1, 1, "poste", OUTLINE)
+    text(d, 1, 1, tr("poste", "pole"), OUTLINE)
     return img
 
 
@@ -163,7 +164,7 @@ def black_box(opening):
                 d.point((x + spread * k // 8, base_top - 2 - k), fill=(255, 236, 150, alpha))
     box(d, 10, base_top, 60, 38, (34, 34, 40), (60, 60, 70), (14, 14, 18))
     rect(d, 14, base_top + 18, 52, 1, (60, 60, 70))
-    text(d, 22, base_top + 22, "IA?", (120, 120, 140) if opening == 0 else CYAN)
+    text(d, 22, base_top + 22, tr("IA?", "AI?"), (120, 120, 140) if opening == 0 else CYAN)
     lid_lift = opening * 7
     box(d, 8, base_top - 6 - lid_lift, 64, 8, (40, 40, 48), (70, 70, 80), (20, 20, 24))
     if opening >= 2:
@@ -191,9 +192,7 @@ def box_item():
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+def build():
     sprites = {
         "office": office(),
         "smartvision": close_smartvision(),
@@ -205,10 +204,8 @@ def main(out_dir):
     }
     for k in range(4):
         sprites[f"box-{k}"] = black_box(k)
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", len(sprites), "sprites")
+    return sprites
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

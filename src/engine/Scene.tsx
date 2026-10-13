@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useTranslation } from "react-i18next";
 import gsap from "gsap";
 import { trackFase } from "../lib/analytics";
-import { jobHref } from "../lib/route";
-import { loadSprites, type SpriteMap } from "../lib/sprites";
+import { jobHref, type Lang } from "../lib/route";
+import { loadSprites, spritePaths, type SpriteMap } from "../lib/sprites";
 import {
   ANIMATION_SPEED,
   CHARS_PER_SECOND,
@@ -10,6 +11,7 @@ import {
   TEXT_SPEED,
   WIDTH,
 } from "./config";
+import { usePhaseText } from "./phaseText";
 import type { Phase } from "./types";
 
 type Status = "idle" | "playing" | "done";
@@ -22,7 +24,7 @@ function subscribeReducedMotion(onChange: () => void) {
   return () => query.removeEventListener("change", onChange);
 }
 
-/** Lê a preferência por menos movimento; no HTML gerado no build (sem `window`), começa com movimento. */
+/** Reads the reduced-motion preference; in the build's HTML (no `window`) it starts with motion. */
 function usePrefersReducedMotion() {
   return useSyncExternalStore(
     subscribeReducedMotion,
@@ -34,15 +36,19 @@ function usePrefersReducedMotion() {
 type SceneProps = {
   phase: Phase;
   onItem: (id: string, got: boolean) => void;
-  /** Sem `onNext`, é a última fase e o botão de próxima fase não aparece. */
+  /** Without `onNext`, this is the last phase and the next-phase button doesn't show. */
   onNext?: () => void;
-  /** Começa sozinha assim que as imagens carregam (quando a pessoa já veio da fase anterior). */
+  /** Starts on its own as soon as the images load (when the player came from the previous phase). */
   autoStart?: boolean;
   sectionRef?: React.Ref<HTMLElement>;
 };
 
 export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: SceneProps) {
   const { beats } = phase;
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language as Lang;
+  const { title, description, lines } = usePhaseText(phase);
+  const sprites = useMemo(() => spritePaths(phase.sprites, lang), [phase, lang]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const spritesRef = useRef<SpriteMap<string> | null>(null);
@@ -56,7 +62,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
   const [animating, setAnimating] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-  /** Muda a cada "tentar de novo", para o efeito carregar as imagens outra vez. */
+  /** Changes on every "try again", so the effect loads the images again. */
   const [attempt, setAttempt] = useState(0);
   const reduceMotion = usePrefersReducedMotion();
 
@@ -78,7 +84,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     setAttempt((n) => n + 1);
   };
 
-  // Só a fase que está na tela responde ao teclado.
+  // Only the phase on screen responds to the keyboard.
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
@@ -92,10 +98,11 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     return () => observer.disconnect();
   }, []);
 
-  /** Toca a animação da fala e digita o texto ao mesmo tempo. */
+  /** Plays the beat's animation and types its line at the same time. */
   const startBeat = useCallback(
     (index: number) => {
-      const { to, seconds, speed, textSpeed, text } = beats[index];
+      const { to, seconds, speed, textSpeed } = beats[index];
+      const text = lines[index];
       animRef.current?.kill();
       typeRef.current?.kill();
       setBeat(index);
@@ -117,7 +124,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
         onUpdate: () => setTyped(Math.floor(chars.n)),
       });
     },
-    [beats, render],
+    [beats, lines, render],
   );
 
   const start = useCallback(() => {
@@ -127,20 +134,20 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     trackFase("fase_iniciada", phase.id);
   }, [render, startBeat, phase.id]);
 
-  // Carrega as imagens e só então desenha (ou começa a fase): o início automático
-  // acontece no retorno do carregamento, não direto no corpo do efeito.
+  // Loads the images and only then draws (or starts the phase): the auto start happens
+  // in the load callback, not directly in the effect body.
   useEffect(() => {
     let cancelled = false;
-    loadSprites(phase.sprites)
-      .then((sprites) => {
+    loadSprites(sprites)
+      .then((images) => {
         if (cancelled) return;
-        spritesRef.current = sprites;
+        spritesRef.current = images;
         setLoaded(true);
         if (reduceMotion) {
           render(phase.staticAt);
           setStatus("done");
         } else if (autoStart) {
-          // Vindo da fase anterior, não precisa de outro "PRESS START".
+          // Coming from the previous phase, no need for another "PRESS START".
           start();
         } else {
           render(0);
@@ -154,19 +161,20 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
       animRef.current?.kill();
       typeRef.current?.kill();
     };
-  }, [phase, render, reduceMotion, autoStart, start, attempt]);
+    // `sprites` changes with the language, but Story remounts the scene when the language changes.
+  }, [phase, sprites, render, reduceMotion, autoStart, start, attempt]);
 
-  /** Avança para a próxima fala, mas só depois que o texto e a animação da atual terminam. */
+  /** Moves to the next beat, but only after the current one's text and animation finish. */
   const advance = useCallback(() => {
     if (status !== "playing") return;
-    if (typed < beats[beat].text.length || animating) return;
+    if (typed < lines[beat].length || animating) return;
     if (beat + 1 < beats.length) {
       startBeat(beat + 1);
     } else {
       setStatus("done");
       trackFase("fase_concluida", phase.id);
     }
-  }, [status, beat, beats, typed, animating, startBeat, phase.id]);
+  }, [status, beat, beats, lines, typed, animating, startBeat, phase.id]);
 
   const skip = () => {
     animRef.current?.kill();
@@ -176,7 +184,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     trackFase("fase_pulada", phase.id);
   };
 
-  // Enter ou espaço fazem o mesmo que clicar: começar ou avançar.
+  // Enter or space do the same as clicking: start or advance.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== " " && event.key !== "Enter") return;
@@ -198,15 +206,15 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     return () => window.removeEventListener("keydown", onKey);
   }, [status, loaded, start, advance]);
 
-  const current = beats[beat];
+  const current = lines[beat];
   const ready =
-    status === "playing" && typed >= current.text.length && !animating;
+    status === "playing" && typed >= current.length && !animating;
 
   return (
     <section
       ref={sectionRef}
       className={reduceMotion ? "phase phase--static" : "phase"}
-      aria-label={phase.title}
+      aria-label={title}
     >
       <div
         ref={stageRef}
@@ -219,29 +227,29 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
           height={HEIGHT}
           className="phase__canvas"
           role="img"
-          aria-label={phase.description}
+          aria-label={description}
         />
 
         {!loaded && !failed && (
           <p className="phase__loading" role="status">
-            carregando…
+            {t("story.scene.loading")}
           </p>
         )}
 
         {failed && (
           <div className="phase__done" role="alert">
-            <p className="phase__clear">ERRO AO CARREGAR</p>
-            <p className="phase__hint">As imagens desta fase não carregaram.</p>
+            <p className="phase__clear">{t("story.scene.loadError")}</p>
+            <p className="phase__hint">{t("story.scene.loadErrorHint")}</p>
             <div className="phase__actions">
               <button type="button" onClick={retry}>
                 <span className="icon" aria-hidden="true">
                   ↺
                 </span>{" "}
-                tentar de novo
+                {t("story.scene.retry")}
               </button>
               {onNext && (
                 <button type="button" onClick={onNext}>
-                  pular fase{" "}
+                  {t("story.scene.skipPhase")}{" "}
                   <span className="icon" aria-hidden="true">
                     ▶▶
                   </span>
@@ -257,25 +265,25 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
               <span className="icon" aria-hidden="true">
                 ▶
               </span>{" "}
-              PRESS START
+              {t("story.scene.pressStart")}
             </span>
-            <span className="phase__hint">clique, ou aperte Enter</span>
+            <span className="phase__hint">{t("story.scene.startHint")}</span>
           </button>
         )}
 
         {reduceMotion ? (
           <div className="dialog">
-            {beats.map((b) => (
-              <p key={b.text}>{b.text}</p>
+            {beats.map((b, i) => (
+              <p key={b.id}>{lines[i]}</p>
             ))}
           </div>
         ) : (
           status === "playing" && (
             <div className="dialog" aria-live="polite">
               <p>
-                {current.text.slice(0, typed)}
+                {current.slice(0, typed)}
                 <span className="dialog__rest" aria-hidden="true">
-                  {current.text.slice(typed)}
+                  {current.slice(typed)}
                 </span>
               </p>
               <div className="dialog__footer">
@@ -291,7 +299,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
                     advance();
                   }}
                 >
-                  {beat + 1 < beats.length ? "continuar" : "concluir"}{" "}
+                  {beat + 1 < beats.length ? t("story.scene.continue") : t("story.scene.finish")}{" "}
                   <span className="icon" aria-hidden="true">
                     ▶
                   </span>
@@ -311,7 +319,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
                 skip();
               }}
             >
-              pular{" "}
+              {t("story.scene.skip")}{" "}
               <span className="icon" aria-hidden="true">
                 ▶▶
               </span>
@@ -321,25 +329,25 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
 
         {status === "done" && (
           <div className="phase__done">
-            <p className="phase__clear">FASE COMPLETA</p>
+            <p className="phase__clear">{t("story.scene.phaseClear")}</p>
             <div className="phase__actions">
               {!reduceMotion && (
                 <button type="button" onClick={start}>
                   <span className="icon" aria-hidden="true">
                     ↺
                   </span>{" "}
-                  ver de novo
+                  {t("story.scene.replay")}
                 </button>
               )}
               {onNext && (
                 <button type="button" onClick={onNext}>
-                  próxima fase{" "}
+                  {t("story.scene.nextPhase")}{" "}
                   <span className="icon" aria-hidden="true">
                     ▶
                   </span>
                 </button>
               )}
-              {phase.job && <a href={jobHref(phase.job)}>ver no currículo</a>}
+              {phase.job && <a href={jobHref(phase.job, lang)}>{t("story.scene.seeOnResume")}</a>}
             </div>
           </div>
         )}

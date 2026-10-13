@@ -1,6 +1,6 @@
 import { drawEmptySeat, drawFrame, drawSeated, drawWalk } from "../engine/character";
 import { definePhase } from "../engine/types";
-import { segment } from "../lib/sprites";
+import { segment, withText } from "../lib/sprites";
 
 const BASE = import.meta.env.BASE_URL;
 const P = `${BASE}sprites/phase5`;
@@ -76,9 +76,6 @@ function along(path: Point[], t: number): Point {
 
 export const phase5 = definePhase({
   id: "phase5",
-  title: "Fase 5: Fulllab, e-commerce e mobile",
-  description:
-    "Num escritório aberto, um rapaz de moicano descobre os endpoints da API da VTEX com uma lupa, liga o app a lojas como Sephora e Magento por uma API e, rodeado por um time de quatro pessoas, sobe de nível para líder técnico.",
   sprites: {
     office: `${P}/office.png`,
     desk: `${P}/desk.png`,
@@ -87,14 +84,14 @@ export const phase5 = definePhase({
     lcdFrame: `${P3}/lcd-frame.png`,
     lupa: `${P}/lupa.png`,
     diagram: `${P}/diagram.png`,
-    levelUp: `${P}/level-up.png`,
+    levelUp: withText(`${P}/level-up.png`),
     star: `${P}/star.png`,
-    reverse0: `${P}/reverse-0.png`,
-    reverse1: `${P}/reverse-1.png`,
-    reverse2: `${P}/reverse-2.png`,
-    reverse3: `${P}/reverse-3.png`,
-    reverse4: `${P}/reverse-4.png`,
-    reverse5: `${P}/reverse-5.png`,
+    reverse0: withText(`${P}/reverse-0.png`),
+    reverse1: withText(`${P}/reverse-1.png`),
+    reverse2: withText(`${P}/reverse-2.png`),
+    reverse3: withText(`${P}/reverse-3.png`),
+    reverse4: withText(`${P}/reverse-4.png`),
+    reverse5: withText(`${P}/reverse-5.png`),
     danielWalk: `${C}/mohawk-walk.png`,
     danielSit: `${C}/mohawk-sit.png`,
     coworker: `${C}/coworker-walk.png`,
@@ -102,40 +99,36 @@ export const phase5 = definePhase({
     devWoman: `${C}/dev-woman-walk.png`,
     neighborWoman: `${C}/neighbor-woman-walk.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase5.beats), under the same ids.
+  beats: {
+    fulllab: {
       to: TIMELINE.walkIn[1],
       seconds: 2,
       speed: 1,
       textSpeed: 1,
-      text: "Em 2015 fui para a Fulllab, trabalhar com e-commerce e aplicativos mobile.",
     },
-    {
+    vtex: {
       to: TIMELINE.reveal[1],
       seconds: 3.6,
       speed: 1,
       textSpeed: 1,
-      text: "Integrei a VTEX por engenharia reversa, quando ainda não tinha documentação.",
     },
-    {
+    apis: {
       to: TIMELINE.packets[1],
       seconds: 3.4,
       speed: 1,
       textSpeed: 1,
-      text: "Criei as APIs dos apps, um plugin para Magento e robôs com Selenium para lojas sem API, como a Sephora.",
     },
-    {
+    techLead: {
       to: 1,
       seconds: 3.6,
       speed: 1,
       textSpeed: 1,
-      text: "Em 2017 virei líder técnico, com um time de 4 pessoas.",
     },
-  ],
+  },
   item: {
     id: "phone",
-    label: "Celular com o app",
     src: `${P}/item-phone.png`,
     at: TIMELINE.item,
   },

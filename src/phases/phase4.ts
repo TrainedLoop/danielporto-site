@@ -1,6 +1,6 @@
 import { drawEmptySeat, drawSeated, drawWalk } from "../engine/character";
 import { definePhase } from "../engine/types";
-import { segment } from "../lib/sprites";
+import { segment, withText } from "../lib/sprites";
 
 const BASE = import.meta.env.BASE_URL;
 const P = `${BASE}sprites/phase4`;
@@ -47,9 +47,6 @@ const drawRect = (ctx: CanvasRenderingContext2D, image: HTMLImageElement, r: Rec
 
 export const phase4 = definePhase({
   id: "phase4",
-  title: "Fase 4: Hebara, o primeiro emprego como dev",
-  description:
-    "Um rapaz de moicano entra num escritório com pôsteres de raspadinha e pega umo crachá do primeiro emprego. No monitor, escreve o código da intranet em C#, faz o primeiro deploy em produção e raspa uma raspadinha que revela: site novo.",
   sprites: {
     office: `${P}/office.png`,
     desk: `${P3}/office-desk.png`,
@@ -57,9 +54,9 @@ export const phase4 = definePhase({
     chair: `${P3}/chair.png`,
     lcdFrame: `${P3}/lcd-frame.png`,
     intranet: `${P}/intranet.png`,
-    deploy: `${P}/deploy.png`,
-    deployDone: `${P}/deploy-done.png`,
-    card: `${P}/card.png`,
+    deploy: withText(`${P}/deploy.png`),
+    deployDone: withText(`${P}/deploy-done.png`),
+    card: withText(`${P}/card.png`),
     coin: `${P}/coin.png`,
     ide0: `${P}/ide-0.png`,
     ide1: `${P}/ide-1.png`,
@@ -69,12 +66,12 @@ export const phase4 = definePhase({
     ide5: `${P}/ide-5.png`,
     ide6: `${P}/ide-6.png`,
     ide7: `${P}/ide-7.png`,
-    scratch0: `${P}/scratch-0.png`,
-    scratch1: `${P}/scratch-1.png`,
-    scratch2: `${P}/scratch-2.png`,
-    scratch3: `${P}/scratch-3.png`,
-    scratch4: `${P}/scratch-4.png`,
-    scratch5: `${P}/scratch-5.png`,
+    scratch0: withText(`${P}/scratch-0.png`),
+    scratch1: withText(`${P}/scratch-1.png`),
+    scratch2: withText(`${P}/scratch-2.png`),
+    scratch3: withText(`${P}/scratch-3.png`),
+    scratch4: withText(`${P}/scratch-4.png`),
+    scratch5: withText(`${P}/scratch-5.png`),
     scratch6: `${P}/scratch-6.png`,
     scratch7: `${P}/scratch-7.png`,
     scratch8: `${P}/scratch-8.png`,
@@ -82,40 +79,36 @@ export const phase4 = definePhase({
     danielSit: `${C}/mohawk-sit.png`,
     coworkerSit: `${C}/coworker-sit.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase4.beats), under the same ids.
+  beats: {
+    firstJob: {
       to: TIMELINE.walkIn[1],
       seconds: 2.2,
       speed: 1,
       textSpeed: 1,
-      text: "Em 2013, um curso de C# me levou ao primeiro emprego como programador júnior, na Hebara.",
     },
-    {
+    intranet: {
       to: TIMELINE.intranet[1],
       seconds: 3.6,
       speed: 1,
       textSpeed: 1,
-      text: "Comecei desenvolvendo a intranet da empresa, com C#, .NET MVC, WebForms e banco Oracle.",
     },
-    {
+    firstDeploys: {
       to: TIMELINE.success[1],
       seconds: 3,
       speed: 1,
       textSpeed: 1,
-      text: "E vieram os meus primeiros deploys em produção.",
     },
-    {
+    lotterySites: {
       to: TIMELINE.scratch[1],
       seconds: 3.4,
       speed: 1,
       textSpeed: 1,
-      text: "Também ajudei a reestruturar os sites da Raspadinha do Rio e do Rio de Prêmios.",
     },
-  ],
+  },
   item: {
     id: "badge",
-    label: "Crachá do primeiro emprego",
     src: `${P}/item-badge.png`,
     at: TIMELINE.item,
   },

@@ -1,10 +1,11 @@
-"""Desenha em pixel art os objetos da fase 4 (Hebara, o primeiro emprego como dev).
+"""Draws the phase 4 objects in pixel art (Hebara, the first dev job).
 
-Uso:
-    python -I tools/build_props_phase4.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props_phase4.py <output-dir> [--lang en]
 
-Escritório com pôsteres de raspadinha, o crachá, a IDE com o código da intranet, o primeiro
-deploy em produção e uma raspadinha (desenhada do zero) que revela o site novo.
+Office with scratch-card posters, the badge, the IDE with the intranet code, the first
+production deploy and a scratch card (drawn from scratch) that reveals the new site.
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text.
 """
 
 import random
@@ -13,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from build_props import H, OUTLINE, W, WHITE, box, canvas, rect  # noqa: E402
+from build_props import H, OUTLINE, W, WHITE, box, canvas, rect, run, tr  # noqa: E402
 from build_props_phase1 import CLOSE_H, CLOSE_W, XP_GREEN, text  # noqa: E402
 from build_props_phase3 import CARPET, FLOOR_Y  # noqa: E402
 
@@ -124,22 +125,22 @@ def deploy(done):
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (240, 240, 236))
     rect(d, 0, 0, CLOSE_W, 12, (60, 60, 70))
-    text(d, 3, 2, "Publicar", WHITE)
+    text(d, 3, 2, tr("Publicar", "Publish"), WHITE)
     # Servidor de produção.
     box(d, 12, 20, 24, 34, (60, 62, 70), (90, 92, 100), (30, 32, 36))
     for y in (24, 32, 40):
         rect(d, 15, y, 18, 5, (40, 42, 48))
         rect(d, 29, y + 2, 2, 1, XP_GREEN if done else (240, 180, 40))
-    text(d, 44, 24, "PRODUÇÃO", (190, 40, 40))
+    text(d, 44, 24, tr("PRODUÇÃO", "PRODUCTION"), (190, 40, 40))
     text(d, 44, 38, "IIS + Oracle", (80, 80, 90))
     rect(d, 22, 58, 132, 14, (200, 200, 200))
     rect(d, 24, 60, 128, 10, (230, 230, 230))
     if done:
         rect(d, 24, 60, 128, 10, XP_GREEN)
         box(d, 16, 80, 144, 20, (220, 250, 220), WHITE, (120, 190, 120))
-        text(d, 22, 86, "Sucesso! Online", (20, 110, 40))
+        text(d, 22, 86, tr("Sucesso! Online", "Success! Online"), (20, 110, 40))
     else:
-        text(d, 40, 84, "Publicando...", (80, 80, 90))
+        text(d, 40, 84, tr("Publicando...", "Publishing..."), (80, 80, 90))
     return img
 
 
@@ -159,8 +160,8 @@ def card_base():
     text(d, c["x"] + 32, c["y"] + 20, "DO RIO", WHITE)
     s = SCRATCH
     rect(d, s["x"], s["y"], s["w"], s["h"], WHITE)
-    text(d, s["x"] + 24, s["y"] + 10, "SITE", (30, 120, 50))
-    text(d, s["x"] + 24, s["y"] + 22, "NOVO!", (200, 40, 60))
+    text(d, s["x"] + 24, s["y"] + 10, tr("SITE", "NEW"), (30, 120, 50))
+    text(d, s["x"] + 24, s["y"] + 22, tr("NOVO!", "SITE!"), (200, 40, 60))
     for sx, sy in ((s["x"] + 8, s["y"] + 6), (s["x"] + 112, s["y"] + 28), (s["x"] + 100, s["y"] + 8)):
         rect(d, sx, sy + 1, 5, 1, GOLD[2])
         rect(d, sx + 2, sy - 1, 1, 5, GOLD[2])
@@ -175,7 +176,7 @@ def scratch_layer(frame):
     rng = random.Random(7)
     for _ in range(140):
         d.point((s["x"] + rng.randrange(s["w"]), s["y"] + rng.randrange(s["h"])), fill=SILVER[0])
-    text(d, s["x"] + 36, s["y"] + 16, "RASPE", SILVER[2])
+    text(d, s["x"] + 36, s["y"] + 16, tr("RASPE", "SCRATCH"), SILVER[2])
     # Zigue-zague: cada quadro raspa uma faixa diagonal.
     total = SCRATCH_FRAMES
     width = s["w"] / total
@@ -195,9 +196,7 @@ def coin():
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+def build():
     sprites = {
         "office": office(),
         "item-badge": badge(),
@@ -211,10 +210,8 @@ def main(out_dir):
         sprites[f"ide-{lines}"] = ide(lines)
     for frame in range(SCRATCH_FRAMES + 1):
         sprites[f"scratch-{frame}"] = scratch_layer(frame)
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", len(sprites), "sprites")
+    return sprites
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

@@ -3,19 +3,21 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App'
 import { pageMeta } from './content/pages'
 import { setLang } from './i18n'
-import { pageFromPath, pageKey, pathFromLegacyHash } from './lib/route'
+import { pageKey, pageOrHome, pathFromLegacyHash, pathFromLegacyPath } from './lib/route'
 import { initAnalytics } from './lib/analytics'
 import './styles.css'
 
-// Links antigos (#/curriculo) vão para a página de verdade (/curriculo/), que já vem pronta do build.
-const legacy = pathFromLegacyHash(window.location.hash)
+// Old links (#/curriculo, /en/curriculo/) go to the real page (/curriculo/, /en/resume/),
+// which the build already rendered.
+const { pathname, search, hash } = window.location
+const legacy = pathFromLegacyHash(hash) ?? pathFromLegacyPath(pathname, search, hash)
 
 if (legacy) {
   window.location.replace(legacy)
 } else {
   initAnalytics()
   const container = document.getElementById('root')!
-  const page = pageFromPath(window.location.pathname) ?? { route: 'home', lang: 'pt' }
+  const page = pageOrHome(pathname)
   setLang(page.lang)
   const app = (
     <StrictMode>
@@ -23,9 +25,10 @@ if (legacy) {
     </StrictMode>
   )
 
-  // No build, cada página já vem com o HTML renderizado: o React só assume o que está lá.
-  // Se o HTML é de outra página (o 404.html, ou /curriculo sem a barra no fim), renderiza do zero.
-  // A história também: ela retoma o progresso salvo no navegador, que o HTML do build não conhece.
+  // In the build, each page ships with its HTML already rendered: React just takes over.
+  // If the HTML belongs to another page (404.html, or /curriculo without the trailing slash),
+  // render from scratch. The story too: it resumes the progress saved in the browser,
+  // which the build's HTML can't know about.
   if (container.dataset.route === pageKey(page) && page.route !== 'historia') {
     hydrateRoot(container, app)
   } else {

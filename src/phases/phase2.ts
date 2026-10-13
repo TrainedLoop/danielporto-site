@@ -1,6 +1,6 @@
 import { drawFrame, drawWalk, FRAME } from "../engine/character";
 import { definePhase } from "../engine/types";
-import { segment } from "../lib/sprites";
+import { segment, withText } from "../lib/sprites";
 
 const BASE = import.meta.env.BASE_URL;
 const P = `${BASE}sprites/phase2`;
@@ -63,22 +63,19 @@ const drawRect = (ctx: CanvasRenderingContext2D, image: HTMLImageElement, r: Rec
 
 export const phase2 = definePhase({
   id: "phase2",
-  title: "Fase 2: o técnico da rua",
-  description:
-    "Um adolescente montou uma bancada de conserto de computadores na garagem de casa. Vizinhos chegam com gabinetes; ele troca memória e HD, formata o Windows e sai com a caixa de ferramentas para atender na casa de um cliente.",
   sprites: {
     street: `${P}/street.png`,
     bench: `${P}/bench.png`,
     monitor: `${P}/monitor.png`,
     tower: `${P}/tower.png`,
     pc: `${P}/pc.png`,
-    sign: `${P}/sign.png`,
+    sign: withText(`${P}/sign.png`),
     toolbox: `${P}/toolbox.png`,
     thumbs: `${P}/thumbs.png`,
     closeCase: `${P}/close-case.png`,
     ram: `${P}/ram.png`,
     hd: `${P}/hd.png`,
-    closeFormat: `${P}/close-format.png`,
+    closeFormat: withText(`${P}/close-format.png`),
     closeFrame: `${BASE}sprites/phase1/close-frame.png`,
     counter0: `${P}/counter-0.png`,
     counter1: `${P}/counter-1.png`,
@@ -88,40 +85,36 @@ export const phase2 = definePhase({
     man: `${BASE}sprites/character/neighbor-man-walk.png`,
     woman: `${BASE}sprites/character/neighbor-woman-walk.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase2.beats), under the same ids.
+  beats: {
+    courses: {
       to: TIMELINE.sign[1],
       seconds: 2,
       speed: 1,
       textSpeed: 1,
-      text: "Aos 16 anos fiz cursos de montagem e manutenção de micro e de pacote Office.",
     },
-    {
+    neighborhood: {
       to: TIMELINE.womanOut[1],
       seconds: 4,
       speed: 1,
       textSpeed: 1,
-      text: "Virei o técnico da rua: todo PC da vizinhança passava pela minha mão.",
     },
-    {
+    repairs: {
       to: TIMELINE.format[1],
       seconds: 3.4,
       speed: 1,
       textSpeed: 1,
-      text: "Formatava o Windows e trocava peças, como HD e memória.",
     },
-    {
+    houseCalls: {
       to: 1,
       seconds: 2.8,
       speed: 1,
       textSpeed: 1,
-      text: "Às vezes na minha casa, às vezes na casa do cliente.",
     },
-  ],
+  },
   item: {
     id: "screwdriver",
-    label: "Chave de fenda",
     src: `${P}/item-screwdriver.png`,
     at: TIMELINE.item,
   },

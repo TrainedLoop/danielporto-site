@@ -1,9 +1,10 @@
-"""Desenha em pixel art os objetos da fase 2 (o técnico da rua).
+"""Draws the phase 2 objects in pixel art (the neighborhood tech guy).
 
-Uso:
-    python -I tools/build_props_phase2.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props_phase2.py <output-dir> [--lang en]
 
-Mesma escala e mesmas regras das fases anteriores.
+Same scale and rules as the previous phases.
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text.
 """
 
 import sys
@@ -11,7 +12,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from build_props import BEIGE, H, OUTLINE, W, WHITE, WOOD, box, canvas, rect  # noqa: E402
+from build_props import BEIGE, H, OUTLINE, W, WHITE, WOOD, box, canvas, rect, run, tr  # noqa: E402
 from build_props_phase1 import CLOSE_H, CLOSE_W, PLANT, XP_BLUE, text  # noqa: E402
 
 SIDEWALK_Y = 132
@@ -140,8 +141,8 @@ def sign():
     """Placa de papelão: CONSERTO DE PC."""
     img, d = canvas(72, 26)
     box(d, 0, 0, 72, 26, (200, 160, 110), (220, 184, 136), (160, 120, 80))
-    text(d, 4, 4, "CONSERTO", (40, 30, 30))
-    text(d, 20, 15, "DE PC", (180, 40, 40))
+    text(d, 4, 4, tr("CONSERTO", "COMPUTER"), (40, 30, 30))
+    text(d, tr(20, 12), 15, tr("DE PC", "REPAIR"), (180, 40, 40))
     rect(d, 34, 0, 4, 2, (120, 120, 120))
     return img
 
@@ -259,13 +260,13 @@ def close_format():
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (0, 0, 168))
     rect(d, 0, 0, CLOSE_W, 12, (0, 0, 120))
-    text(d, 4, 2, "Setup do Windows", WHITE)
-    text(d, 12, 26, "Formatando C:", (230, 230, 230))
-    text(d, 12, 42, "Aguarde...", (200, 200, 230))
+    text(d, 4, 2, tr("Setup do Windows", "Windows Setup"), WHITE)
+    text(d, 12, 26, tr("Formatando C:", "Formatting C:"), (230, 230, 230))
+    text(d, 12, 42, tr("Aguarde...", "Please wait..."), (200, 200, 230))
     rect(d, 22, 68, 132, 14, (230, 230, 230))
     rect(d, 24, 70, 128, 10, (0, 0, 100))
     rect(d, 0, CLOSE_H - 12, CLOSE_W, 12, (180, 180, 180))
-    text(d, 4, CLOSE_H - 10, "ENTER=Continuar", (40, 40, 40))
+    text(d, 4, CLOSE_H - 10, tr("ENTER=Continuar", "ENTER=Continue"), (40, 40, 40))
     return img
 
 
@@ -286,9 +287,7 @@ def screwdriver():
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+def build():
     sprites = {
         "street": street(),
         "bench": bench(),
@@ -306,10 +305,8 @@ def main(out_dir):
     }
     for n in range(4):
         sprites[f"counter-{n}"] = counter(n)
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", len(sprites), "sprites")
+    return sprites
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

@@ -1,6 +1,6 @@
 import { drawEmptySeat, drawSeated, drawWalk } from "../engine/character";
 import { definePhase } from "../engine/types";
-import { segment } from "../lib/sprites";
+import { segment, withText } from "../lib/sprites";
 
 const BASE = import.meta.env.BASE_URL;
 const P = `${BASE}sprites/phase6`;
@@ -62,61 +62,54 @@ const drawRect = (ctx: CanvasRenderingContext2D, image: HTMLImageElement, r: Rec
 
 export const phase6 = definePhase({
   id: "phase6",
-  title: "Fase 6: Fu2re e a visão computacional",
-  description:
-    "Num escritório com aquário, um homem de barba trabalha na SmartVision, uma plataforma que treina modelos de visão computacional. Na rua, um carro com uma câmera no teto fotografa os postes da Light, que ganham caixas de detecção. Por fim, uma caixa-preta escrita IA se abre.",
   sprites: {
     office: `${P}/office.png`,
     desk: `${P5}/desk.png`,
     lcd: `${P3}/lcd.png`,
     chair: `${P3}/chair.png`,
     lcdFrame: `${P3}/lcd-frame.png`,
-    smartvision: `${P}/smartvision.png`,
+    smartvision: withText(`${P}/smartvision.png`),
     avenue: `${P}/avenue.png`,
     car: `${P}/car.png`,
     flash: `${P}/flash.png`,
-    label: `${P}/detect-label.png`,
-    box0: `${P}/box-0.png`,
-    box1: `${P}/box-1.png`,
-    box2: `${P}/box-2.png`,
-    box3: `${P}/box-3.png`,
+    label: withText(`${P}/detect-label.png`),
+    box0: withText(`${P}/box-0.png`),
+    box1: withText(`${P}/box-1.png`),
+    box2: withText(`${P}/box-2.png`),
+    box3: withText(`${P}/box-3.png`),
     danielWalk: `${C}/adult-walk.png`,
     danielSit: `${C}/adult-sit.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase6.beats), under the same ids.
+  beats: {
+    fu2re: {
       to: TIMELINE.walkIn[1],
       seconds: 2,
       speed: 1,
       textSpeed: 1,
-      text: "Em 2019 fui para a Fu2re, onde ouvi falar de IA a sério, antes do boom.",
     },
-    {
+    smartVision: {
       to: TIMELINE.training[1],
       seconds: 3.6,
       speed: 1,
       textSpeed: 1,
-      text: "Na SmartVision, a plataforma de visão computacional da empresa, fiz das APIs com fila de treino à interface em React.",
     },
-    {
+    polesCar: {
       to: TIMELINE.car[1],
       seconds: 4,
       speed: 1,
       textSpeed: 1,
-      text: "Participei do software de um carro que fotografava os postes da Light pela cidade, como os do Google.",
     },
-    {
+    blackBox: {
       to: 1,
       seconds: 3.4,
       speed: 1,
       textSpeed: 1,
-      text: "E fui abrindo a caixa-preta para entender como se treina um modelo.",
     },
-  ],
+  },
   item: {
     id: "black-box",
-    label: "Caixa-preta da IA, aberta",
     src: `${P}/item-box.png`,
     at: TIMELINE.item,
   },

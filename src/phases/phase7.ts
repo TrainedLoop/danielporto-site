@@ -1,6 +1,6 @@
 import { drawEmptySeat, drawSeated, drawWalk, FACING, FRAME } from "../engine/character";
 import { definePhase } from "../engine/types";
-import { segment } from "../lib/sprites";
+import { segment, withText } from "../lib/sprites";
 
 const BASE = import.meta.env.BASE_URL;
 const P = `${BASE}sprites/phase7`;
@@ -88,9 +88,6 @@ const drawRect = (ctx: CanvasRenderingContext2D, image: HTMLImageElement, r: Rec
 
 export const phase7 = definePhase({
   id: "phase7",
-  title: "Fase 7: Purple Metrics, tudo se conecta",
-  description:
-    "No home office com o Pão de Açúcar na janela, um homem de barba troca o C# pelo React e TypeScript e vê a esteira de CI/CD passar dos 800 deploys. Os itens da jornada se juntam numa estrela, IA aplicada. Com ela vem o chat de IA do produto, construído junto com o time numa chamada de vídeo, e um terminal conectando o MCP e os agentes de IA.",
   sprites: {
     room: `${P}/room.png`,
     desk: `${P}/desk.png`,
@@ -101,12 +98,12 @@ export const phase7 = definePhase({
     badgeCsharp: `${P}/badge-csharp.png`,
     badgeReact: `${P}/badge-react.png`,
     badgeTs: `${P}/badge-ts.png`,
-    pipeline: `${P}/pipeline.png`,
-    dashboard: `${P}/dashboard.png`,
-    msgUser: `${P}/msg-user.png`,
-    msgAi: `${P}/msg-ai.png`,
-    call: `${P}/call.png`,
-    live: `${P}/live.png`,
+    pipeline: withText(`${P}/pipeline.png`),
+    dashboard: withText(`${P}/dashboard.png`),
+    msgUser: withText(`${P}/msg-user.png`),
+    msgAi: withText(`${P}/msg-ai.png`),
+    call: withText(`${P}/call.png`),
+    live: withText(`${P}/live.png`),
     iaBig: `${P}/ia-big.png`,
     itemIa: `${P}/item-ia.png`,
     count0: `${P}/count-0.png`,
@@ -119,12 +116,12 @@ export const phase7 = definePhase({
     count700: `${P}/count-700.png`,
     count800: `${P}/count-800.png`,
     terminal0: `${P}/terminal-0.png`,
-    terminal1: `${P}/terminal-1.png`,
-    terminal2: `${P}/terminal-2.png`,
-    terminal3: `${P}/terminal-3.png`,
-    terminal4: `${P}/terminal-4.png`,
-    terminal5: `${P}/terminal-5.png`,
-    terminal6: `${P}/terminal-6.png`,
+    terminal1: withText(`${P}/terminal-1.png`),
+    terminal2: withText(`${P}/terminal-2.png`),
+    terminal3: withText(`${P}/terminal-3.png`),
+    terminal4: withText(`${P}/terminal-4.png`),
+    terminal5: withText(`${P}/terminal-5.png`),
+    terminal6: withText(`${P}/terminal-6.png`),
     item0: `${BASE}sprites/${ITEMS[0]}.png`,
     item1: `${BASE}sprites/${ITEMS[1]}.png`,
     item2: `${BASE}sprites/${ITEMS[2]}.png`,
@@ -140,54 +137,48 @@ export const phase7 = definePhase({
     neighborWoman: `${C}/neighbor-woman-walk.png`,
     neighborMan: `${C}/neighbor-man-walk.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase7.beats), under the same ids.
+  beats: {
+    purple: {
       to: TIMELINE.classChange[1],
       seconds: 2.6,
       speed: 1,
       textSpeed: 1,
-      text: "Em 2022 entrei na Purple Metrics, trabalhando de casa, e mudei de stack: do back-end para o front-end, com React e TypeScript.",
     },
-    {
+    pipeline: {
       to: TIMELINE.counter[1],
       seconds: 3.4,
       speed: 1,
       textSpeed: 1,
-      text: "Criei a esteira de CI/CD do front, com mais de 800 deploys em produção.",
     },
-    {
+    appliedAi: {
       to: TIMELINE.glow[1],
       seconds: 4,
       speed: 1,
       textSpeed: 1,
-      text: "Aí tudo se conectou: tudo o que juntei pelo caminho virou IA aplicada.",
     },
-    {
+    chat: {
       to: TIMELINE.bars[1],
       seconds: 3.4,
       speed: 1,
       textSpeed: 1,
-      text: "Com isso, criei a primeira versão do chat conversacional da Purple.",
     },
-    {
+    today: {
       to: TIMELINE.live[1],
       seconds: 3,
       speed: 1,
       textSpeed: 1,
-      text: "Hoje continuo construindo a versão atual junto com o time, já em produção com clientes.",
     },
-    {
+    mcp: {
       to: 1,
       seconds: 4,
       speed: 1,
       textSpeed: 1,
-      text: "Também criei a primeira prova de conceito de MCP da Purple e ajudo o time a desenvolver com agentes de IA.",
     },
-  ],
+  },
   item: {
     id: "ia",
-    label: "IA aplicada",
     src: `${P}/item-ia.png`,
     at: TIMELINE.item,
   },

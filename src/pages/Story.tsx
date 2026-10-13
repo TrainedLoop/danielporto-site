@@ -1,24 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Scene } from "../engine/Scene";
 import { track } from "../lib/analytics";
-import { href, storyHref, storyPhase } from "../lib/route";
-import { loadSprites } from "../lib/sprites";
-import { phase0 } from "../phases/phase0";
-import { phase1 } from "../phases/phase1";
-import { phase2 } from "../phases/phase2";
-import { phase3 } from "../phases/phase3";
-import { phase4 } from "../phases/phase4";
-import { phase5 } from "../phases/phase5";
-import { phase6 } from "../phases/phase6";
-import { phase7 } from "../phases/phase7";
-
-// Fases em ordem; cada uma entrega um item para o inventário.
-const PHASES = [phase0, phase1, phase2, phase3, phase4, phase5, phase6, phase7];
+import { href, storyHref, storyPhase, type Lang } from "../lib/route";
+import { loadSprites, spritePaths } from "../lib/sprites";
+import { PHASES } from "../phases";
 
 type Progress = { current: number; items: Record<string, boolean> };
 
-// O progresso fica no navegador para recarregar a página, ou ir ao currículo e voltar,
-// sem recomeçar do zero. Sem armazenamento (aba anônima, bloqueado), a história funciona igual.
+// Progress is kept in the browser so reloading the page, or going to the résumé and back,
+// doesn't start over. Without storage (private tab, blocked), the story works the same.
+// It is shared by both languages: switching language keeps the phase and the items.
 const STORAGE_KEY = "historia:progresso";
 
 function readProgress(): Progress | null {
@@ -39,7 +31,7 @@ function clearProgress() {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
   } catch {
-    // Sem armazenamento, não há o que limpar.
+    // No storage, nothing to clear.
   }
 }
 
@@ -49,11 +41,11 @@ function writeProgress({ current, items }: Progress) {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ fase: current, itens }));
   } catch {
-    // Sem armazenamento: o progresso só não sobrevive ao recarregar.
+    // No storage: progress just won't survive a reload.
   }
 }
 
-/** Abrir direto numa fase (/historia/?fase=3) já entrega os itens das fases anteriores. */
+/** Opening a phase directly (/historia/?fase=3) already gives the items of the previous phases. */
 function progressAt(phase: number): Progress {
   const current = Math.min(Math.max(phase, 1), PHASES.length) - 1;
   const items = Object.fromEntries(PHASES.slice(0, current).map((p) => [p.item.id, true]));
@@ -67,57 +59,60 @@ function initialProgress(): Progress {
 }
 
 /**
- * A história em pixel art, opcional a partir da home. Uma fase por vez, como num
- * jogo: a próxima só aparece quando a atual termina, e o inventário acumula os itens.
+ * The pixel-art story, optional from the home page. One phase at a time, like a game:
+ * the next one only shows up when the current one ends, and the inventory collects the items.
  */
 export function Story() {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language as Lang;
+  const texts = t("story.phases");
   const [initial] = useState(initialProgress);
   const [current, setCurrent] = useState(initial.current);
   const [items, setItems] = useState(initial.items);
-  // Só começa sozinha quem acabou de vir da fase anterior; ao abrir por link ou
-  // recarregar, a fase espera o "PRESS START".
+  // Only a phase reached from the previous one starts on its own; opened from a link or
+  // after a reload, it waits for "PRESS START".
   const [cameFromPrevious, setCameFromPrevious] = useState(false);
   const handleItem = useCallback(
     (id: string, got: boolean) =>
       setItems((existing) => (existing[id] === got ? existing : { ...existing, [id]: got })),
-    [],
+    [setItems],
   );
   const goNext = useCallback(() => {
     setCurrent((index) => index + 1);
     setCameFromPrevious(true);
     window.scrollTo(0, 0);
-  }, []);
+  }, [setCurrent, setCameFromPrevious]);
 
-  // Enquanto uma fase roda, baixa as imagens da próxima, para não ter pausa entre elas.
-  // Espera a atual terminar de carregar, para não disputar a conexão com ela.
+  // While a phase plays, download the next one's images so there's no pause between them.
+  // Waits for the current one to finish loading, so they don't compete for the connection.
   useEffect(() => {
     const now = PHASES[current];
     const next = PHASES[current + 1];
     if (!now || !next) return;
     let cancelled = false;
-    loadSprites(now.sprites)
+    loadSprites(spritePaths(now.sprites, lang))
       .then(() => {
-        if (!cancelled) return loadSprites(next.sprites);
+        if (!cancelled) return loadSprites(spritePaths(next.sprites, lang));
       })
       .catch(() => undefined);
     return () => {
       cancelled = true;
     };
-  }, [current]);
+  }, [current, lang]);
 
-  // Guarda o progresso e mostra a fase atual na URL. replaceState para o "voltar"
-  // do navegador não passar fase por fase.
+  // Saves progress and shows the current phase in the URL, in the page's language.
+  // replaceState so the browser's back button doesn't step through every phase.
   useEffect(() => {
     writeProgress({ current, items });
   }, [current, items]);
   useEffect(() => {
-    const target = current < PHASES.length ? storyHref(current + 1) : href("historia");
+    const target = current < PHASES.length ? storyHref(current + 1, lang) : href("historia", lang);
     if (window.location.pathname + window.location.search !== target) {
       window.history.replaceState(null, "", target);
     }
-  }, [current]);
+  }, [current, lang]);
 
-  // Voltar/avançar do navegador para um link de fase também leva até ela.
+  // Browser back/forward to a phase link also goes to that phase.
   useEffect(() => {
     const onPopState = () => {
       const linked = storyPhase();
@@ -134,7 +129,7 @@ export function Story() {
   const finished = current >= PHASES.length;
   const phase = PHASES[current];
   useEffect(() => void (finished && track("historia_concluida")), [finished]);
-  const collected = PHASES.filter((p) => items[p.item.id]).map((p) => p.item);
+  const collected = PHASES.filter((p) => items[p.item.id]).map((p) => ({ ...p.item, label: texts[p.id].item }));
 
   return (
     <>
@@ -142,13 +137,14 @@ export function Story() {
         {!finished && (
           <>
             <p className="story__progress" aria-live="polite">
-              {phase.title}
+              {texts[phase.id].title}
               <span className="story__count">
                 {current + 1}/{PHASES.length}
               </span>
             </p>
+            {/* Keyed by language too: switching language restarts the phase with its texts and sprites. */}
             <Scene
-              key={phase.id}
+              key={`${phase.id}-${lang}`}
               phase={phase}
               onItem={handleItem}
               onNext={goNext}
@@ -157,16 +153,15 @@ export function Story() {
           </>
         )}
 
-        {/* Encerramento: a história continua na Purple. */}
+        {/* Ending: the story continues at Purple. */}
         {finished && (
           <section className="next">
-            <p className="next__level">CONTINUA…</p>
-            <p className="next__soon">
-              Hoje sou desenvolvedor full stack sênior na Purple Metrics, levando IA para produção.
-            </p>
+            <p className="next__level">{t("story.ending.title")}</p>
+            <p className="next__soon">{t("story.ending.text")}</p>
             <p className="next__links">
-              <a href={href("curriculo")}>ler o currículo</a> · <a href={href("home")}>voltar ao início</a> ·{" "}
-              <a href={href("creditos")}>créditos</a> ·{" "}
+              <a href={href("curriculo", lang)}>{t("story.ending.resume")}</a> ·{" "}
+              <a href={href("home", lang)}>{t("story.ending.home")}</a> ·{" "}
+              <a href={href("creditos", lang)}>{t("story.ending.credits")}</a> ·{" "}
               <button
                 type="button"
                 className="next__restart"
@@ -177,15 +172,15 @@ export function Story() {
                   setCameFromPrevious(false);
                 }}
               >
-                jogar de novo
+                {t("story.ending.restart")}
               </button>
             </p>
           </section>
         )}
       </main>
 
-      <nav className="inventory" aria-label="Inventário">
-        <span className="inventory__label">ITENS</span>
+      <nav className="inventory" aria-label={t("story.inventory.label")}>
+        <span className="inventory__label">{t("story.inventory.title")}</span>
         <ul>
           {Array.from({ length: PHASES.length }, (_, i) => {
             const item = collected[i];

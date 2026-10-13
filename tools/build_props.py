@@ -1,10 +1,11 @@
-"""Desenha em pixel art os objetos da fase 0 (casa da avó).
+"""Draws the phase 0 objects in pixel art (grandma's house).
 
-Uso:
-    python -I tools/build_props.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props.py <output-dir> [--lang en]
 
-Tudo é desenhado em código, na escala dos sprites LPC (cena nativa de 320x180),
-com contorno escuro e luz vindo de cima, para combinar com o personagem.
+Everything is drawn in code, at the scale of the LPC sprites (native 320x180 scene),
+with a dark outline and light coming from above, to match the character.
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text. Phase 0 has no text, so it writes none.
 """
 
 import sys
@@ -29,6 +30,55 @@ WIN_TEAL = (0, 128, 128)
 WIN_GRAY = (192, 192, 192)
 WIN_DARK = (128, 128, 128)
 WIN_BLUE = (0, 0, 128)
+
+
+# Language of the text drawn into the sprites. Each script draws Portuguese by default;
+# with `--lang en` it draws again in English and saves only the sprites whose pixels
+# changed (the ones with text), as <name>.en.png next to the Portuguese ones.
+_LANG = {"current": "pt"}
+
+
+def tr(pt, en):
+    """Picks the Portuguese or the English value for the language being drawn."""
+    return en if _LANG["current"] == "en" else pt
+
+
+def run(build, argv=None):
+    """Command line shared by the build_props*.py scripts.
+
+    `build()` returns {name: image}. Without `--lang`, saves every sprite as <name>.png.
+    With `--lang en`, saves only <name>.en.png for the sprites that differ from Portuguese.
+    """
+    args = list(sys.argv[1:] if argv is None else argv)
+    lang = "pt"
+    if "--lang" in args:
+        i = args.index("--lang")
+        lang = args[i + 1]
+        del args[i : i + 2]
+    if lang not in ("pt", "en"):
+        raise SystemExit(f"unknown language: {lang}")
+    out = Path(args[0])
+    out.mkdir(parents=True, exist_ok=True)
+    _LANG["current"] = "pt"
+    sprites = build()
+    if lang == "pt":
+        for name, image in sprites.items():
+            image.save(out / f"{name}.png")
+        print("ok", len(sprites), "sprites:", ", ".join(sprites))
+        return
+    _LANG["current"] = lang
+    try:
+        localized = build()
+    finally:
+        _LANG["current"] = "pt"
+    changed = [name for name, image in localized.items() if _differs(sprites[name], image)]
+    for name in changed:
+        localized[name].save(out / f"{name}.{lang}.png")
+    print("ok", len(changed), f"{lang} variants:", ", ".join(changed))
+
+
+def _differs(a, b):
+    return a.size != b.size or a.tobytes() != b.tobytes()
 
 
 def canvas(w, h):
@@ -258,10 +308,8 @@ def cd(size):
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    sprites = {
+def build():
+    return {
         "room": room(),
         "desk": desk(),
         "monitor": monitor(),
@@ -275,10 +323,7 @@ def main(out_dir):
         "cd": cd(12),
         "item-cd": cd(32),
     }
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", ", ".join(sprites))
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

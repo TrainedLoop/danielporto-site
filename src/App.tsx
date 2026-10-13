@@ -1,12 +1,37 @@
-import { useEffect } from 'react'
+import { useEffect, type SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { href, useRoute, type Page } from './lib/route'
+import { equivalentHref, href, useRoute, type Lang, type Page, type Route } from './lib/route'
 import { Credits } from './pages/Credits'
 import { Home } from './pages/Home'
 import { Resume } from './pages/Resume'
 import { Story } from './pages/Story'
 
-/** `page` é a página com que o app começa: vem do caminho no navegador e, no build, de cada página pré-renderizada. */
+/**
+ * A link in the PT · EN switch. The rendered href points to the same page in the other
+ * language; on hover, focus or click it is swapped for the full equivalent address (the
+ * story's phase, the résumé's job), which the build-time href can't know.
+ */
+function LangLink({ route, lang, current, label }: { route: Route; lang: Lang; current: Lang; label: string }) {
+  const update = (event: SyntheticEvent<HTMLAnchorElement>) => {
+    event.currentTarget.href = equivalentHref(route, lang)
+  }
+  const code = lang === 'en' ? 'en' : 'pt-BR'
+  return (
+    <a
+      href={href(route, lang)}
+      hrefLang={code}
+      lang={code}
+      aria-current={lang === current ? 'true' : undefined}
+      onMouseEnter={update}
+      onFocus={update}
+      onClick={update}
+    >
+      {label}
+    </a>
+  )
+}
+
+/** `page` is the page the app starts on: from the browser path, or, in the build, each prerendered page. */
 export default function App({ page: initial }: { page: Page }) {
   const { route, lang } = useRoute(initial)
   const { t } = useTranslation()
@@ -15,9 +40,6 @@ export default function App({ page: initial }: { page: Page }) {
     document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR'
   }, [lang])
 
-  // A versão em inglês só existe para a home e o currículo; nas outras páginas o EN leva à home.
-  const enRoute = route === 'curriculo' ? 'curriculo' : 'home'
-
   return (
     <>
       <header className={`topbar topbar--${route} no-print`}>
@@ -25,20 +47,16 @@ export default function App({ page: initial }: { page: Page }) {
           Daniel Porto
         </a>
         <nav className="topbar__nav" aria-label={t('nav.label')}>
-          <a href={href('historia')} aria-current={route === 'historia' ? 'page' : undefined}>
+          <a href={href('historia', lang)} aria-current={route === 'historia' ? 'page' : undefined}>
             {t('nav.story')}
           </a>
           <a href={href('curriculo', lang)} aria-current={route === 'curriculo' ? 'page' : undefined}>
             {t('nav.resume')}
           </a>
-          <span className="topbar__lang">
-            <a href={href(route)} hrefLang="pt-BR" lang="pt-BR" aria-current={lang === 'pt' ? 'true' : undefined}>
-              PT
-            </a>
+          <span className="topbar__lang" role="group" aria-label={t('nav.language')}>
+            <LangLink route={route} lang="pt" current={lang} label="PT" />
             {' · '}
-            <a href={href(enRoute, 'en')} hrefLang="en" lang="en" aria-current={lang === 'en' ? 'true' : undefined}>
-              EN
-            </a>
+            <LangLink route={route} lang="en" current={lang} label="EN" />
           </span>
         </nav>
       </header>
@@ -51,7 +69,7 @@ export default function App({ page: initial }: { page: Page }) {
       {route !== 'historia' && (
         <footer className="site-footer no-print">
           <span>© Daniel Porto</span>
-          <a href={href('creditos')}>{t('footerCredits')}</a>
+          <a href={href('creditos', lang)}>{t('footerCredits')}</a>
         </footer>
       )}
     </>
