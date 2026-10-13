@@ -77,7 +77,7 @@ A publicação é automática: cada push na `main` faz o build e publica no GitH
 ## Métricas
 
 O site usa o [PostHog](https://posthog.com) para saber como as pessoas navegam
-(`src/lib/analytics.ts`). O `posthog-js` vem num chunk separado, carregado só depois
+(`src/lib/analytics.ts`). O `posthog-js` (com o gravador de sessão) vem num chunk separado, carregado só depois
 que a página aparece (`requestIdleCallback`), então não pesa no bundle inicial.
 
 A chave vem do build: `VITE_POSTHOG_KEY` e `VITE_POSTHOG_HOST` (padrão
@@ -89,8 +89,15 @@ Privacidade:
 
 - nada de cookie, localStorage ou sessionStorage (`persistence: "memory"`): cada visita é
   um visitante anônimo novo e não precisa de banner de consentimento;
-- sem gravação de sessão, sem autocapture (cliques e campos não são capturados
-  automaticamente), sem heatmaps, surveys, feature flags ou scripts extras do PostHog;
+- gravação de sessão (session replay) ligada: o gravador vem no mesmo chunk do PostHog
+  (`src/lib/posthog.ts`), nada é baixado do CDN deles. Campos de formulário são mascarados,
+  headers, corpos de requisição e logs do console não entram; o texto das páginas é público e
+  aparece como está. O `<canvas>` da história é gravado a 3 quadros por segundo, qualidade 0.4.
+  A navegação interna não recarrega a página, então uma visita é uma gravação só. A gravação
+  só começa se estiver ligada no projeto do PostHog (configuração remota, um JSON);
+- o rodapé (e a tela final da história) avisa que visitas e sessões anônimas são registradas;
+- sem autocapture (cliques e campos não são capturados automaticamente), sem heatmaps,
+  surveys, feature flags ou scripts extras do PostHog;
 - com Do Not Track ou Global Privacy Control ligado no navegador, o PostHog nem é carregado.
 
 Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página):

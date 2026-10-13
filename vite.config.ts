@@ -30,6 +30,9 @@ function contentDate(): string {
 export default defineConfig({
   base: process.env.BASE_PATH ?? '/',
   plugins: [react()],
+  // The lazy PostHog chunk (posthog-js + replay recorder, src/lib/posthog.ts) is ~510 kB
+  // minified; it loads after the page is idle, so it doesn't need the default 500 kB warning.
+  build: { chunkSizeWarningLimit: 600 },
   // A build-time constant, identical in the client and SSR bundles, so hydration matches.
   define: { __CONTENT_DATE__: JSON.stringify(contentDate()) },
 })

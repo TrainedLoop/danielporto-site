@@ -164,6 +164,8 @@ const languages = [
 const ui = {
   nav: { label: "Navegação", story: "história", resume: "currículo", language: "Idioma" },
   footerCredits: "créditos dos sprites e da fonte",
+  // Shown in the footer and on the story's ending screen (the story page has no footer).
+  privacyNotice: "Este site registra visitas e sessões anônimas, sem cookies, para melhorar o conteúdo.",
   home: {
     avatarAlt: "Daniel em pixel art",
     hello: "Olá, eu sou",

@@ -2,11 +2,15 @@ import type { PostHog } from "posthog-js";
 import { i18n } from "../i18n";
 
 /**
- * Usage metrics with PostHog, loaded after the page shows up (in a separate chunk) so it
- * doesn't weigh on the initial bundle.
+ * Usage metrics and session replay with PostHog, loaded after the page shows up (in a
+ * separate chunk, src/lib/posthog.ts, which also bundles the replay recorder) so it doesn't
+ * weigh on the initial bundle.
  *
  * Privacy: no cookies or localStorage (persistence "memory", so each visit is a new
- * anonymous visitor), no session recording, no autocapture and no extra PostHog scripts.
+ * anonymous visitor and a new recording), no autocapture and no extra PostHog scripts.
+ * Replay masks every input and skips network headers/bodies and console logs; page text is
+ * public content, so it is recorded as is. Pages change through the History API without
+ * reloads (src/lib/route.ts), so one visit is one page load and one recording.
  * With Do Not Track or Global Privacy Control on, or without VITE_POSTHOG_KEY in the build
  * (local dev, forks), everything here is a no-op.
  */
@@ -73,24 +77,39 @@ function onClick(event: MouseEvent) {
 }
 
 async function load() {
-  const { default: posthog } = await import("posthog-js");
+  const { default: posthog } = await import("./posthog");
   posthog.init(KEY!, {
     api_host: HOST,
     persistence: "memory",
     capture_pageview: false, // $pageview is manual, on every page change
     capture_pageleave: false,
     autocapture: false,
-    disable_session_recording: true,
+    // Replay also needs "Record user sessions" on in the PostHog project: the client only
+    // starts after the project's remote config (/array/<key>/config, a JSON request) says so.
+    disable_session_recording: false,
+    session_recording: {
+      maskAllInputs: true,
+      recordHeaders: false,
+      recordBody: false,
+      // The story is drawn on a <canvas>, which replays blank unless its frames are captured.
+      // Few frames and modest quality keep recordings small; the scenes are mostly static.
+      captureCanvas: { recordCanvas: true, canvasFps: 3, canvasQuality: "0.4" },
+    },
+    enable_recording_console_log: false,
     disable_surveys: true,
     disable_product_tours: true,
     disable_conversations: true,
     disable_web_experiments: true,
     disable_external_dependency_loading: true,
-    advanced_disable_flags: true,
+    // Must stay false so the remote config above loads (it carries the replay settings).
+    // The site uses no feature flags, so those are never fetched.
+    advanced_disable_flags: false,
+    advanced_disable_feature_flags: true,
+    advanced_disable_feature_flags_on_first_load: true,
     capture_heatmaps: false,
     capture_dead_clicks: false,
     capture_exceptions: false,
-    capture_performance: false,
+    capture_performance: false, // also keeps network timing out of recordings
     respect_dnt: true,
     // No batching: the event goes out right away, before an outbound link takes the visitor away.
     request_batching: false,
