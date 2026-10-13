@@ -21,7 +21,8 @@ function optedOut(): boolean {
   return nav.doNotTrack === "1" || win.doNotTrack === "1" || nav.globalPrivacyControl === true;
 }
 
-const enabled = Boolean(KEY) && !optedOut();
+// No build (pré-renderização no Node) não há navegador: nada é enviado.
+const enabled = typeof window !== "undefined" && Boolean(KEY) && !optedOut();
 let client: PostHog | null = null;
 // Eventos disparados antes do PostHog terminar de carregar.
 const queue: [string, Props | undefined][] = [];

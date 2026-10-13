@@ -33,3 +33,6 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          # Chave falsa: o build do PR passa pelo mesmo caminho do deploy, com o PostHog ligado.
+          VITE_POSTHOG_KEY: phc_ci_falsa
