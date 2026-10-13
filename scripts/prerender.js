@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
 const ssrDir = join(root, "dist-ssr");
 
-const { render, pages, ROUTES, routePath, SITE_URL } = await import(
+const { render, pageMeta, pageKey, PAGES, routePath, SITE_URL } = await import(
   pathToFileURL(join(ssrDir, "entry-server.js")).href
 );
 const template = await readFile(join(dist, "index.html"), "utf8");
@@ -27,34 +27,46 @@ function replace(html, pattern, value) {
 const metaContent = (attribute, name) =>
   new RegExp(`(<meta\\s+${attribute}="${name}"\\s+content=")[^"]*("\\s*\\/?>)`);
 
-function page(route) {
-  const { title, description } = pages[route];
-  const url = `${SITE_URL}${routePath(route)}`;
+function page(target) {
+  const { route, lang } = target;
+  const { title, description } = pageMeta(target);
+  const url = `${SITE_URL}${routePath(route, lang)}`;
   let html = template;
+  if (lang === "en") {
+    html = replace(html, /(<html\s+lang=")[^"]*(")/, "en");
+    html = replace(html, metaContent("property", "og:locale"), "en_US");
+  }
   html = replace(html, /(<title>)[^<]*(<\/title>)/, title);
   html = replace(html, metaContent("name", "description"), description);
   html = replace(html, /(<link\s+rel="canonical"\s+href=")[^"]*(")/, url);
   html = replace(html, metaContent("property", "og:url"), url);
   html = replace(html, metaContent("property", "og:title"), title);
   html = replace(html, metaContent("name", "twitter:title"), title);
-  // A home mantém o texto curto de compartilhamento que já está no index.html.
-  if (route !== "home") {
+  // A home em português mantém o texto curto de compartilhamento que já está no index.html.
+  if (route !== "home" || lang === "en") {
     html = replace(html, metaContent("property", "og:description"), description);
     html = replace(html, metaContent("name", "twitter:description"), description);
   }
+  // Home e currículo existem nos dois idiomas: avisa os buscadores de cada versão.
+  if (PAGES.some((other) => other.route === route && other.lang !== lang)) {
+    const alternates = ["pt", "en"]
+      .map((l) => `<link rel="alternate" hreflang="${l === "en" ? "en" : "pt-BR"}" href="${SITE_URL}${routePath(route, l)}" />`)
+      .join("\n    ");
+    html = html.replace("</head>", () => `    ${alternates}\n  </head>`);
+  }
   // data-route diz ao main.tsx qual página está no HTML, para só hidratar quando for a mesma.
-  return html.replace('<div id="root"></div>', () => `<div id="root" data-route="${route}">${render(route)}</div>`);
+  return html.replace('<div id="root"></div>', () => `<div id="root" data-route="${pageKey(target)}">${render(target)}</div>`);
 }
 
-for (const route of ROUTES) {
-  const file = join(dist, routePath(route), "index.html");
+for (const target of PAGES) {
+  const file = join(dist, routePath(target.route, target.lang), "index.html");
   await mkdir(dirname(file), { recursive: true });
-  await writeFile(file, page(route));
+  await writeFile(file, page(target));
   console.log(`pré-renderizado: ${file.slice(root.length + 1)}`);
 }
 
 // Caminho desconhecido: o GitHub Pages devolve o 404.html, que abre a home sem entrar no índice dos buscadores.
-const notFound = page("home").replace("</title>", '</title>\n    <meta name="robots" content="noindex" />');
+const notFound = page({ route: "home", lang: "pt" }).replace("</title>", '</title>\n    <meta name="robots" content="noindex" />');
 await writeFile(join(dist, "404.html"), notFound);
 console.log("pré-renderizado: dist/404.html");
 
