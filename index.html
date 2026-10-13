@@ -72,10 +72,6 @@
       }
     </script>
 
-    <style>
-      /* Links do conteúdo de reserva legíveis no fundo escuro. */
-      #root > main a { color: #f3c03f; }
-    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -84,29 +80,8 @@
     />
   </head>
   <body style="margin: 0; background: #1b1622">
-    <div id="root">
-      <!-- Conteúdo de reserva: aparece para robôs e para quem abre sem JavaScript.
-           O React substitui tudo isto quando o site carrega. -->
-      <main style="max-width: 720px; margin: 0 auto; padding: 48px 16px; font-family: system-ui, sans-serif; color: #f4ecd8; background: #1b1622">
-        <h1>Daniel Porto</h1>
-        <p><strong>Desenvolvedor Full Stack Sênior na Purple Metrics</strong> · Rio de Janeiro, Brasil</p>
-        <p>
-          Desenvolvedor full stack sênior, com mais de 10 anos construindo produto. Levo IA para produção com o que uma
-          empresa exige: permissão por usuário, controle de custo, proteção de dados pessoais e qualidade medida em dados
-          reais.
-        </p>
-        <p>
-          Hoje trabalho com front-end (React e TypeScript), IA no produto (o chat conversacional da Purple, MCP e agentes
-          de IA) e CI/CD. Antes: Fu2re (visão computacional), Fulllab (e-commerce, mobile e liderança técnica) e Hebara,
-          com back-end em C#/.NET.
-        </p>
-        <p>
-          <a href="https://www.linkedin.com/in/daniel-porto/">LinkedIn</a> ·
-          <a href="https://github.com/TrainedLoop">GitHub</a> ·
-          <a href="mailto:contato@danielporto.com.br">contato@danielporto.com.br</a>
-        </p>
-      </main>
-    </div>
+    <!-- O build preenche o #root com o HTML de cada página (scripts/prerender.js). -->
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,11 +1,12 @@
-import { href, useRoute } from './lib/route'
+import { href, useRoute, type Route } from './lib/route'
 import { Credits } from './pages/Credits'
 import { Home } from './pages/Home'
 import { Resume } from './pages/Resume'
 import { Story } from './pages/Story'
 
-export default function App() {
-  const route = useRoute()
+/** `route` é a página com que o app começa: vem do caminho no navegador e, no build, de cada rota pré-renderizada. */
+export default function App({ route: initial }: { route: Route }) {
+  const route = useRoute(initial)
 
   return (
     <>

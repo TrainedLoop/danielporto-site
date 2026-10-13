@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
 import { loadSprites, type SpriteMap } from "../lib/sprites";
 import {
@@ -11,6 +11,23 @@ import {
 import type { Phase } from "./types";
 
 type Status = "idle" | "playing" | "done";
+
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onChange: () => void) {
+  const query = window.matchMedia(REDUCED_MOTION);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+/** Lê a preferência por menos movimento; no HTML gerado no build (sem `window`), começa com movimento. */
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => false,
+  );
+}
 
 type SceneProps = {
   phase: Phase;
@@ -36,9 +53,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
   const [typed, setTyped] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
+  const reduceMotion = usePrefersReducedMotion();
 
   const render = useCallback(
     (p: number) => {
