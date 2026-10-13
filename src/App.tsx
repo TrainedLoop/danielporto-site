@@ -1,15 +1,15 @@
 import { useEffect } from 'react'
 import { content as contentPt } from './content/profile'
 import { content as contentEn } from './content/profile.en'
-import { href, useLang, useRoute } from './lib/route'
+import { href, useRoute, type Page } from './lib/route'
 import { Credits } from './pages/Credits'
 import { Home } from './pages/Home'
 import { Resume } from './pages/Resume'
 import { Story } from './pages/Story'
 
-export default function App() {
-  const route = useRoute()
-  const lang = useLang()
+/** `page` é a página com que o app começa: vem do caminho no navegador e, no build, de cada página pré-renderizada. */
+export default function App({ page: initial }: { page: Page }) {
+  const { route, lang } = useRoute(initial)
   const content = lang === 'en' ? contentEn : contentPt
   const t = content.ui
 

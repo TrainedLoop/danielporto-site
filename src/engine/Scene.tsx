@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
+import { jobHref } from "../lib/route";
 import { loadSprites, type SpriteMap } from "../lib/sprites";
 import {
   ANIMATION_SPEED,
@@ -11,6 +12,23 @@ import {
 import type { Phase } from "./types";
 
 type Status = "idle" | "playing" | "done";
+
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
+function subscribeReducedMotion(onChange: () => void) {
+  const query = window.matchMedia(REDUCED_MOTION);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+/** Lê a preferência por menos movimento; no HTML gerado no build (sem `window`), começa com movimento. */
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia(REDUCED_MOTION).matches,
+    () => false,
+  );
+}
 
 type SceneProps = {
   phase: Phase;
@@ -36,9 +54,10 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
   const [typed, setTyped] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
+  const [failed, setFailed] = useState(false);
+  /** Muda a cada "tentar de novo", para o efeito carregar as imagens outra vez. */
+  const [attempt, setAttempt] = useState(0);
+  const reduceMotion = usePrefersReducedMotion();
 
   const render = useCallback(
     (p: number) => {
@@ -53,21 +72,10 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     [phase, onItem],
   );
 
-  useEffect(() => {
-    let cancelled = false;
-    loadSprites(phase.sprites).then((sprites) => {
-      if (cancelled) return;
-      spritesRef.current = sprites;
-      render(reduceMotion ? phase.staticAt : 0);
-      if (reduceMotion) setStatus("done");
-      setLoaded(true);
-    });
-    return () => {
-      cancelled = true;
-      animRef.current?.kill();
-      typeRef.current?.kill();
-    };
-  }, [phase, render, reduceMotion]);
+  const retry = () => {
+    setFailed(false);
+    setAttempt((n) => n + 1);
+  };
 
   // Só a fase que está na tela responde ao teclado.
   useEffect(() => {
@@ -117,10 +125,34 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     startBeat(0);
   }, [render, startBeat]);
 
-  // Vindo da fase anterior, não precisa de outro "PRESS START".
+  // Carrega as imagens e só então desenha (ou começa a fase): o início automático
+  // acontece no retorno do carregamento, não direto no corpo do efeito.
   useEffect(() => {
-    if (loaded && autoStart && !reduceMotion && status === "idle") start();
-  }, [loaded, autoStart, reduceMotion, status, start]);
+    let cancelled = false;
+    loadSprites(phase.sprites)
+      .then((sprites) => {
+        if (cancelled) return;
+        spritesRef.current = sprites;
+        setLoaded(true);
+        if (reduceMotion) {
+          render(phase.staticAt);
+          setStatus("done");
+        } else if (autoStart) {
+          // Vindo da fase anterior, não precisa de outro "PRESS START".
+          start();
+        } else {
+          render(0);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setFailed(true);
+      });
+    return () => {
+      cancelled = true;
+      animRef.current?.kill();
+      typeRef.current?.kill();
+    };
+  }, [phase, render, reduceMotion, autoStart, start, attempt]);
 
   /** Avança para a próxima fala, mas só depois que o texto e a animação da atual terminam. */
   const advance = useCallback(() => {
@@ -150,7 +182,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
         event.target.closest("button, a")
       )
         return;
-      if (status === "idle") {
+      if (status === "idle" && loaded) {
         event.preventDefault();
         start();
       } else if (status === "playing") {
@@ -160,7 +192,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [status, start, advance]);
+  }, [status, loaded, start, advance]);
 
   const current = beats[beat];
   const ready =
@@ -186,7 +218,36 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
           aria-label={phase.description}
         />
 
-        {status === "idle" && (
+        {!loaded && !failed && (
+          <p className="phase__loading" role="status">
+            carregando…
+          </p>
+        )}
+
+        {failed && (
+          <div className="phase__done" role="alert">
+            <p className="phase__clear">ERRO AO CARREGAR</p>
+            <p className="phase__hint">As imagens desta fase não carregaram.</p>
+            <div className="phase__actions">
+              <button type="button" onClick={retry}>
+                <span className="icon" aria-hidden="true">
+                  ↺
+                </span>{" "}
+                tentar de novo
+              </button>
+              {onNext && (
+                <button type="button" onClick={onNext}>
+                  pular fase{" "}
+                  <span className="icon" aria-hidden="true">
+                    ▶▶
+                  </span>
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {status === "idle" && loaded && (
           <button type="button" className="phase__start" onClick={start}>
             <span className="phase__press">
               <span className="icon" aria-hidden="true">
@@ -274,6 +335,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
                   </span>
                 </button>
               )}
+              {phase.job && <a href={jobHref(phase.job)}>ver no currículo</a>}
             </div>
           </div>
         )}

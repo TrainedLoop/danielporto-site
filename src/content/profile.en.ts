@@ -164,6 +164,8 @@ export const ui = {
   resume: {
     roleAt: "at",
     playStory: "▶ play the story (in Portuguese)",
+    downloadPdf: "download PDF",
+    pdfTitle: "Daniel Porto - Resume",
     summary: "Summary",
     experience: "Experience",
     skills: "Skills",

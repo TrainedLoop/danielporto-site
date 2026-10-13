@@ -191,6 +191,7 @@ export const phase7 = definePhase({
     src: `${P}/item-ia.png`,
     at: TIMELINE.item,
   },
+  job: "purple-metrics-desenvolvedor-full-stack-senior",
   staticAt: 1,
   draw(ctx, s, p) {
     // ---- Home office
