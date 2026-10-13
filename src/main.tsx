@@ -21,7 +21,8 @@ if (legacy) {
 
   // No build, cada página já vem com o HTML renderizado: o React só assume o que está lá.
   // Se o HTML é de outra página (o 404.html, ou /curriculo sem a barra no fim), renderiza do zero.
-  if (container.dataset.route === route) {
+  // A história também: ela retoma o progresso salvo no navegador, que o HTML do build não conhece.
+  if (container.dataset.route === route && route !== 'historia') {
     hydrateRoot(container, app)
   } else {
     document.title = pages[route].title

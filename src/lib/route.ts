@@ -29,6 +29,8 @@ export function routeFromPath(pathname: string): Route | null {
 export function pathFromLegacyHash(hash: string): string | null {
   if (!hash.startsWith("#/")) return null;
   const name = hash.slice(2).replace(/\/+$/, "");
+  const fase = /^historia\/(\d+)$/.exec(name);
+  if (fase) return storyHref(Number(fase[1]));
   return href(ROUTES.includes(name as Route) ? (name as Route) : "home");
 }
 
@@ -72,3 +74,13 @@ export function useRoute(initial: Route): Route {
 
   return route;
 }
+
+/** Fase pedida no link (/historia/?fase=3 → 3, contando a partir de 1), ou null se não houver. */
+export function storyPhase(): number | null {
+  if (typeof window === "undefined") return null;
+  const fase = new URLSearchParams(window.location.search).get("fase");
+  return fase && /^\d+$/.test(fase) ? Number(fase) : null;
+}
+
+/** Link direto para uma fase da história (contando a partir de 1, como o contador "3/8"). */
+export const storyHref = (phase: number) => `${href("historia")}?fase=${phase}`;
