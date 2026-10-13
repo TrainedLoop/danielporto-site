@@ -29,21 +29,21 @@ def home_office():
     for y in range(FLOOR_Y, H, 6):
         rect(d, 0, y, W, 1, (150, 100, 64))
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
-    # Janela com o Pão de Açúcar e o mar.
+    # Window with Sugarloaf Mountain and the sea.
     wx, wy, ww, wh = 20, 20, 96, 70
     box(d, wx, wy, ww, wh, WHITE)
     rect(d, wx + 3, wy + 3, ww - 6, wh - 6, (160, 210, 245))
     rect(d, wx + 3, wy + wh - 18, ww - 6, 15, (70, 140, 200))
     for x in range(ww - 6):
-        # Morro principal e o morro da Urca.
+        # The main peak and Urca hill.
         h1 = max(0, 34 - abs(x - 58) * 2) if abs(x - 58) < 9 else max(0, 18 - abs(x - 58))
         h2 = max(0, 16 - abs(x - 26))
         height = max(h1, h2)
         if height:
             rect(d, wx + 3 + x, wy + wh - 18 - height, 1, height, (80, 110, 90))
-    rect(d, wx + 26, wy + 30, 34, 1, (60, 60, 60))  # cabo do bondinho
+    rect(d, wx + 26, wy + 30, 34, 1, (60, 60, 60))  # cable car line
     rect(d, wx + ww // 2, wy + 3, 2, wh - 6, WHITE)
-    # Estante com o cristal (lembrança do fã-site) e livros.
+    # Shelf with the crystal (a souvenir of the fan site) and books.
     box(d, 236, 34, 70, 6, WOOD[1], WOOD[0], WOOD[3])
     box(d, 236, 66, 70, 6, WOOD[1], WOOD[0], WOOD[3])
     for i, c in enumerate(((200, 60, 60), (60, 110, 200), (240, 190, 50), (90, 170, 90))):
@@ -51,7 +51,7 @@ def home_office():
     for i in range(7):
         half = i if i < 4 else 7 - i
         rect(d, 284 - half, 18 + i * 2, half * 2 + 1, 2, (120, 190, 250))
-    # Planta grande.
+    # Big plant.
     box(d, 296, 116, 16, 24, (210, 130, 90), (230, 160, 120), (170, 100, 70))
     for lx, ly, lw, lh in ((302, 84, 4, 32), (294, 92, 9, 4), (305, 96, 10, 4), (294, 104, 9, 4)):
         rect(d, lx, ly, lw, lh, PLANT[1])
@@ -68,7 +68,7 @@ def home_desk():
 
 
 def ultrawide():
-    """Monitor ultrawide; a tela (54x20) começa em (3, 3)."""
+    """Ultrawide monitor; the screen (54x20) starts at (3, 3)."""
     img, d = canvas(60, 34)
     box(d, 0, 0, 60, 26, (40, 42, 48), (70, 72, 80), (20, 22, 26))
     rect(d, 3, 3, 54, 20, PURPLE[2])
@@ -95,18 +95,18 @@ def badge(label, color):
     return img
 
 
-# ---------------------------------------------------------------- telas de perto
+# ---------------------------------------------------------------- close-up screens
 
 def stages():
     return ["build", "lint", tr("testes", "tests"), "deploy"]
 
 
-# Posição de cada etapa na tela de perto; o código acende a bolinha da etapa.
+# Position of each stage on the close-up screen; the code lights up the stage's dot.
 STAGE_Y0, STAGE_STEP = 20, 18
 
 
 def close_pipeline():
-    """Esteira de CI/CD: as etapas acendem no código; o contador também é desenhado no código."""
+    """CI/CD pipeline: the stages light up in code; the counter is also drawn in code."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (24, 26, 34))
     rect(d, 0, 0, CLOSE_W, 12, (44, 48, 60))
@@ -125,7 +125,7 @@ def close_pipeline():
 
 
 def deploy_counter(value):
-    """Número do contador de deploys (desenhado sobre a caixa da tela da esteira)."""
+    """Deploy counter number (drawn over the box on the pipeline screen)."""
     img, d = canvas(76, 18)
     label = f"{value}+" if value >= 800 else str(value)
     text(d, 38 - len(label) * 4, 5, label, GOLD[0])
@@ -133,16 +133,16 @@ def deploy_counter(value):
 
 
 def close_dashboard():
-    """Dashboard do produto com o painel do chat; mensagens e barras entram no código."""
+    """Product dashboard with the chat panel; messages and bars are added in code."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (246, 244, 252))
     rect(d, 0, 0, CLOSE_W, 12, PURPLE[1])
     text(d, 4, 2, "Purple Metrics", WHITE)
-    # Lado esquerdo: um gráfico do dashboard.
+    # Left side: a dashboard chart.
     box(d, 4, 16, 70, 50, WHITE, None, (210, 206, 226))
     for i, h in enumerate((18, 30, 24, 36, 28)):
         rect(d, 10 + i * 12, 60 - h, 8, h, (200, 190, 236))
-    # Painel do chat à direita.
+    # Chat panel on the right.
     box(d, 80, 16, 92, 88, WHITE, None, (210, 206, 226))
     rect(d, 81, 17, 90, 10, PURPLE[0])
     text(d, 84, 18, tr("Chat IA", "AI chat"), WHITE)
@@ -150,7 +150,7 @@ def close_dashboard():
     return img
 
 
-# Chamada de vídeo com o time: as caras entram no código (recortadas das folhas LPC).
+# Video call with the team: the faces are added in code (cropped from the LPC sheets).
 CALL_TILES = [(6, 16), (64, 16), (122, 16), (6, 58), (64, 58), (122, 58)]
 CALL_TILE = (48, 38)
 
@@ -216,29 +216,29 @@ def ai_message():
     return img
 
 
-def ia_item(size):
-    """O item final: uma estrela dourada com um núcleo roxo de circuito (IA aplicada)."""
+def applied_ai_item(size):
+    """The final item: a golden star with a purple circuit core (applied AI)."""
     img, d = canvas(size, size)
     c = size // 2
     r = size // 2 - 1
-    # Raios principais (cruz) afinando nas pontas.
+    # Main rays (a cross) tapering at the tips.
     for i in range(r):
         w = max(0, (r - i) // 4)
         rect(d, c - w, c - i, 2 * w + 1, 1, GOLD[0])
         rect(d, c - w, c + i, 2 * w + 1, 1, GOLD[0])
         rect(d, c - i, c - w, 1, 2 * w + 1, GOLD[0])
         rect(d, c + i, c - w, 1, 2 * w + 1, GOLD[0])
-    # Raios diagonais curtos.
+    # Short diagonal rays.
     for i in range(r // 2):
         for sx, sy in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
             d.point((c + sx * i, c + sy * i), fill=GOLD[1])
-    # Núcleo roxo com circuito.
+    # Purple core with a circuit.
     core = max(3, size // 6)
     box(d, c - core, c - core, core * 2 + 1, core * 2 + 1, PURPLE[1], PURPLE[0], PURPLE[2])
     for k in range(-core + 2, core - 1, 2):
         d.point((c + k, c), fill=(120, 230, 255))
         d.point((c, c + k), fill=(120, 230, 255))
-    # Brilhos.
+    # Sparkles.
     for bx, by in ((c - r + 2, c - r + 4), (c + r - 4, c + r - 3)):
         d.point((bx, by), fill=WHITE)
     return img
@@ -257,8 +257,8 @@ def build():
         "dashboard": close_dashboard(),
         "msg-user": user_message(),
         "msg-ai": ai_message(),
-        "ia-big": ia_item(48),
-        "item-ia": ia_item(32),
+        "ia-big": applied_ai_item(48),
+        "item-ia": applied_ai_item(32),
     }
     sprites["call"] = close_call()
     sprites["live"] = live_label()

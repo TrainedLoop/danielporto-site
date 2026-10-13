@@ -18,7 +18,7 @@ const profile = {
   ],
 };
 
-/** Resumo do currículo (o "Sobre" do LinkedIn). */
+/** Résumé summary (the LinkedIn "About"). */
 const summary = {
   aiProjectsTitle: "Projetos de IA que desenvolvi",
   aiProjects: [
@@ -32,7 +32,7 @@ const summary = {
     "Minha carreira começou no back-end com C#/.NET e SQL Server. Hoje, na Purple Metrics, trabalho com front-end (React e TypeScript), IA no produto e a esteira de CI/CD. Uso Python principalmente nos projetos de IA (FastAPI, LiteLLM). No dia a dia também lido com Docker, GitHub Actions, Azure DevOps e AWS.",
 };
 
-/** Destaques curtos para a home. */
+/** Short highlights for the home page. */
 const highlights = [
   {
     title: "IA em produção",
@@ -49,7 +49,7 @@ const highlights = [
 ];
 
 export type Job = {
-  /** Âncora estável no currículo, igual nos dois idiomas (a história linka por ela). */
+  /** Stable anchor on the résumé, the same in both languages (the story links to it). */
   id: string;
   company: string;
   role: string;
@@ -58,7 +58,7 @@ export type Job = {
   bullets: string[];
 };
 
-/** Experiência, da mais recente para a mais antiga. */
+/** Experience, from the most recent to the oldest. */
 const experience: Job[] = [
   {
     id: "purple-metrics-desenvolvedor-full-stack-senior",
@@ -126,7 +126,7 @@ const experience: Job[] = [
   },
 ];
 
-/** Competências (as cinco primeiras são as principais). */
+/** Skills (the first five are the main ones). */
 const skills = [
   "Inteligência artificial (IA)",
   "React",
@@ -336,24 +336,24 @@ const phases = {
 
 const story = { ...storyUi, phases };
 
-/** Título e descrição de cada página, gravados no HTML estático de cada rota no build. */
+/** Title and description of each page, written into each route's static HTML at build time. */
 const meta = {
   home: {
     title: "Daniel Porto · Desenvolvedor Full Stack Sênior · IA aplicada",
     description:
       "Desenvolvedor full stack sênior na Purple Metrics. Levo IA para produção: LLMs, agentes e visão computacional, com React, TypeScript e C#/.NET. Currículo e a minha história em pixel art.",
   },
-  historia: {
+  story: {
     title: "A história em pixel art · Daniel Porto",
     description:
       "A trajetória do Daniel Porto contada como um jogo em pixel art: 8 fases, da casa da avó até a IA em produção na Purple Metrics.",
   },
-  curriculo: {
+  resume: {
     title: "Currículo · Daniel Porto · Desenvolvedor Full Stack Sênior",
     description:
       "Currículo do Daniel Porto: desenvolvedor full stack sênior na Purple Metrics, com IA em produção (LLMs, MCP, agentes e visão computacional), React, TypeScript, C#/.NET e mais de 10 anos de experiência.",
   },
-  creditos: {
+  credits: {
     title: "Créditos dos sprites e da fonte · Daniel Porto",
     description:
       "Autores e licenças da arte em pixel art do site do Daniel Porto: sprites do Liberated Pixel Cup e do OpenGameArt e a fonte Press Start 2P.",
@@ -367,6 +367,6 @@ const share = {
 
 const pt = { ...ui, meta, share, story, profile, summary, highlights, experience, skills, languages };
 
-/** O formato das mensagens: en.ts precisa ter exatamente as mesmas chaves. */
+/** The shape of the messages: en.ts must have exactly the same keys. */
 export type Messages = typeof pt;
 export default pt;

@@ -77,17 +77,21 @@ Privacidade:
   automaticamente), sem heatmaps, surveys, feature flags ou scripts extras do PostHog;
 - com Do Not Track ou Global Privacy Control ligado no navegador, o PostHog nem é carregado.
 
-Eventos:
+Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página):
 
 | Evento | Quando | Propriedades |
 | --- | --- | --- |
-| `$pageview` | ao abrir o site e a cada troca de página | `rota` |
-| `escolha_home` | clique em "Jogar a história" ou "Ler o currículo" na home | `opcao`: `historia` \| `curriculo` |
-| `fase_iniciada` | uma fase da história começa (inclusive "ver de novo") | `fase` (0 a 7), `fase_id` |
-| `fase_concluida` | a pessoa chega ao fim das falas de uma fase | `fase`, `fase_id` |
-| `fase_pulada` | clique em "pular" | `fase`, `fase_id` |
-| `historia_concluida` | a tela de encerramento ("CONTINUA…") aparece | — |
-| `link_externo` | clique em link para LinkedIn, GitHub ou email | `destino`: `linkedin` \| `github` \| `email`, `url` |
+| `$pageview` | ao abrir o site e a cada troca de página | `route` (o caminho, ex.: `curriculo`, `en/story`) |
+| `home_choice` | clique em "Jogar a história" ou "Ler o currículo" na home | `option`: `story` \| `resume` |
+| `phase_started` | uma fase da história começa (inclusive "ver de novo") | `phase` (0 a 7), `phase_id` |
+| `phase_completed` | a pessoa chega ao fim das falas de uma fase | `phase`, `phase_id` |
+| `phase_skipped` | clique em "pular" | `phase`, `phase_id` |
+| `story_completed` | a tela de encerramento ("CONTINUA…") aparece | — |
+| `outbound_link` | clique em link para LinkedIn, GitHub ou email | `destination`: `linkedin` \| `github` \| `email`, `url` |
+
+Até a troca do código para inglês, os eventos tinham nomes em português (`escolha_home`,
+`fase_iniciada`, `fase_concluida`, `fase_pulada`, `historia_concluida`, `link_externo`, com
+`rota`, `opcao`, `fase`, `fase_id` e `destino`); os dados antigos no PostHog ficam com esses nomes.
 
 ## Arte
 

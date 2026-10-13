@@ -28,7 +28,7 @@ const EXIT_LEFT_X = -80;
 const TOOLBOX_GROUND = { x: 44, y: 122 };
 const TOOLBOX_HAND = { x: 14, y: 36 };
 
-// Trechos (0 a 1) da animação. Cada fala termina quando a última animação dela acaba.
+// Slices (0 to 1) of the animation. Each beat ends exactly when its last animation ends.
 const TIMELINE = {
   walkIn: [0, 0.12],
   sign: [0.12, 0.18],
@@ -120,7 +120,7 @@ export const phase2 = definePhase({
   },
   staticAt: 0.8,
   draw(ctx, s, p) {
-    // ---- Rua e oficina
+    // ---- Street and workshop
     ctx.drawImage(s.street, 0, 0);
     const signT = segment(p, TIMELINE.sign[0], TIMELINE.sign[1]);
     if (signT > 0) {
@@ -131,7 +131,7 @@ export const phase2 = definePhase({
     ctx.drawImage(s.monitor, MONITOR.x, MONITOR.y);
     ctx.drawImage(s.tower, TOWER.x, TOWER.y);
 
-    // Contador de PCs: sobe a cada gabinete que chega e quando sai para atender fora.
+    // PC counter: goes up with each tower that arrives and when he leaves for a house call.
     const count =
       p >= TIMELINE.danielLeaves[0] + 0.02
         ? 3
@@ -142,12 +142,12 @@ export const phase2 = definePhase({
             : 0;
     if (p >= TIMELINE.manIn[0]) ctx.drawImage(s[`counter${count}` as keyof typeof s], 4, 4);
 
-    // Gabinetes deixados na calçada (o primeiro volta para o dono no fim).
+    // Towers left on the sidewalk (the first one goes back to its owner at the end).
     const firstPicked = p >= TIMELINE.pickUp[1];
     if (p >= TIMELINE.drop1[1] && !firstPicked) ctx.drawImage(s.pc, STACK[0].x, STACK[0].y);
     if (p >= TIMELINE.drop2[1]) ctx.drawImage(s.pc, STACK[1].x, STACK[1].y);
 
-    // ---- Daniel: chega e trabalha de costas na bancada; no fim sai com a caixa de ferramentas.
+    // ---- Daniel: arrives and works at the bench, back turned; at the end leaves with the toolbox.
     if (p < TIMELINE.danielLeaves[0]) {
       ctx.drawImage(s.toolbox, TOOLBOX_GROUND.x, TOOLBOX_GROUND.y);
       if (p < TIMELINE.walkIn[1]) {
@@ -156,7 +156,7 @@ export const phase2 = definePhase({
         drawFrame(ctx, s.danielWalk, "up", 0, DANIEL_BENCH_X, WALK_Y);
       }
     } else {
-      // Sai pela esquerda, para o lado oposto ao do vizinho, pegando a caixa de ferramentas no caminho.
+      // Leaves to the left, away from the neighbor, picking up the toolbox on the way.
       const t = segment(p, TIMELINE.danielLeaves[0], TIMELINE.danielLeaves[1]);
       const x = lerp(DANIEL_BENCH_X, EXIT_LEFT_X, t);
       const carrying = x + TOOLBOX_HAND.x <= TOOLBOX_GROUND.x;
@@ -165,7 +165,7 @@ export const phase2 = definePhase({
       if (carrying) ctx.drawImage(s.toolbox, Math.round(x + TOOLBOX_HAND.x), WALK_Y + TOOLBOX_HAND.y);
     }
 
-    // ---- Vizinhos chegando com o PC, deixando na calçada e indo embora.
+    // ---- Neighbors arriving with their PC, leaving it on the sidewalk and going away.
     const neighbor = (
       sheet: HTMLImageElement,
       inT: readonly [number, number],
@@ -192,7 +192,7 @@ export const phase2 = definePhase({
     neighbor(s.man, TIMELINE.manIn, TIMELINE.drop1, TIMELINE.manOut, STACK[0]);
     neighbor(s.woman, TIMELINE.womanIn, TIMELINE.drop2, TIMELINE.womanOut, STACK[1]);
 
-    // O senhor volta, pega o PC consertado e sai com um joinha.
+    // The man comes back, picks up the fixed PC and leaves with a thumbs-up.
     if (p >= TIMELINE.manBack[0] && p < TIMELINE.manLeaves[1]) {
       if (p < TIMELINE.manLeaves[0]) {
         drawWalk(ctx, s.man, p, TIMELINE.manBack[0], TIMELINE.manBack[1], DOOR_X, STACK[0].x + 20, WALK_Y - 2, "left");
@@ -206,7 +206,7 @@ export const phase2 = definePhase({
       }
     }
 
-    // ---- Zoom: primeiro dentro do gabinete, depois na tela da formatação.
+    // ---- Zoom: first inside the tower, then on the Windows reinstall screen.
     const zoomIn = easeOut(segment(p, TIMELINE.zoomIn[0], TIMELINE.zoomIn[1]));
     const zoomOut = segment(p, TIMELINE.zoomOut[0], TIMELINE.zoomOut[1]);
     if (zoomIn <= 0 || zoomOut >= 1) return;
@@ -226,7 +226,7 @@ export const phase2 = definePhase({
       return;
     }
 
-    // Tela de formatação, com a barra enchendo; no fim encolhe de volta para o monitor.
+    // Reinstall screen with the bar filling up; at the end it shrinks back into the monitor.
     const frame = lerpRect(CLOSE_FRAME, MONITOR, 1 - amount);
     const screen = lerpRect(CLOSE_SCREEN, { x: MONITOR.x + 7, y: MONITOR.y + 6, w: 30, h: 22 }, 1 - amount);
     drawRect(ctx, s.closeFrame, frame);

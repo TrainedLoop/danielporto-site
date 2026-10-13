@@ -13,7 +13,7 @@ const LCD: Rect = { x: 152, y: 74, w: 34, h: 24 };
 const CLOSE_FRAME: Rect = { x: 60, y: 14, w: 200, h: 130 };
 const CLOSE_SCREEN: Rect = { x: 72, y: 24, w: 176, h: 108 };
 const PROGRESS = { x: 24, y: 60, w: 128, h: 10 };
-// Área prateada da raspadinha, já na posição da tela de perto.
+// Silver area of the scratch card, already in close-up screen coordinates.
 const SCRATCH = { x: CLOSE_SCREEN.x + 24, y: CLOSE_SCREEN.y + 44, w: 128, h: 40 };
 const SCRATCH_FRAMES = 8;
 const IDE_LINES = 7;
@@ -21,7 +21,7 @@ const IDE_LINES = 7;
 const SIT = { x: 156, y: 82 };
 const CONFETTI_COLORS = ["#f3c03f", "#e6455a", "#46b4e6", "#5ac85a", "#a066dc"];
 
-// Trechos (0 a 1) da animação. Cada fala termina quando a última animação dela acaba.
+// Slices (0 to 1) of the animation. Each beat ends exactly when its last animation ends.
 const TIMELINE = {
   walkIn: [0, 0.16],
   zoom: [0.18, 0.22],
@@ -115,7 +115,7 @@ export const phase4 = definePhase({
   job: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
   staticAt: 0.94,
   draw(ctx, s, p) {
-    // ---- Escritório
+    // ---- Office
     ctx.drawImage(s.office, 0, 0);
     ctx.drawImage(s.desk, 140, 106);
     ctx.drawImage(s.lcd, LCD.x, LCD.y);
@@ -124,7 +124,7 @@ export const phase4 = definePhase({
     ctx.drawImage(s.lcd, 280, 74);
     drawSeated(ctx, s.coworkerSit, s.chair, 270, 82);
 
-    // ---- Daniel chega e senta na mesa dele; o crachá entra no inventário.
+    // ---- Daniel arrives and sits at his desk; the badge enters the inventory.
     if (p < TIMELINE.walkIn[1]) {
       drawEmptySeat(ctx, s.chair, SIT.x, SIT.y);
       drawWalk(ctx, s.danielWalk, p, TIMELINE.walkIn[0], TIMELINE.walkIn[1], -64, SIT.x, 96, "up");
@@ -132,7 +132,7 @@ export const phase4 = definePhase({
       drawSeated(ctx, s.danielSit, s.chair, SIT.x, SIT.y);
     }
 
-    // ---- Zoom no monitor: IDE, intranet, deploy e a raspadinha.
+    // ---- Zoom into the monitor: IDE, intranet, deploy and the scratch card.
     const zoomT = easeOut(segment(p, TIMELINE.zoom[0], TIMELINE.zoom[1]));
     if (zoomT <= 0) return;
     ctx.fillStyle = `rgba(27, 22, 34, ${0.8 * zoomT})`;
@@ -154,14 +154,14 @@ export const phase4 = definePhase({
     drawRect(ctx, content, screen);
     if (zoomT < 1) return;
 
-    // Barra do deploy enchendo.
+    // Deploy bar filling up.
     if (p >= TIMELINE.deploy[0] && p < TIMELINE.success[0]) {
       const fill = segment(p, TIMELINE.deploy[0], TIMELINE.deploy[1]);
       ctx.fillStyle = "#3ca03c";
       ctx.fillRect(CLOSE_SCREEN.x + PROGRESS.x, CLOSE_SCREEN.y + PROGRESS.y, Math.round(PROGRESS.w * fill), PROGRESS.h);
     }
 
-    // Confetes caindo quando o deploy dá certo.
+    // Confetti falling when the deploy succeeds.
     if (p >= TIMELINE.success[0] && p < TIMELINE.card) {
       const t = segment(p, TIMELINE.success[0], TIMELINE.success[1]);
       for (let i = 0; i < 24; i++) {
@@ -172,7 +172,7 @@ export const phase4 = definePhase({
       }
     }
 
-    // Raspadinha: a camada prateada vai sumindo e a moeda acompanha o zigue-zague.
+    // Scratch card: the silver layer disappears and the coin follows the zigzag.
     if (p >= TIMELINE.card) {
       const t = segment(p, TIMELINE.scratch[0], TIMELINE.scratch[1]);
       const frame = Math.round(t * SCRATCH_FRAMES);

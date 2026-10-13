@@ -1,9 +1,9 @@
-/* ---------------------------------------------------------------- Fontes
-   Servidas pelo próprio site (arquivos de @fontsource 5.3.0, licença OFL em
-   src/assets/fonts). Só os subconjuntos latin e latin-ext: os acentos do
-   português estão no latin; o navegador baixa o latin-ext só se a página usar
-   algum caractere dele (unicode-range). Inter só em 400 e 700, os pesos que o
-   CSS usa. */
+/* ---------------------------------------------------------------- Fonts
+   Served by the site itself (files from @fontsource 5.3.0, OFL license in
+   src/assets/fonts). Only the latin and latin-ext subsets: Portuguese accents
+   are in latin; the browser downloads latin-ext only if the page uses one of
+   its characters (unicode-range). Inter only in 400 and 700, the weights the
+   CSS uses. */
 
 @font-face {
   font-family: 'Press Start 2P';
@@ -137,7 +137,7 @@ a {
   gap: 16px;
 }
 
-/* Seletor de idioma (PT · EN): o idioma atual fica destacado. */
+/* Language switch (PT · EN): the current language is highlighted. */
 .topbar__lang {
   color: var(--ink);
   opacity: 0.8;
@@ -148,7 +148,7 @@ a {
   white-space: nowrap;
 }
 
-/* No celular, o topo com o seletor de idioma precisa caber numa linha. */
+/* On phones, the top bar with the language switch must fit on one line. */
 @media (max-width: 420px) {
   .topbar {
     padding: 12px;
@@ -167,12 +167,12 @@ a {
   color: var(--accent);
 }
 
-/* Na história, o topo fica transparente para não roubar espaço da cena. */
-.topbar--historia {
+/* On the story page, the top bar is transparent so it doesn't take space from the scene. */
+.topbar--story {
   background: transparent;
 }
 
-/* Fase: uma tela inteira; a cena roda sozinha depois do play. */
+/* Phase: a full screen; the scene plays on its own after start. */
 .phase {
   height: 100vh;
   position: relative;
@@ -182,9 +182,9 @@ a {
   height: auto;
 }
 
-/* Palco: a cena em cima e a caixa de diálogo embaixo, fora da animação. */
+/* Stage: the scene on top and the dialog box below, outside the animation. */
 .phase__stage {
-  --hud: 270px; /* espaço da barra do topo, do diálogo e do inventário */
+  --hud: 270px; /* room for the top bar, the dialog and the inventory */
   position: relative;
   height: 100vh;
   display: flex;
@@ -231,7 +231,7 @@ button {
   font-family: var(--pixel-font);
 }
 
-/* A fonte de pixel não tem ▶ e ↺; a fonte de reserva os desenha menores, então compensamos. */
+/* The pixel font has no ▶ or ↺; the fallback font draws them smaller, so we compensate. */
 .icon {
   display: inline-block;
   font-family: system-ui, sans-serif;
@@ -240,7 +240,7 @@ button {
   vertical-align: -0.12em;
 }
 
-/* Controles enquanto a cena roda. */
+/* Controls while the scene plays. */
 .controls {
   position: absolute;
   top: 48px;
@@ -328,7 +328,7 @@ button {
   margin-bottom: 16px;
 }
 
-/* Enquanto as imagens da fase carregam. */
+/* While the phase's images load. */
 .phase__loading {
   position: absolute;
   top: 40%;
@@ -339,7 +339,7 @@ button {
   animation: blink 1s steps(1) infinite;
 }
 
-/* Caixa de diálogo estilo RPG. */
+/* RPG-style dialog box. */
 .dialog {
   position: relative;
   width: min(100vw - 32px, calc((100vh - var(--hud)) * 16 / 9));
@@ -392,7 +392,7 @@ button {
   font-size: 24px;
 }
 
-/* Inventário fixo no rodapé. */
+/* Inventory fixed at the bottom. */
 .inventory {
   position: fixed;
   inset: auto 0 0;
@@ -470,12 +470,12 @@ button {
   }
 }
 
-/* Texto ainda não digitado ocupa espaço, para a caixa não mudar de tamanho. */
+/* Not-yet-typed text takes up space, so the box doesn't change size. */
 .dialog__rest {
   visibility: hidden;
 }
 
-/* Rodapé do diálogo: posição da fala e o botão de continuar. */
+/* Dialog footer: beat position and the continue button. */
 .dialog__footer {
   display: flex;
   justify-content: space-between;
@@ -527,7 +527,7 @@ button {
   border: 1px solid currentColor;
 }
 
-/* Quando dá para avançar, a cena inteira vira clicável. */
+/* When it's possible to advance, the whole scene becomes clickable. */
 .phase__stage--ready {
   cursor: pointer;
 }
@@ -563,7 +563,7 @@ button {
   align-items: center;
 }
 
-/* Avatar: o personagem parado, de frente (folha "idle" do LPC), ampliado 3x sem suavizar. */
+/* Avatar: the character standing, facing front (LPC "idle" sheet), scaled 3x without smoothing. */
 .hero__avatar {
   width: 192px;
   height: 192px;
@@ -724,7 +724,7 @@ button {
   border: 2px solid rgba(184, 169, 140, 0.5);
 }
 
-/* ---------------------------------------------------------------- Currículo */
+/* ---------------------------------------------------------------- Résumé */
 
 .resume__header h1 {
   margin: 0;
@@ -838,7 +838,7 @@ button {
   font-style: italic;
 }
 
-/* ---------------------------------------------------------------- Celular */
+/* ---------------------------------------------------------------- Phones */
 
 @media (max-width: 720px) {
   .hero {
@@ -866,7 +866,7 @@ button {
   }
 }
 
-/* ---------------------------------------------------------------- Impressão (se alguém imprimir o currículo pelo navegador) */
+/* ---------------------------------------------------------------- Print (if someone prints the résumé from the browser) */
 
 @media print {
   @page {
@@ -878,7 +878,7 @@ button {
     display: none !important;
   }
 
-  /* O index.html pinta o body de escuro inline (para o conteúdo de reserva); no papel, fundo branco. */
+  /* index.html paints the body dark inline (for the fallback content); on paper, white background. */
   html,
   body {
     background: #fff !important;
@@ -892,13 +892,13 @@ button {
     line-height: 1.45;
   }
 
-  /* O id vence a regra `#root > main a` do index.html, que pinta os links de amarelo. */
+  /* The id beats index.html's `#root > main a` rule, which paints links yellow. */
   #root .resume a {
     color: #111;
     text-decoration: none;
   }
 
-  /* No papel o link não clica: mostra o endereço ao lado do nome. */
+  /* On paper a link can't be clicked: show the address next to the name. */
   .resume__contact a[href^='http']::after {
     content: ' (' attr(href) ')';
     font-size: 0.9em;
@@ -959,7 +959,7 @@ button {
   }
 }
 
-/* ---------------------------------------------------------------- História: uma fase por vez */
+/* ---------------------------------------------------------------- Story: one phase at a time */
 
 .story__progress {
   position: fixed;
@@ -1001,7 +1001,7 @@ button {
   }
 }
 
-/* ---------------------------------------------------------------- Rodapé e créditos */
+/* ---------------------------------------------------------------- Footer and credits */
 
 .site-footer {
   display: flex;

@@ -18,7 +18,7 @@ const profile = {
   ],
 };
 
-/** Resumo do currículo (o "Sobre" do LinkedIn). */
+/** Résumé summary (the LinkedIn "About"). */
 const summary = {
   aiProjectsTitle: "AI projects I have built",
   aiProjects: [
@@ -32,7 +32,7 @@ const summary = {
     "My career started on the back end with C#/.NET and SQL Server. Today, at Purple Metrics, I work on the front end (React and TypeScript), AI in the product and the CI/CD pipeline. I use Python mainly in AI projects (FastAPI, LiteLLM). Day to day I also work with Docker, GitHub Actions, Azure DevOps and AWS.",
 };
 
-/** Destaques curtos para a home. */
+/** Short highlights for the home page. */
 const highlights = [
   {
     title: "AI in production",
@@ -48,7 +48,7 @@ const highlights = [
   },
 ];
 
-/** Experiência, da mais recente para a mais antiga. */
+/** Experience, from the most recent to the oldest. */
 const experience: Job[] = [
   {
     id: "purple-metrics-desenvolvedor-full-stack-senior",
@@ -116,7 +116,7 @@ const experience: Job[] = [
   },
 ];
 
-/** Competências (as cinco primeiras são as principais). */
+/** Skills (the first five are the main ones). */
 const skills = [
   "Artificial intelligence (AI)",
   "React",
@@ -319,24 +319,24 @@ const phases: Messages["story"]["phases"] = {
 
 const story = { ...storyUi, phases };
 
-/** Título e descrição de cada página, gravados no HTML estático de cada rota no build. */
+/** Title and description of each page, written into each route's static HTML at build time. */
 const meta = {
   home: {
     title: "Daniel Porto · Senior Full Stack Developer · Applied AI",
     description:
       "Senior full stack developer at Purple Metrics. I take AI to production: LLMs, agents and computer vision, with React, TypeScript and C#/.NET. Résumé and my story in pixel art.",
   },
-  curriculo: {
+  resume: {
     title: "Résumé · Daniel Porto · Senior Full Stack Developer",
     description:
       "Daniel Porto's résumé: senior full stack developer at Purple Metrics, with AI in production (LLMs, MCP, agents and computer vision), React, TypeScript, C#/.NET and over 10 years of experience.",
   },
-  historia: {
+  story: {
     title: "The story in pixel art · Daniel Porto",
     description:
       "Daniel Porto's career told as a pixel-art game: 8 levels, from his grandmother's house to AI in production at Purple Metrics.",
   },
-  creditos: {
+  credits: {
     title: "Sprite and font credits · Daniel Porto",
     description:
       "Authors and licenses of the pixel art on Daniel Porto's site: sprites from the Liberated Pixel Cup and OpenGameArt, and the Press Start 2P font.",

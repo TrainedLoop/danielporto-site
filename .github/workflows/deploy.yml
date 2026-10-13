@@ -1,4 +1,4 @@
-name: Publicar no GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Versão do pnpm vem do campo packageManager do package.json
+      # The pnpm version comes from the packageManager field in package.json
       - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
@@ -28,13 +28,13 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Lint
         run: pnpm lint
 
-      - name: Configurar o Pages
+      - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslation } from "react-i18next";
 import gsap from "gsap";
-import { trackFase } from "../lib/analytics";
+import { trackPhase } from "../lib/analytics";
 import { jobHref, type Lang } from "../lib/route";
 import { loadSprites, spritePaths, type SpriteMap } from "../lib/sprites";
 import {
@@ -131,7 +131,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     render(0);
     setStatus("playing");
     startBeat(0);
-    trackFase("fase_iniciada", phase.id);
+    trackPhase("phase_started", phase.id);
   }, [render, startBeat, phase.id]);
 
   // Loads the images and only then draws (or starts the phase): the auto start happens
@@ -172,7 +172,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
       startBeat(beat + 1);
     } else {
       setStatus("done");
-      trackFase("fase_concluida", phase.id);
+      trackPhase("phase_completed", phase.id);
     }
   }, [status, beat, beats, lines, typed, animating, startBeat, phase.id]);
 
@@ -181,7 +181,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     typeRef.current?.kill();
     render(1);
     setStatus("done");
-    trackFase("fase_pulada", phase.id);
+    trackPhase("phase_skipped", phase.id);
   };
 
   // Enter or space do the same as clicking: start or advance.

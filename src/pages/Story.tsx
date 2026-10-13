@@ -11,17 +11,32 @@ type Progress = { current: number; items: Record<string, boolean> };
 // Progress is kept in the browser so reloading the page, or going to the résumé and back,
 // doesn't start over. Without storage (private tab, blocked), the story works the same.
 // It is shared by both languages: switching language keeps the phase and the items.
-const STORAGE_KEY = "historia:progresso";
+// Saved as { phase, items }: the phase index (0 to 8, 8 = finished) and the collected item ids.
+const STORAGE_KEY = "story:progress";
+// Key and field names used before the code moved to English ({ fase, itens }). Read once and
+// moved to STORAGE_KEY, so returning visitors keep their progress.
+const LEGACY_STORAGE_KEY = "historia:progresso";
+
+/** Validates saved progress; `phaseField`/`itemsField` name the fields in that format. */
+function parseProgress(raw: string | null, phaseField: string, itemsField: string): Progress | null {
+  const saved: unknown = JSON.parse(raw ?? "null");
+  if (!saved || typeof saved !== "object") return null;
+  const phase = (saved as Record<string, unknown>)[phaseField];
+  const ids = (saved as Record<string, unknown>)[itemsField];
+  if (typeof phase !== "number" || !Number.isInteger(phase) || phase < 0 || phase > PHASES.length) return null;
+  const items = Array.isArray(ids) ? ids.filter((id): id is string => typeof id === "string") : [];
+  return { current: phase, items: Object.fromEntries(items.map((id) => [id, true])) };
+}
 
 function readProgress(): Progress | null {
   if (typeof window === "undefined") return null;
   try {
-    const saved: unknown = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "null");
-    if (!saved || typeof saved !== "object") return null;
-    const { fase, itens } = saved as { fase?: unknown; itens?: unknown };
-    if (typeof fase !== "number" || !Number.isInteger(fase) || fase < 0 || fase > PHASES.length) return null;
-    const ids = Array.isArray(itens) ? itens.filter((id) => typeof id === "string") : [];
-    return { current: fase, items: Object.fromEntries(ids.map((id) => [id, true])) };
+    const current = parseProgress(window.localStorage.getItem(STORAGE_KEY), "phase", "items");
+    if (current) return current;
+    const legacy = parseProgress(window.localStorage.getItem(LEGACY_STORAGE_KEY), "fase", "itens");
+    window.localStorage.removeItem(LEGACY_STORAGE_KEY);
+    if (legacy) writeProgress(legacy);
+    return legacy;
   } catch {
     return null;
   }
@@ -30,16 +45,17 @@ function readProgress(): Progress | null {
 function clearProgress() {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
+    window.localStorage.removeItem(LEGACY_STORAGE_KEY);
   } catch {
     // No storage, nothing to clear.
   }
 }
 
 function writeProgress({ current, items }: Progress) {
-  const itens = Object.keys(items).filter((id) => items[id]);
-  if (current === 0 && itens.length === 0) return clearProgress();
+  const ids = Object.keys(items).filter((id) => items[id]);
+  if (current === 0 && ids.length === 0) return clearProgress();
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ fase: current, itens }));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ phase: current, items: ids }));
   } catch {
     // No storage: progress just won't survive a reload.
   }
@@ -106,7 +122,7 @@ export function Story() {
     writeProgress({ current, items });
   }, [current, items]);
   useEffect(() => {
-    const target = current < PHASES.length ? storyHref(current + 1, lang) : href("historia", lang);
+    const target = current < PHASES.length ? storyHref(current + 1, lang) : href("story", lang);
     if (window.location.pathname + window.location.search !== target) {
       window.history.replaceState(null, "", target);
     }
@@ -128,7 +144,7 @@ export function Story() {
 
   const finished = current >= PHASES.length;
   const phase = PHASES[current];
-  useEffect(() => void (finished && track("historia_concluida")), [finished]);
+  useEffect(() => void (finished && track("story_completed")), [finished]);
   const collected = PHASES.filter((p) => items[p.item.id]).map((p) => ({ ...p.item, label: texts[p.id].item }));
 
   return (
@@ -159,9 +175,9 @@ export function Story() {
             <p className="next__level">{t("story.ending.title")}</p>
             <p className="next__soon">{t("story.ending.text")}</p>
             <p className="next__links">
-              <a href={href("curriculo", lang)}>{t("story.ending.resume")}</a> ·{" "}
+              <a href={href("resume", lang)}>{t("story.ending.resume")}</a> ·{" "}
               <a href={href("home", lang)}>{t("story.ending.home")}</a> ·{" "}
-              <a href={href("creditos", lang)}>{t("story.ending.credits")}</a> ·{" "}
+              <a href={href("credits", lang)}>{t("story.ending.credits")}</a> ·{" "}
               <button
                 type="button"
                 className="next__restart"

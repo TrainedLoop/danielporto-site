@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { href, type Lang } from "../lib/route";
 
-/** Abre a caixa de impressão; o título vira o nome sugerido do PDF e volta ao original depois. */
+/** Opens the print dialog; the title becomes the suggested PDF name and is restored afterwards. */
 function printResume(pdfTitle: string) {
   const original = document.title;
   document.title = pdfTitle;
@@ -10,7 +10,7 @@ function printResume(pdfTitle: string) {
   window.print();
 }
 
-/** A versão em texto: o currículo completo, da experiência atual para a mais antiga. */
+/** The text version: the full résumé, from the current job to the oldest. */
 export function Resume() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
@@ -20,10 +20,10 @@ export function Resume() {
   const skills = t("skills");
   const languages = t("languages");
 
-  // Vindo da história (/curriculo/#id-do-emprego), rola até o emprego da fase.
+  // Coming from the story (/curriculo/#job-id), scroll to that phase's job.
   useEffect(() => {
-    const exp = decodeURIComponent(window.location.hash.slice(1));
-    if (exp) document.getElementById(exp)?.scrollIntoView();
+    const jobId = decodeURIComponent(window.location.hash.slice(1));
+    if (jobId) document.getElementById(jobId)?.scrollIntoView();
   }, []);
 
   return (
@@ -44,7 +44,7 @@ export function Resume() {
           ))}
         </p>
         <p className="resume__actions no-print">
-          <a href={href("historia", lang)}>{t("resume.playStory")}</a>
+          <a href={href("story", lang)}>{t("resume.playStory")}</a>
           <button type="button" className="resume__pdf" onClick={() => printResume(t("resume.pdfTitle"))}>
             {t("resume.downloadPdf")}
           </button>

@@ -5,10 +5,10 @@ import en from "./locales/en";
 import pt from "./locales/pt";
 
 /**
- * Traduções com i18next. O idioma vem da página (/en/ é inglês), não do navegador:
- * quem troca é a navegação (src/lib/route.ts), o main.tsx no boot e o build em cada página.
- * As mensagens vão junto no bundle, então a inicialização e a troca de idioma são síncronas,
- * o que o HTML gerado no build precisa.
+ * Translations with i18next. The language comes from the page (/en/ is English), not from
+ * the browser: it is switched by navigation (src/lib/route.ts), by main.tsx on boot and by
+ * the build for each page. The messages ship in the bundle, so initialization and language
+ * changes are synchronous, which the build's prerendered HTML needs.
  */
 export const i18n = i18next.createInstance();
 
@@ -18,7 +18,7 @@ i18n.use(initReactI18next).init({
   fallbackLng: "pt",
   initAsync: false,
   returnObjects: true,
-  interpolation: { escapeValue: false }, // o React já escapa
+  interpolation: { escapeValue: false }, // React already escapes
 });
 
 export function setLang(lang: Lang) {

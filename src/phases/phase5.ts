@@ -17,7 +17,7 @@ const SIT = { x: 156, y: 82 };
 const STAND_Y = 96;
 const ENDPOINTS = 5;
 
-// Caminhos dos pacotes no diagrama (coordenadas da tela de perto): celular → API → loja.
+// Packet paths in the diagram (close-up screen coordinates): phone → API → store.
 const at = (x: number, y: number): Point => ({ x: CLOSE_SCREEN.x + x, y: CLOSE_SCREEN.y + y });
 const STORE_PATHS: Point[][] = [19, 53, 87].map((storeY) => [
   at(28, 53),
@@ -28,7 +28,7 @@ const STORE_PATHS: Point[][] = [19, 53, 87].map((storeY) => [
   at(104, storeY),
 ]);
 
-// O time de 4 pessoas chega para o "level up": dois de cada lado.
+// The team of 4 arrives for the "level up": two on each side.
 const TEAM = [
   { sheet: "coworker", from: -64, to: 40 },
   { sheet: "friend", from: -100, to: 84 },
@@ -36,7 +36,7 @@ const TEAM = [
   { sheet: "neighborWoman", from: 396, to: 266 },
 ] as const;
 
-// Trechos (0 a 1) da animação. Cada fala termina quando a última animação dela acaba.
+// Slices (0 to 1) of the animation. Each beat ends exactly when its last animation ends.
 const TIMELINE = {
   walkIn: [0, 0.14],
   zoomIn: [0.16, 0.2],
@@ -60,7 +60,7 @@ const lerpRect = (a: Rect, b: Rect, t: number): Rect => ({
 const drawRect = (ctx: CanvasRenderingContext2D, image: HTMLImageElement, r: Rect) =>
   ctx.drawImage(image, Math.round(r.x), Math.round(r.y), Math.round(r.w), Math.round(r.h));
 
-/** Posição ao longo de uma linha quebrada, com t de 0 a 1. */
+/** Position along a polyline, with t from 0 to 1. */
 function along(path: Point[], t: number): Point {
   const lengths = path.slice(1).map((p, i) => Math.hypot(p.x - path[i].x, p.y - path[i].y));
   let remaining = lengths.reduce((a, b) => a + b, 0) * t;
@@ -82,7 +82,7 @@ export const phase5 = definePhase({
     lcd: `${P3}/lcd.png`,
     chair: `${P3}/chair.png`,
     lcdFrame: `${P3}/lcd-frame.png`,
-    lupa: `${P}/lupa.png`,
+    magnifier: `${P}/lupa.png`,
     diagram: `${P}/diagram.png`,
     levelUp: withText(`${P}/level-up.png`),
     star: `${P}/star.png`,
@@ -135,7 +135,7 @@ export const phase5 = definePhase({
   job: "fulllab-retail-solutions-lider-tecnico",
   staticAt: 1,
   draw(ctx, s, p) {
-    // ---- Escritório
+    // ---- Office
     ctx.drawImage(s.office, 0, 0);
     ctx.drawImage(s.desk, 140, 106);
     ctx.drawImage(s.lcd, LCD.x, LCD.y);
@@ -148,12 +148,12 @@ export const phase5 = definePhase({
     } else if (!standing) {
       drawSeated(ctx, s.danielSit, s.chair, SIT.x, SIT.y);
     } else {
-      // Levanta e vira para o time.
+      // Stands up and turns to the team.
       drawEmptySeat(ctx, s.chair, SIT.x, SIT.y);
       drawFrame(ctx, s.danielWalk, "down", 0, SIT.x, STAND_Y + 4);
     }
 
-    // ---- O time chega e o "LEVEL UP!" sobe em cima do Daniel.
+    // ---- The team arrives and "LEVEL UP!" rises above Daniel.
     if (standing) {
       for (const member of TEAM) {
         drawWalk(ctx, s[member.sheet], p, TIMELINE.team[0], TIMELINE.team[1], member.from, member.to, STAND_Y, member.to < SIT.x ? "right" : "left");
@@ -174,7 +174,7 @@ export const phase5 = definePhase({
       return;
     }
 
-    // ---- Zoom no monitor: engenharia reversa da VTEX e o diagrama das integrações.
+    // ---- Zoom into the monitor: VTEX reverse engineering and the integrations diagram.
     const zoomIn = easeOut(segment(p, TIMELINE.zoomIn[0], TIMELINE.zoomIn[1]));
     if (zoomIn <= 0) return;
     const zoomOut = easeOut(segment(p, TIMELINE.zoomOut[0], TIMELINE.zoomOut[1]));
@@ -190,16 +190,16 @@ export const phase5 = definePhase({
     drawRect(ctx, content, lerpRect(screenFrom, CLOSE_SCREEN, amount));
     if (amount < 1) return;
 
-    // Lupa varrendo a linha que está sendo descoberta.
+    // Magnifying glass sweeping the line being uncovered.
     if (p < TIMELINE.diagram && revealT > 0 && revealT < 1) {
       const line = Math.min(ENDPOINTS - 1, revealed);
       const k = (revealT * ENDPOINTS) % 1;
       const x = CLOSE_SCREEN.x + 6 + k * 100;
       const y = CLOSE_SCREEN.y + 14 + line * 16;
-      ctx.drawImage(s.lupa, Math.round(x), Math.round(y));
+      ctx.drawImage(s.magnifier, Math.round(x), Math.round(y));
     }
 
-    // Pacotes de dados indo e voltando entre o app, a API e as lojas.
+    // Data packets going back and forth between the app, the API and the stores.
     const packetsT = segment(p, TIMELINE.packets[0], TIMELINE.packets[1]);
     if (p >= TIMELINE.diagram && packetsT > 0) {
       STORE_PATHS.forEach((path, i) => {

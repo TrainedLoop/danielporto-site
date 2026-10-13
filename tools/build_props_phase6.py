@@ -26,18 +26,18 @@ DETECT = (60, 230, 120)
 
 
 def office():
-    """Mesmo escritório da Fulllab, com o letreiro da Fu2re e um aquário no lugar do quadro."""
+    """Same office as Fulllab, with the Fu2re sign and a fish tank instead of the picture."""
     img = fulllab_office("FU2RE", CYAN, (20, 90, 120))
     from PIL import ImageDraw
 
     d = ImageDraw.Draw(img)
-    # Cobre o quadro com a parede e põe o aquário em cima de um móvel.
+    # Paint the wall over the picture and put the fish tank on a cabinet.
     rect(d, 246, 26, 66, 52, (236, 232, 224))
     box(d, 244, 92, 64, 46, (90, 70, 60), (120, 96, 80), (60, 46, 40))
     rect(d, 248, 98, 56, 1, (60, 46, 40))
     box(d, 244, 46, 64, 46, WATER[1], (200, 236, 250), OUTLINE)
     rect(d, 246, 48, 60, 4, WATER[0])
-    rect(d, 246, 84, 60, 6, (220, 200, 150))  # areia
+    rect(d, 246, 84, 60, 6, (220, 200, 150))  # sand
     for x, h in ((252, 16), (258, 22), (292, 18)):
         rect(d, x, 84 - h, 2, h, PLANT[1])
         rect(d, x + 2, 84 - h + 4, 2, h - 6, PLANT[0])
@@ -50,24 +50,24 @@ def office():
 
 
 def close_smartvision():
-    """Tela da SmartVision: fila de treino e o gráfico (barras e curva são desenhadas no código)."""
+    """SmartVision screen: training queue and the chart (bars and curve are drawn in code)."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (240, 242, 248))
     rect(d, 0, 0, CLOSE_W, 12, SV_BLUE[0])
     text(d, 4, 2, "SmartVision", WHITE)
-    # Fila de treino.
+    # Training queue.
     text(d, 4, 16, tr("Fila", "Queue"), SV_BLUE[2])
     for i, name in enumerate(tr(("postes", "placas", "fios"), ("poles", "signs", "wires"))):
         y = 28 + i * 18
         box(d, 4, y, 78, 16, WHITE, None, (200, 204, 216))
         text(d, 7, y + 2, name, (40, 44, 60))
         rect(d, 7, y + 11, 70, 3, (220, 224, 234))
-    # Gráfico da perda (loss).
+    # Loss chart.
     text(d, 90, 16, "loss", SV_BLUE[2])
     rect(d, 90, 28, 82, 56, WHITE)
     rect(d, 92, 30, 1, 52, (120, 124, 140))
     rect(d, 92, 81, 78, 1, (120, 124, 140))
-    # Miniaturas com caixas de detecção.
+    # Thumbnails with detection boxes.
     for i in range(4):
         x = 4 + i * 42
         rect(d, x, 88, 38, 16, (130, 170, 210))
@@ -77,7 +77,7 @@ def close_smartvision():
     return img
 
 
-# ---------------------------------------------------------------- rua com os postes
+# ---------------------------------------------------------------- street with the utility poles
 
 POLES = [40, 120, 200, 280]
 STREET_SIDEWALK = 130
@@ -88,19 +88,19 @@ def avenue():
     img, d = canvas(W, H)
     rect(d, 0, 0, W, 70, (150, 206, 244))
     rect(d, 0, 0, W, 20, (176, 222, 250))
-    # Prédios ao fundo.
+    # Buildings in the background.
     for bx, bw, bh, c in ((0, 40, 70, (180, 190, 200)), (44, 30, 54, (200, 196, 186)), (78, 46, 80, (170, 180, 196)), (128, 34, 60, (210, 200, 190)), (166, 50, 74, (176, 186, 200)), (220, 36, 56, (200, 196, 186)), (260, 60, 82, (170, 180, 196))):
         rect(d, bx, STREET_SIDEWALK - bh, bw, bh, c)
         for wy in range(STREET_SIDEWALK - bh + 6, STREET_SIDEWALK - 6, 8):
             for wx in range(bx + 4, bx + bw - 4, 7):
                 rect(d, wx, wy, 3, 4, (230, 236, 244))
-    # Calçada e avenida.
+    # Sidewalk and avenue.
     rect(d, 0, STREET_SIDEWALK, W, STREET_ROAD - STREET_SIDEWALK, CONCRETE[0])
     rect(d, 0, STREET_ROAD - 2, W, 2, CONCRETE[2])
     rect(d, 0, STREET_ROAD, W, H - STREET_ROAD, ASPHALT[1])
     for x in range(6, W, 30):
         rect(d, x, 164, 14, 2, (230, 220, 150))
-    # Postes de concreto com cruzeta e transformador.
+    # Concrete poles with crossarm and transformer.
     for px in POLES:
         rect(d, px, 44, 5, STREET_SIDEWALK - 42, CONCRETE[1])
         rect(d, px, 44, 1, STREET_SIDEWALK - 42, CONCRETE[2])
@@ -108,13 +108,13 @@ def avenue():
         box(d, px + 6, 58, 10, 14, (120, 124, 130), (150, 154, 160), (90, 94, 100))
         for ix in (px - 11, px + 14):
             rect(d, ix, 47, 2, 3, (200, 210, 220))
-    # Fio entre os postes.
+    # Wire between the poles.
     rect(d, 0, 49, W, 1, (50, 50, 56))
     return img
 
 
 def survey_car():
-    """Carro com a câmera de 360° no teto (como os do Street View), virado para a direita."""
+    """Car with a 360° camera on the roof (like the Street View cars), facing right."""
     img, d = canvas(64, 40)
     box(d, 2, 22, 58, 12, (236, 236, 240), WHITE, (180, 180, 190))
     box(d, 14, 14, 30, 10, (236, 236, 240), WHITE, (180, 180, 190))
@@ -124,7 +124,7 @@ def survey_car():
     for wx in (10, 44):
         d.ellipse((wx, 29, wx + 10, 39), fill=OUTLINE)
         d.ellipse((wx + 3, 32, wx + 7, 36), fill=(160, 160, 170))
-    # Mastro e câmera.
+    # Mast and camera.
     rect(d, 28, 2, 2, 12, (90, 90, 96))
     d.ellipse((24, 0, 34, 8), fill=(40, 42, 50))
     for cx, cy in ((26, 3), (30, 2), (32, 5)):
@@ -147,15 +147,15 @@ def detect_label():
     return img
 
 
-# ---------------------------------------------------------------- caixa-preta
+# ---------------------------------------------------------------- black box
 
 
 def black_box(opening):
-    """Caixa-preta abrindo (0 = fechada, 3 = aberta com engrenagens e luz)."""
+    """Black box opening (0 = closed, 3 = open with gears and light)."""
     img, d = canvas(80, 72)
     base_top = 32
     if opening > 0:
-        # Raios de luz saindo de dentro, mais fortes conforme abre.
+        # Light rays coming out, stronger as it opens.
         for i, x in enumerate(range(16, 66, 6)):
             length = 8 + opening * 8 - (i % 2) * 6
             spread = (x - 40) // 6
@@ -168,7 +168,7 @@ def black_box(opening):
     lid_lift = opening * 7
     box(d, 8, base_top - 6 - lid_lift, 64, 8, (40, 40, 48), (70, 70, 80), (20, 20, 24))
     if opening >= 2:
-        # Engrenagens e "neurônios" aparecendo.
+        # Gears and "neurons" appearing.
         for gx, gy, r in ((26, base_top - 4, 6), (44, base_top - 8, 8), (58, base_top - 2, 5)):
             d.ellipse((gx - r, gy - r, gx + r, gy + r), outline=(250, 200, 60), width=2)
             d.point((gx, gy), fill=(250, 200, 60))
@@ -181,7 +181,7 @@ def black_box(opening):
 
 
 def box_item():
-    """Caixa-preta aberta (item do inventário)."""
+    """Open black box (inventory item)."""
     img, d = canvas(32, 32)
     d.polygon([(10, 14), (22, 14), (27, 2), (5, 2)], fill=(255, 240, 170, 140))
     box(d, 4, 14, 24, 16, (34, 34, 40), (70, 70, 80), (14, 14, 18))

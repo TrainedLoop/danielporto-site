@@ -3,9 +3,9 @@ import { pageMeta } from "../content/pages";
 import { setLang } from "../i18n";
 import { trackPageview } from "./analytics";
 
-export type Route = "home" | "historia" | "curriculo" | "creditos";
+export type Route = "home" | "story" | "resume" | "credits";
 
-export const ROUTES: Route[] = ["home", "historia", "curriculo", "creditos"];
+export const ROUTES: Route[] = ["home", "story", "resume", "credits"];
 
 /** Page language: Portuguese by default, English under the /en/ prefix. */
 export type Lang = "pt" | "en";
@@ -17,11 +17,12 @@ export type Page = { route: Route; lang: Lang };
 
 /**
  * Path of each page from the site root, without BASE_PATH. Every route exists in both
- * languages; English pages use English slugs (/en/story/, /en/resume/...).
+ * languages; English pages use English slugs (/en/story/, /en/resume/...). The route ids
+ * are internal; the Portuguese URLs keep their Portuguese slugs.
  */
 const PATHS: Record<Lang, Record<Route, string>> = {
-  pt: { home: "", historia: "historia/", curriculo: "curriculo/", creditos: "creditos/" },
-  en: { home: "en/", historia: "en/story/", curriculo: "en/resume/", creditos: "en/credits/" },
+  pt: { home: "", story: "historia/", resume: "curriculo/", credits: "creditos/" },
+  en: { home: "en/", story: "en/story/", resume: "en/resume/", credits: "en/credits/" },
 };
 
 /**
@@ -30,13 +31,13 @@ const PATHS: Record<Lang, Record<Route, string>> = {
  * redirect-only page there (scripts/prerender.js).
  */
 export const LEGACY_PATHS: Record<string, Page> = {
-  "en/curriculo/": { route: "curriculo", lang: "en" },
+  "en/curriculo/": { route: "resume", lang: "en" },
 };
 
 /** Every page, in the order the build writes the static HTML. */
 export const PAGES: Page[] = LANGS.flatMap((lang) => ROUTES.map((route) => ({ route, lang })));
 
-/** Identifies the page in the build's HTML (data-route): "curriculo", "en/curriculo"... */
+/** Identifies the page in the build's HTML (data-route): "resume", "en/resume"... */
 export const pageKey = ({ route, lang }: Page) => (lang === "en" ? `en/${route}` : route);
 
 const BASE = import.meta.env.BASE_URL;
@@ -88,8 +89,8 @@ export function pathFromLegacyPath(pathname: string, search = "", hash = ""): st
 export function pathFromLegacyHash(hash: string): string | null {
   if (!hash.startsWith("#/")) return null;
   const name = hash.slice(2).replace(/\/+$/, "");
-  const fase = /^historia\/(\d+)$/.exec(name);
-  if (fase) return storyHref(Number(fase[1]));
+  const phase = /^historia\/(\d+)$/.exec(name);
+  if (phase) return storyHref(Number(phase[1]));
   const page = pageFromPath(`${BASE}${name}`) ?? { route: "home", lang: "pt" };
   return href(page.route, page.lang);
 }
@@ -160,10 +161,10 @@ export function storyPhase(): number | null {
 
 /** Direct link to a story phase (counting from 1, like the "3/8" counter). */
 export const storyHref = (phase: number, lang: Lang = "pt") =>
-  `${href("historia", lang)}?${PHASE_PARAM[lang]}=${phase}`;
+  `${href("story", lang)}?${PHASE_PARAM[lang]}=${phase}`;
 
 /** Link to a job on the résumé (/curriculo/#id); Resume scrolls to it on open. Ids are the same in both languages. */
-export const jobHref = (jobId: string, lang: Lang = "pt") => `${href("curriculo", lang)}#${jobId}`;
+export const jobHref = (jobId: string, lang: Lang = "pt") => `${href("resume", lang)}#${jobId}`;
 
 /**
  * The same page in another language, for the PT · EN switch: keeps the story phase
@@ -172,10 +173,10 @@ export const jobHref = (jobId: string, lang: Lang = "pt") => `${href("curriculo"
  */
 export function equivalentHref(route: Route, lang: Lang): string {
   if (typeof window === "undefined") return href(route, lang);
-  if (route === "historia") {
+  if (route === "story") {
     const phase = storyPhase();
     return phase === null ? href(route, lang) : storyHref(phase, lang);
   }
-  if (route === "curriculo") return `${href(route, lang)}${window.location.hash}`;
+  if (route === "resume") return `${href(route, lang)}${window.location.hash}`;
   return href(route, lang);
 }

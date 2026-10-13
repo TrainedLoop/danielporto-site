@@ -26,9 +26,9 @@ VTEX_PINK = (240, 40, 110)
 
 
 def office(sign="FULLLAB", neon=NEON, glow=(120, 30, 90)):
-    """Escritório aberto; a fase 6 reaproveita com outro letreiro."""
+    """Open-plan office; phase 6 reuses it with another sign."""
     img, d = canvas(W, H)
-    # Parede clara com um trecho de tijolinho.
+    # Light wall with a stretch of exposed brick.
     rect(d, 0, 0, W, FLOOR_Y, (236, 232, 224))
     rect(d, 120, 0, 120, FLOOR_Y, BRICK[1])
     for row, y in enumerate(range(0, FLOOR_Y, 6)):
@@ -36,12 +36,12 @@ def office(sign="FULLLAB", neon=NEON, glow=(120, 30, 90)):
         for x in range(120 + (row % 2) * 6, 240, 12):
             rect(d, x, y + 1, 1, 5, BRICK[2])
             rect(d, x + 1, y + 1, 10, 1, BRICK[0])
-    # Placa em neon.
+    # Neon sign.
     sign_x = 180 - len(sign) * 4
     for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
         text(d, sign_x + dx, 24 + dy, sign, glow)
     text(d, sign_x, 24, sign, neon)
-    # Janelão com a cidade.
+    # Big window with the city.
     box(d, 8, 12, 104, 86, (60, 64, 72))
     rect(d, 11, 15, 98, 80, (150, 200, 240))
     for bx, bw, bh, c in ((14, 16, 46, (110, 130, 160)), (32, 22, 62, (90, 110, 140)), (56, 14, 38, (120, 140, 170)), (72, 20, 54, (100, 120, 150)), (94, 14, 30, (130, 150, 180))):
@@ -50,11 +50,11 @@ def office(sign="FULLLAB", neon=NEON, glow=(120, 30, 90)):
             for wx in range(bx + 3, bx + bw - 2, 5):
                 rect(d, wx, wy, 2, 3, (220, 230, 180))
     rect(d, 59, 15, 2, 80, (60, 64, 72))
-    # Lado direito: estante com plantas e um quadro.
+    # Right side: shelf with plants and a picture.
     box(d, 252, 30, 56, 44, (240, 240, 236), WHITE, (190, 190, 186))
     rect(d, 256, 34, 48, 36, (60, 120, 200))
     rect(d, 256, 54, 48, 16, (240, 190, 60))
-    # Piso de madeira clara.
+    # Light wood floor.
     rect(d, 0, FLOOR_Y, W, H - FLOOR_Y, (196, 150, 104))
     for y in range(FLOOR_Y, H, 5):
         rect(d, 0, y, W, 1, (170, 124, 82))
@@ -62,7 +62,7 @@ def office(sign="FULLLAB", neon=NEON, glow=(120, 30, 90)):
         for x in range((row * 13) % 40, W, 40):
             rect(d, x, y + 1, 1, 4, (170, 124, 82))
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
-    # Plantas altas nos cantos.
+    # Tall plants in the corners.
     for px in (112, 300):
         box(d, px, 118, 14, 22, (240, 240, 236), WHITE, (190, 190, 186))
         for lx, ly, lw, lh in ((px + 5, 86, 4, 32), (px - 2, 94, 9, 4), (px + 8, 98, 9, 4), (px - 1, 106, 8, 4), (px + 9, 108, 8, 4)):
@@ -80,7 +80,7 @@ def wood_desk():
     return img
 
 
-# ---------------------------------------------------------------- telas de perto
+# ---------------------------------------------------------------- close-up screens
 
 ENDPOINTS = [
     "GET /catalog",
@@ -107,7 +107,7 @@ def close_reverse(revealed):
     return img
 
 
-def lupa():
+def magnifier():
     img, d = canvas(24, 24)
     d.ellipse((1, 1, 15, 15), fill=OUTLINE)
     d.ellipse((3, 3, 13, 13), fill=(200, 230, 250, 120))
@@ -118,7 +118,7 @@ def lupa():
     return img
 
 
-# Diagrama: celular → API → lojas. Coordenadas usadas também no código para os pacotes.
+# Diagram: phone → API → stores. The coordinates are also used in code for the packets.
 DIAGRAM = {
     "phone": (6, 34, 22, 38),
     "api": (52, 42, 40, 22),
@@ -146,7 +146,7 @@ def close_diagram():
     sx, sw, sh = DIAGRAM["store_x"], DIAGRAM["store_w"], DIAGRAM["store_h"]
     for name, sy in DIAGRAM["stores"]:
         color = VTEX_PINK if name == "VTEX" else (40, 40, 44) if name == "Sephora" else (240, 120, 40)
-        # Linha em "L" da API até a loja.
+        # "L"-shaped line from the API to the store.
         mid_x = ax + aw + 6
         rect(d, ax + aw, ay + ah // 2, mid_x - ax - aw, 2, line)
         top, bottom = sorted((ay + ah // 2, sy + sh // 2))
@@ -155,7 +155,7 @@ def close_diagram():
         box(d, sx, sy, sw, sh, WHITE, None, (200, 200, 210))
         rect(d, sx + 1, sy + 1, 4, sh - 2, color)
         text(d, sx + 7, sy + 5, name, (40, 40, 48))
-    # Robozinho (Selenium) ao lado da loja sem API.
+    # Little robot (Selenium) next to the store with no API.
     rx, ry = 96, 30
     box(d, rx, ry, 12, 10, (180, 186, 200), WHITE, (120, 126, 140))
     rect(d, rx + 3, ry + 3, 2, 2, (40, 200, 120))
@@ -192,7 +192,7 @@ def star():
 
 
 def phone_item():
-    """Celular com o app aberto (item do inventário)."""
+    """Phone with the app open (inventory item)."""
     img, d = canvas(32, 32)
     box(d, 8, 2, 16, 28, (30, 32, 38), (60, 62, 70), OUTLINE)
     rect(d, 10, 5, 12, 20, (110, 180, 250))
@@ -208,7 +208,7 @@ def build():
     sprites = {
         "office": office(),
         "desk": wood_desk(),
-        "lupa": lupa(),
+        "lupa": magnifier(),
         "diagram": close_diagram(),
         "level-up": level_up(),
         "star": star(),

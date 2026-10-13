@@ -1,16 +1,26 @@
 import type { PostHog } from "posthog-js";
+import { i18n } from "../i18n";
 
 /**
- * Métricas de uso com o PostHog, carregado depois que a página aparece (num chunk
- * separado) para não pesar no bundle inicial.
+ * Usage metrics with PostHog, loaded after the page shows up (in a separate chunk) so it
+ * doesn't weigh on the initial bundle.
  *
- * Privacidade: nada de cookie nem localStorage (persistence "memory", então cada
- * visita é um visitante anônimo novo), sem gravação de sessão, sem autocapture e sem
- * scripts extras do PostHog. Com Do Not Track ou Global Privacy Control ligado, ou
- * sem VITE_POSTHOG_KEY no build (dev local, forks), tudo aqui vira no-op.
+ * Privacy: no cookies or localStorage (persistence "memory", so each visit is a new
+ * anonymous visitor), no session recording, no autocapture and no extra PostHog scripts.
+ * With Do Not Track or Global Privacy Control on, or without VITE_POSTHOG_KEY in the build
+ * (local dev, forks), everything here is a no-op.
  */
 
 type Props = Record<string, string | number | boolean>;
+
+/** Events sent by the site (besides $pageview); see the table in the README. */
+export type EventName =
+  | "home_choice"
+  | "phase_started"
+  | "phase_completed"
+  | "phase_skipped"
+  | "story_completed"
+  | "outbound_link";
 
 const KEY = import.meta.env.VITE_POSTHOG_KEY as string | undefined;
 const HOST = (import.meta.env.VITE_POSTHOG_HOST as string | undefined) || "https://us.i.posthog.com";
@@ -21,32 +31,34 @@ function optedOut(): boolean {
   return nav.doNotTrack === "1" || win.doNotTrack === "1" || nav.globalPrivacyControl === true;
 }
 
-// No build (pré-renderização no Node) não há navegador: nada é enviado.
+// In the build (prerendering in Node) there is no browser: nothing is sent.
 const enabled = typeof window !== "undefined" && Boolean(KEY) && !optedOut();
 let client: PostHog | null = null;
-// Eventos disparados antes do PostHog terminar de carregar.
-const queue: [string, Props | undefined][] = [];
+// Events fired before PostHog finishes loading.
+const queue: [string, Props][] = [];
 
-export function track(event: string, props?: Props) {
+/** Sends an event; every event carries the page language (`lang`: "pt" | "en"). */
+export function track(event: EventName | "$pageview", props?: Props) {
   if (!enabled) return;
-  if (client) client.capture(event, props);
-  else queue.push([event, props]);
+  const withLang = { lang: i18n.language, ...props };
+  if (client) client.capture(event, withLang);
+  else queue.push([event, withLang]);
 }
 
-/** Propriedades de uma fase da história; os ids são "phase0".."phase7", na ordem. */
-export function trackFase(event: "fase_iniciada" | "fase_concluida" | "fase_pulada", id: string) {
-  track(event, { fase: Number(id.replace(/\D/g, "")), fase_id: id });
+/** Properties of a story phase; ids are "phase0".."phase7", in order. */
+export function trackPhase(event: "phase_started" | "phase_completed" | "phase_skipped", id: string) {
+  track(event, { phase: Number(id.replace(/\D/g, "")), phase_id: id });
 }
 
-/** Chamado no boot e a cada troca de página (src/lib/route.ts): as rotas usam a History API. */
+/** Called on boot and on every page change (src/lib/route.ts): routes use the History API. */
 export function trackPageview() {
   const base = import.meta.env.BASE_URL;
-  const rota = window.location.pathname.slice(base.length).replace(/\/+$/, "") || "home";
-  track("$pageview", { rota });
+  const route = window.location.pathname.slice(base.length).replace(/\/+$/, "") || "home";
+  track("$pageview", { route });
 }
 
-/** Links para fora que interessam: LinkedIn, GitHub e email. */
-function destino(link: HTMLAnchorElement): string | null {
+/** Outbound links we care about: LinkedIn, GitHub and email. */
+function destination(link: HTMLAnchorElement): string | null {
   if (link.protocol === "mailto:") return "email";
   if (/(^|\.)linkedin\.com$/.test(link.hostname)) return "linkedin";
   if (/(^|\.)github\.com$/.test(link.hostname)) return "github";
@@ -56,8 +68,8 @@ function destino(link: HTMLAnchorElement): string | null {
 function onClick(event: MouseEvent) {
   const link = event.target instanceof Element ? event.target.closest("a[href]") : null;
   if (!(link instanceof HTMLAnchorElement)) return;
-  const dest = destino(link);
-  if (dest) track("link_externo", { destino: dest, url: link.href });
+  const dest = destination(link);
+  if (dest) track("outbound_link", { destination: dest, url: link.href });
 }
 
 async function load() {
@@ -65,7 +77,7 @@ async function load() {
   posthog.init(KEY!, {
     api_host: HOST,
     persistence: "memory",
-    capture_pageview: false, // o $pageview é manual, a cada troca de página
+    capture_pageview: false, // $pageview is manual, on every page change
     capture_pageleave: false,
     autocapture: false,
     disable_session_recording: true,
@@ -80,14 +92,14 @@ async function load() {
     capture_exceptions: false,
     capture_performance: false,
     respect_dnt: true,
-    // Sem fila em lote: o evento sai na hora, antes de um link para fora tirar a pessoa da página.
+    // No batching: the event goes out right away, before an outbound link takes the visitor away.
     request_batching: false,
   });
   client = posthog;
   for (const [event, props] of queue.splice(0)) client.capture(event, props);
 }
 
-/** Chamado uma vez no boot: registra os ouvintes e agenda o carregamento do PostHog. */
+/** Called once on boot: registers the listeners and schedules loading PostHog. */
 export function initAnalytics() {
   if (!enabled) return;
   trackPageview();

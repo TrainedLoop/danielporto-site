@@ -1,13 +1,13 @@
-"""Monta as versões do personagem a partir das camadas do LPC Character Generator.
+"""Builds the character versions from the layers of the LPC Character Generator.
 
-Uso:
-    python -I tools/build_character.py <pasta-do-lpc> <pasta-de-saida> [prévia.png]
+Usage:
+    python -I tools/build_character.py <lpc-dir> <output-dir> [preview.png]
 
-Só lê PNGs e JSONs do gerador (não executa nada dele). Para cada fase da
-história gera uma folha por animação usada no site (walk, sit e, no adulto,
-idle) com as camadas empilhadas por zPos e recoloridas pelas paletas do próprio
-gerador, além do arquivo de créditos exigido pelas licenças. Se receber um
-terceiro argumento, salva ali uma prévia ampliada de todas as versões.
+Only reads the generator's PNGs and JSONs (runs nothing from it). For each phase of
+the story it writes one sheet per animation used on the site (walk, sit and, for the
+adult, idle) with the layers stacked by zPos and recolored with the generator's own
+palettes, plus the credits file the licenses require. Given a third argument, it
+saves an enlarged preview of every version there.
 """
 
 import json
@@ -17,19 +17,19 @@ from pathlib import Path
 from PIL import Image
 
 FRAME = 64
-# Linhas da caminhada na folha "universal" antiga (13 colunas x 21 linhas).
+# Walk rows in the old "universal" sheet (13 columns x 21 rows).
 UNIVERSAL_WALK_ROW = 8
 
-SKIN = None  # "light" já é a cor-base do gerador
-HAIR = "espresso"  # castanho bem escuro, definido em CUSTOM_PALETTES
+SKIN = None  # "light" is already the generator's base color
+HAIR = "espresso"  # very dark brown, defined in CUSTOM_PALETTES
 SHIRT = "black"
 SHORTS = "tan"
 SHOES = "white"
 
-# Cada camada: (definição, cor na paleta do material ou None, caminho por tipo de corpo).
-# O caminho vem da própria definição; aqui só escolhemos o que entra em cada fase.
+# Each layer: (definition, color in the material's palette or None).
+# The path per body type comes from the definition itself; here we only pick what goes in each phase.
 VARIANTS = {
-    # NPC da fase 5: desenvolvedora do time na Fulllab.
+    # Phase 5 NPC: a developer on the Fulllab team.
     "dev-woman": {
         "body": "female",
         "anims": ["walk"],
@@ -42,7 +42,7 @@ VARIANTS = {
             ("hair_ponytail", "blonde"),
         ],
     },
-    # NPC da fase 4: colega de trabalho na Hebara.
+    # Phase 4 NPC: a coworker at Hebara.
     "coworker": {
         "body": "teen",
         "anims": ["walk", "sit"],
@@ -55,7 +55,7 @@ VARIANTS = {
             ("hair_parted", "black"),
         ],
     },
-    # NPCs da fase 2: os vizinhos que traziam o PC para consertar.
+    # Phase 2 NPCs: the neighbors who brought their PCs to be fixed.
     "neighbor-man": {
         "body": "male",
         "anims": ["walk"],
@@ -80,7 +80,7 @@ VARIANTS = {
             ("hair_bob", "chestnut"),
         ],
     },
-    # NPC: o amigo que emprestou a apostila de HTML (fase 1).
+    # NPC: the friend who lent the HTML workbook (phase 1).
     "friend": {
         "body": "teen",
         "anims": ["walk", "sit"],
@@ -117,7 +117,7 @@ VARIANTS = {
         ],
     },
     "young": {
-        "body": "teen",  # corpo mais magro; "male" fica musculoso demais
+        "body": "teen",  # slimmer body; "male" is too muscular
         "anims": ["walk", "sit"],
         "layers": [
             ("body", None),
@@ -130,7 +130,7 @@ VARIANTS = {
         ],
     },
     "mohawk": {
-        "body": "teen",  # corpo mais magro; "male" fica musculoso demais
+        "body": "teen",  # slimmer body; "male" is too muscular
         "anims": ["walk", "sit"],
         "layers": [
             ("body", None),
@@ -143,7 +143,7 @@ VARIANTS = {
         ],
     },
     "adult": {
-        "body": "teen",  # corpo mais magro; "male" fica musculoso demais
+        "body": "teen",  # slimmer body; "male" is too muscular
         "anims": ["walk", "idle", "sit"],
         "layers": [
             ("body", None),
@@ -163,7 +163,7 @@ def hex_rgb(value):
     return tuple(int(value[i : i + 2], 16) for i in (0, 2, 4))
 
 
-# Cores próprias, além das paletas do gerador.
+# Custom colors, on top of the generator's palettes.
 CUSTOM_PALETTES = {
     "hair": {"espresso": ["#000000", "#0B0605", "#170D09", "#24140E", "#331D14", "#45291C"]},
 }
@@ -201,8 +201,8 @@ class Lpc:
                 if a == 0:
                     continue
                 if (r, g, b) not in cache:
-                    # Algumas folhas usam tons levemente fora da paleta-base
-                    # (ex.: #A02600 no lugar de #A42600); usa a cor mais próxima.
+                    # Some sheets use tones slightly off the base palette
+                    # (e.g. #A02600 instead of #A42600); use the nearest color.
                     near = min(mapping, key=lambda c: sum((u - v) ** 2 for u, v in zip(c, (r, g, b))))
                     distance = sum((u - v) ** 2 for u, v in zip(near, (r, g, b))) ** 0.5
                     cache[(r, g, b)] = mapping[near] if distance <= 16 else (r, g, b)
@@ -210,7 +210,7 @@ class Lpc:
         return image
 
     def remap_by_luminance(self, image, material, target):
-        """Recolore folhas já coloridas (sem paleta-base) pela ordem de brilho dos tons."""
+        """Recolors already-colored sheets (no base palette) by the brightness order of their tones."""
         _, colors = self.palette(material)
         palette = [hex_rgb(c) for c in colors[target]]
         luminance = lambda c: 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]
@@ -234,13 +234,13 @@ class Lpc:
         material = (definition.get("recolors") or {}).get("material")
 
         if color and color.startswith("file:"):
-            # "file:<variante>[><cor>:<material>]": folha já colorida, opcionalmente recolorida por brilho.
+            # "file:<variant>[><color>:<material>]": an already-colored sheet, optionally recolored by brightness.
             variant, _, recolor_to = color[5:].partition(">")
             per_anim = folder / anim / f"{variant}.png"
             if per_anim.exists():
                 image = Image.open(per_anim).convert("RGBA")
             elif anim == "walk":
-                # Folha universal antiga: recorta a caminhada.
+                # Old universal sheet: crop the walk.
                 sheet = Image.open(folder / f"{variant}.png").convert("RGBA")
                 top = UNIVERSAL_WALK_ROW * FRAME
                 image = sheet.crop((0, top, 9 * FRAME, top + 4 * FRAME))
@@ -276,7 +276,7 @@ def build(lpc_root, out_dir, preview_path=None):
             for name, color in spec["layers"]:
                 z, image = lpc.layer_image(name, spec["body"], anim, color)
                 if image is None:
-                    print(f"  aviso: {variant}/{anim} sem a camada {name}")
+                    print(f"  warning: {variant}/{anim} has no {name} layer")
                     continue
                 layers.append((z, image))
                 for credit in lpc.credits(name):
@@ -289,7 +289,7 @@ def build(lpc_root, out_dir, preview_path=None):
                 sheet.alpha_composite(image)
             sheet.save(out / f"{variant}-{anim}.png")
             if anim == "walk":
-                # Quadro parado olhando para frente (linha 2 = baixo) e de lado (linha 3 = direita).
+                # Standing frame facing front (row 2 = down) and sideways (row 3 = right).
                 front = sheet.crop((0, 2 * FRAME, FRAME, 3 * FRAME))
                 side = sheet.crop((0, 3 * FRAME, FRAME, 4 * FRAME))
                 previews.append((variant, front, side))

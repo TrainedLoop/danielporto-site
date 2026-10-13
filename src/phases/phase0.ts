@@ -7,8 +7,8 @@ const BASE = import.meta.env.BASE_URL;
 const CD_FROM = { x: 124, y: 106 };
 const CD_TO = { x: 274, y: 108 };
 
-// Trechos (0 a 1) da animação em que cada coisa acontece. Cada fala termina
-// exatamente quando a última animação dela acaba, sem tempo morto antes do botão.
+// Slices (0 to 1) of the animation where each thing happens. Each beat ends exactly
+// when its last animation ends, with no dead time before the button.
 const TIMELINE = {
   walk: [0, 0.3],
   boot: [0.3, 0.5],
@@ -70,7 +70,7 @@ export const phase0 = definePhase({
     ctx.drawImage(s.keyboard, 166, 102);
     ctx.drawImage(s.tower, 268, 100);
 
-    // Tela do monitor conforme o momento da história.
+    // Monitor screen for the current moment of the story.
     const screen =
       p >= TIMELINE.game[0]
         ? s.screenGame
@@ -81,7 +81,7 @@ export const phase0 = definePhase({
             : s.screenOff;
     ctx.drawImage(screen, 167, 68);
 
-    // CD: parado na pilha, depois voa em arco até o drive do gabinete.
+    // CD: resting on the stack, then flies in an arc into the tower's drive.
     const cdT = segment(p, TIMELINE.cd[0], TIMELINE.cd[1]);
     if (cdT < 1) {
       const x = CD_FROM.x + (CD_TO.x - CD_FROM.x) * cdT;
@@ -89,12 +89,12 @@ export const phase0 = definePhase({
         CD_FROM.y + (CD_TO.y - CD_FROM.y) * cdT - Math.sin(cdT * Math.PI) * 30;
       ctx.drawImage(s.cd, Math.round(x), Math.round(y));
     } else if (p < TIMELINE.game[0] + 0.03 && Math.floor(p * 400) % 2 === 0) {
-      // LED do drive piscando enquanto lê o CD.
+      // Drive LED blinking while it reads the CD.
       ctx.fillStyle = "#ffb030";
       ctx.fillRect(282, 111, 2, 1);
     }
 
-    // Personagem: entra andando pela esquerda e para de costas, olhando o monitor.
+    // Character: walks in from the left and stops with his back turned, facing the monitor.
     drawWalk(ctx, s.kid, p, TIMELINE.walk[0], TIMELINE.walk[1], -64, 150, 96, "up");
   },
 });

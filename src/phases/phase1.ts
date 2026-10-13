@@ -7,7 +7,7 @@ const P = `${BASE}sprites/phase1`;
 
 const NOTEPAD_LINES = 8;
 
-// Monitor na sala e a mesma tela vista de perto (zoom).
+// Monitor in the room and the same screen seen up close (zoom).
 const SCREEN = { x: 199, y: 66, w: 30, h: 22 };
 const MONITOR = { x: 192, y: 60, w: 44, h: 34 };
 const CLOSE_FRAME = { x: 60, y: 14, w: 200, h: 130 };
@@ -16,10 +16,10 @@ const CLOSE_SCREEN = { x: 72, y: 24, w: 176, h: 108 };
 const DANIEL_DESK_X = 182;
 const FRIEND_DOOR_X = 330;
 const FRIEND_STOP_X = 236;
-const APOSTILA_FROM = { x: 262, y: 120 };
-const APOSTILA_TO = { x: 208, y: 104 };
+const WORKBOOK_FROM = { x: 262, y: 120 };
+const WORKBOOK_TO = { x: 208, y: 104 };
 
-// Trechos (0 a 1) da animação. Cada fala termina quando a última animação dela acaba.
+// Slices (0 to 1) of the animation. Each beat ends exactly when its last animation ends.
 const TIMELINE = {
   walkIn: [0, 0.15],
   boot: [0.15, 0.2],
@@ -58,7 +58,7 @@ export const phase1 = definePhase({
     closeAlert: withText(`${P}/close-alert.png`),
     msnToast: withText(`${P}/msn-toast.png`),
     note: `${P}/note.png`,
-    apostila: `${P}/apostila.png`,
+    workbook: `${P}/apostila.png`,
     notepad0: `${P}/close-notepad-0.png`,
     notepad1: `${P}/close-notepad-1.png`,
     notepad2: `${P}/close-notepad-2.png`,
@@ -107,7 +107,7 @@ export const phase1 = definePhase({
   },
   staticAt: 0.95,
   draw(ctx, s, p) {
-    // ---- Sala
+    // ---- Living room
     ctx.drawImage(s.room, 0, 0);
     ctx.drawImage(s.plant, 150, 110);
     ctx.drawImage(s.desk, 176, 104);
@@ -126,7 +126,7 @@ export const phase1 = definePhase({
             : s.screenOff;
     ctx.drawImage(smallScreen, SCREEN.x, SCREEN.y);
 
-    // ---- Daniel: entra pela esquerda e senta no banquinho, de costas.
+    // ---- Daniel: walks in from the left and sits on the stool, back turned.
     if (p < TIMELINE.walkIn[1]) {
       drawEmptySeat(ctx, s.stool, DANIEL_DESK_X, 82);
       drawWalk(
@@ -144,7 +144,7 @@ export const phase1 = definePhase({
       drawSeated(ctx, s.danielSit, s.stool, DANIEL_DESK_X, 82);
     }
 
-    // ---- O amigo entra pela porta, entrega a apostila e vai embora.
+    // ---- The friend comes in through the door, hands over the workbook and leaves.
     if (p >= TIMELINE.friendIn[0] && p < TIMELINE.friendOut[1]) {
       if (p < TIMELINE.friendOut[0]) {
         drawWalk(
@@ -174,14 +174,14 @@ export const phase1 = definePhase({
     }
     const handT = segment(p, TIMELINE.handOver[0], TIMELINE.handOver[1]);
     if (handT > 0 && handT < 1) {
-      const x = lerp(APOSTILA_FROM.x, APOSTILA_TO.x, handT);
+      const x = lerp(WORKBOOK_FROM.x, WORKBOOK_TO.x, handT);
       const y =
-        lerp(APOSTILA_FROM.y, APOSTILA_TO.y, handT) -
+        lerp(WORKBOOK_FROM.y, WORKBOOK_TO.y, handT) -
         Math.sin(handT * Math.PI) * 18;
-      ctx.drawImage(s.apostila, Math.round(x), Math.round(y));
+      ctx.drawImage(s.workbook, Math.round(x), Math.round(y));
     }
 
-    // ---- Zoom no monitor: a tela cresce até virar um close-up.
+    // ---- Zoom into the monitor: the screen grows into a close-up.
     const zoomT = easeOut(segment(p, TIMELINE.zoom[0], TIMELINE.zoom[1]));
     if (zoomT <= 0) return;
 
@@ -228,7 +228,7 @@ export const phase1 = definePhase({
       Math.round(screen.h),
     );
 
-    // ---- MSN: o aviso sobe no canto da tela e as notinhas flutuam.
+    // ---- MSN: the toast slides up in the screen corner and music notes float.
     const msnT = segment(p, TIMELINE.msn[0], TIMELINE.msn[0] + 0.06);
     if (msnT > 0) {
       const toastY = lerp(

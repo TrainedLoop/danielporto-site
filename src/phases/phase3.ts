@@ -13,7 +13,7 @@ const BEDROOM_LCD: Rect = { x: 146, y: 74, w: 34, h: 24 };
 const CLOSE_FRAME: Rect = { x: 60, y: 14, w: 200, h: 130 };
 const CLOSE_SCREEN: Rect = { x: 72, y: 24, w: 176, h: 108 };
 const CURSOR_FROM = { x: 150, y: 70 };
-const CURSOR_TO = { x: 222, y: 106 }; // ícone de rede na bandeja do cliente
+const CURSOR_TO = { x: 222, y: 106 }; // network icon in the customer's system tray
 
 const SIT_Y = 82;
 const BOARD_LINES = 4;
@@ -23,17 +23,17 @@ const STUDENTS = [
   { sheet: "womanSit", x: 230 },
 ] as const;
 
-// Trechos (0 a 1) da animação. Cada fala termina quando a última animação dela acaba.
+// Slices (0 to 1) of the animation. Each beat ends exactly when its last animation ends.
 const TIMELINE = {
   walkIn: [0, 0.1],
   ring: [0.11, 0.2],
   zoomRemote: [0.2, 0.25],
   cursor: [0.26, 0.35],
   fixed: 0.36,
-  toClass: 0.45, // escurece e troca para a sala de aula
+  toClass: 0.45, // fades out and switches to the classroom
   board: [0.5, 0.68],
   item: 0.36,
-  toBedroom: 0.72, // escurece e troca para o quarto
+  toBedroom: 0.72, // fades out and switches to the bedroom
   zoomCourse: [0.78, 0.83],
   course: [0.83, 0.92],
   certificate: 0.93,
@@ -51,7 +51,7 @@ const lerpRect = (a: Rect, b: Rect, t: number): Rect => ({
 const drawRect = (ctx: CanvasRenderingContext2D, image: HTMLImageElement, r: Rect) =>
   ctx.drawImage(image, Math.round(r.x), Math.round(r.y), Math.round(r.w), Math.round(r.h));
 
-/** Zoom de um monitor da cena até o close-up, com o fundo escurecendo. */
+/** Zooms from a monitor in the scene to the close-up, darkening the background. */
 function zoom(
   ctx: CanvasRenderingContext2D,
   frameImage: HTMLImageElement,
@@ -132,7 +132,7 @@ export const phase3 = definePhase({
   staticAt: 0.6,
   draw(ctx, s, p) {
     if (p < TIMELINE.toClass) {
-      // ---- Escritório do provedor, de dia.
+      // ---- The provider's office, by day.
       ctx.drawImage(s.office, 0, 0);
       ctx.drawImage(s.officeDesk, 150, 106);
       ctx.drawImage(s.lcd, OFFICE_LCD.x, OFFICE_LCD.y);
@@ -160,7 +160,7 @@ export const phase3 = definePhase({
         }
       }
     } else if (p < TIMELINE.toBedroom) {
-      // ---- Sala de aula, à noite: o código vai sendo escrito no quadro.
+      // ---- Classroom, at night: the code is written on the board line by line.
       ctx.drawImage(s.classroom, 0, 0);
       const lines = Math.round(segment(p, TIMELINE.board[0], TIMELINE.board[1]) * BOARD_LINES);
       ctx.drawImage(s[`board${lines}` as keyof typeof s], 68, 18);
@@ -168,7 +168,7 @@ export const phase3 = definePhase({
         drawSeated(ctx, s[student.sheet], s.schoolChair, student.x, 100);
       }
     } else {
-      // ---- Quarto, de madrugada: o curso online de C#.
+      // ---- Bedroom, in the small hours: the online C# course.
       ctx.drawImage(s.bedroom, 0, 0);
       ctx.drawImage(s.nightDesk, 120, 106);
       ctx.drawImage(s.lcdNight, BEDROOM_LCD.x, BEDROOM_LCD.y);
@@ -179,7 +179,7 @@ export const phase3 = definePhase({
       }
     }
 
-    // ---- Escurece entre um ambiente e outro.
+    // ---- Fade to dark between settings.
     for (const cut of [TIMELINE.toClass, TIMELINE.toBedroom]) {
       const alpha = 1 - Math.abs(p - cut) / FADE;
       if (alpha > 0) {

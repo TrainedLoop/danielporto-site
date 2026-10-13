@@ -15,10 +15,10 @@ const CLOSE_SCREEN: Rect = { x: 72, y: 24, w: 176, h: 108 };
 const SIT = { x: 146, y: 82 };
 const CENTER = { x: 160, y: 72 };
 
-// Esteira de CI/CD (coordenadas da tela de perto): bolinhas das etapas e o contador.
+// CI/CD pipeline (close-up screen coordinates): stage dots and the counter.
 const STAGE_DOTS = [20, 38, 56, 74].map((y) => ({ x: 9, y: y + 3 }));
 const COUNTER = { x: 92, y: 56 };
-// Chat: mensagens e as barras da resposta.
+// Chat: messages and the answer's bars.
 const USER_MSG = { x: 84, y: 30 };
 const AI_MSG = { x: 84, y: 52 };
 const ANSWER_BARS = [
@@ -27,7 +27,7 @@ const ANSWER_BARS = [
   { color: "#c8beec", h: 14 },
   { color: "#c8beec", h: 8 },
 ];
-// Chamada de vídeo com o time: posição dos quadradinhos e de quem aparece em cada um.
+// Video call with the team: tile positions and who shows up in each one.
 const CALL_TILES = [
   [6, 16],
   [64, 16],
@@ -39,7 +39,7 @@ const CALL_TILES = [
 const CALL_FACES = ["danielWalk", "coworker", "devWoman", "friend", "neighborWoman", "neighborMan"] as const;
 const TERMINAL_LINES = 6;
 
-// Os itens de todas as fases, que se juntam em "IA aplicada".
+// The items from every phase, which merge into "applied AI".
 const ITEMS = [
   "phase0/item-cd",
   "phase1/item-apostila",
@@ -50,7 +50,7 @@ const ITEMS = [
   "phase6/item-box",
 ] as const;
 
-// Trechos (0 a 1) da animação. Cada fala termina quando a última animação dela acaba.
+// Slices (0 to 1) of the animation. Each beat ends exactly when its last animation ends.
 const TIMELINE = {
   walkIn: [0, 0.06],
   classChange: [0.07, 0.14],
@@ -196,13 +196,13 @@ export const phase7 = definePhase({
     } else {
       drawSeated(ctx, s.danielSit, s.chair, SIT.x, SIT.y);
     }
-    // Depois da fusão, a estrela da IA fica brilhando em cima do Daniel.
+    // After the merge, the AI star keeps shining above Daniel.
     if (p >= TIMELINE.glow[1]) {
       const bob = Math.round(Math.sin(p * 90) * 2);
       ctx.drawImage(s.itemIa, SIT.x + 16, 46 + bob);
     }
 
-    // ---- Troca de classe: o selo do C# sobe e some; React e TS aparecem no lugar.
+    // ---- Class change: the C# badge rises and fades; React and TS appear in its place.
     const change = segment(p, TIMELINE.classChange[0], TIMELINE.classChange[1]);
     if (change > 0 && p < TIMELINE.zoomCi[1]) {
       const out = Math.min(1, change * 2);
@@ -224,8 +224,8 @@ export const phase7 = definePhase({
       }
     }
 
-    // ---- Zoom na tela. Primeiro a esteira de CI/CD; depois do "tudo se conectou",
-    // o chat, a chamada com o time e o terminal com o MCP e os agentes.
+    // ---- Zoom into the screen. First the CI/CD pipeline; after "it all clicked",
+    // the chat, the call with the team and the terminal with MCP and the agents.
     const ciAmount =
       easeOut(segment(p, TIMELINE.zoomCi[0], TIMELINE.zoomCi[1])) *
       (1 - easeOut(segment(p, TIMELINE.zoomOutCi[0], TIMELINE.zoomOutCi[1])));
@@ -276,7 +276,7 @@ export const phase7 = definePhase({
       }
 
       if (amount >= 1 && content === s.call) {
-        // As caras do time entram uma a uma (recorte da cabeça, de frente, das folhas LPC).
+        // The team's faces pop in one by one (front-facing head crop from the LPC sheets).
         const facesT = segment(p, TIMELINE.faces[0], TIMELINE.faces[1]);
         CALL_FACES.forEach((face, i) => {
           if (facesT < i / CALL_FACES.length) return;
@@ -297,7 +297,7 @@ export const phase7 = definePhase({
       }
     }
 
-    // ---- "Tudo se conectou": os itens da jornada voam até o centro e viram "IA aplicada".
+    // ---- "It all clicked": the journey's items fly to the center and become "applied AI".
     const flyT = segment(p, TIMELINE.fly[0], TIMELINE.fly[1]);
     if (flyT <= 0 || p >= TIMELINE.glow[1]) return;
     ctx.fillStyle = `rgba(27, 22, 34, ${0.75 * Math.min(1, flyT * 3)})`;

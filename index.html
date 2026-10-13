@@ -14,7 +14,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Compartilhamento (LinkedIn, WhatsApp, Slack, Facebook) -->
+    <!-- Sharing (LinkedIn, WhatsApp, Slack, Facebook) -->
     <meta property="og:type" content="profile" />
     <meta property="og:site_name" content="Daniel Porto" />
     <meta property="og:locale" content="pt_BR" />
@@ -43,7 +43,7 @@
     />
     <meta name="twitter:image" content="https://www.danielporto.com.br/og-image.png" />
 
-    <!-- Dados estruturados para buscadores -->
+    <!-- Structured data for search engines -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -72,12 +72,12 @@
       }
     </script>
 
-    <!-- Fontes do topo da página inicial (nome e texto); as demais vêm pelo styles.css. -->
+    <!-- Fonts for the top of the home page (name and text); the rest come through styles.css. -->
     <link rel="preload" href="/src/assets/fonts/press-start-2p-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/src/assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body style="margin: 0; background: #1b1622">
-    <!-- O build preenche o #root com o HTML de cada página (scripts/prerender.js). -->
+    <!-- The build fills #root with each page's HTML (scripts/prerender.js). -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
