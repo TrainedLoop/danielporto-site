@@ -54,6 +54,15 @@ export type Job = {
   bullets: string[];
 };
 
+/** Âncora estável de um emprego no currículo: slug de empresa + cargo. */
+export const jobId = (job: Pick<Job, "company" | "role">) =>
+  `${job.company} ${job.role}`
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 /** Experiência, da mais recente para a mais antiga. */
 export const experience: Job[] = [
   {
@@ -149,3 +158,35 @@ export const languages = [
   { name: "Português", level: "nativo" },
   { name: "Inglês", level: "intermediário" },
 ];
+
+/** Textos fixos da interface (topo, home e currículo), traduzidos junto com o conteúdo. */
+export const ui = {
+  nav: { label: "Navegação", story: "história", resume: "currículo" },
+  footerCredits: "créditos dos sprites e da fonte",
+  home: {
+    avatarAlt: "Daniel em pixel art",
+    hello: "Olá, eu sou",
+    roleAt: "na",
+    choiceTitle: "Como você quer conhecer a minha trajetória?",
+    playLabel: "Jogar a história",
+    playHint: "Da casa da minha avó até a IA em produção, em 8 fases de pixel art. Uns 5 minutos.",
+    resumeLabel: "Ler o currículo",
+    resumeHint: "A versão em texto, direta ao ponto, começando pela experiência atual.",
+    highlightsLabel: "O que eu faço",
+    skillsLabel: "Competências",
+  },
+  resume: {
+    roleAt: "na",
+    playStory: "▶ jogar a história",
+    downloadPdf: "baixar PDF",
+    pdfTitle: "Daniel Porto - Currículo",
+    summary: "Resumo",
+    experience: "Experiência",
+    skills: "Competências",
+    languages: "Idiomas",
+  },
+};
+
+/** Tudo o que a home e o currículo mostram, num objeto só: cada idioma tem o seu. */
+export const content = { profile, summary, highlights, experience, skills, languages, ui };
+export type Content = typeof content;

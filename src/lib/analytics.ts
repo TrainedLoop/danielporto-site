@@ -37,8 +37,10 @@ export function trackFase(event: "fase_iniciada" | "fase_concluida" | "fase_pula
   track(event, { fase: Number(id.replace(/\D/g, "")), fase_id: id });
 }
 
-function pageview() {
-  const rota = window.location.hash.replace(/^#\/?/, "") || "home";
+/** Chamado no boot e a cada troca de página (src/lib/route.ts): as rotas usam a History API. */
+export function trackPageview() {
+  const base = import.meta.env.BASE_URL;
+  const rota = window.location.pathname.slice(base.length).replace(/\/+$/, "") || "home";
   track("$pageview", { rota });
 }
 
@@ -62,7 +64,7 @@ async function load() {
   posthog.init(KEY!, {
     api_host: HOST,
     persistence: "memory",
-    capture_pageview: false, // as rotas são por hash: o $pageview é manual
+    capture_pageview: false, // o $pageview é manual, a cada troca de página
     capture_pageleave: false,
     autocapture: false,
     disable_session_recording: true,
@@ -87,8 +89,7 @@ async function load() {
 /** Chamado uma vez no boot: registra os ouvintes e agenda o carregamento do PostHog. */
 export function initAnalytics() {
   if (!enabled) return;
-  pageview();
-  window.addEventListener("hashchange", pageview);
+  trackPageview();
   document.addEventListener("click", onClick, { capture: true });
   const start = () => void load().catch(() => {});
   if ("requestIdleCallback" in window) window.requestIdleCallback(start, { timeout: 4000 });
