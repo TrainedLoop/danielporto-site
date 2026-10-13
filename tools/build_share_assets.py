@@ -1,10 +1,11 @@
-"""Gera a imagem de compartilhamento (Open Graph) e os ícones do site.
+"""Generates the share image (Open Graph) and the site icons.
 
-Uso:
-    python -I tools/build_share_assets.py <pasta-public>
+Usage:
+    python -I tools/build_share_assets.py <public-dir> [--lang en]
 
-- og-image.png (1200x630): avatar, nome, cargo e os itens da história.
-- favicon-32.png, apple-touch-icon.png (180x180): o rosto do personagem.
+- og-image.png (1200x630): avatar, name, role and the story's items.
+- og-image.en.png: the same card in English (only this file is written with `--lang en`).
+- favicon-32.png, apple-touch-icon.png (180x180): the character's face.
 """
 
 import sys
@@ -47,7 +48,23 @@ def avatar(public):
     return sheet.crop((0, DOWN_ROW * FRAME, FRAME, (DOWN_ROW + 1) * FRAME))
 
 
-def og_image(public):
+# Card text per language: name and role, stack, and the call to action.
+CARD_TEXT = {
+    "pt": {
+        "role": ("Desenvolvedor Full", "Stack Sênior"),
+        "stack": ("IA aplicada · React", "TypeScript · C#/.NET"),
+        "cta": ("currículo e a minha", "história em pixel art"),
+    },
+    "en": {
+        "role": ("Senior Full Stack", "Developer"),
+        "stack": ("Applied AI · React", "TypeScript · C#/.NET"),
+        "cta": ("résumé and my story", "in pixel art"),
+    },
+}
+
+
+def og_image(public, lang="pt"):
+    words = CARD_TEXT[lang]
     img = Image.new("RGB", (1200, 630), BG)
     d = ImageDraw.Draw(img)
     # Moldura e grade sutil, no clima de pixel art.
@@ -64,12 +81,12 @@ def og_image(public):
 
     x = 480
     text(d, (x, 110), "Daniel Porto", 48, ACCENT)
-    text(d, (x, 196), "Desenvolvedor Full", 22, INK)
-    text(d, (x, 230), "Stack Sênior", 22, INK)
-    text(d, (x, 290), "IA aplicada · React", 18, MUTED)
-    text(d, (x, 320), "TypeScript · C#/.NET", 18, MUTED)
-    text(d, (x, 380), "currículo e a minha", 16, INK)
-    text(d, (x, 406), "história em pixel art", 16, INK)
+    text(d, (x, 196), words["role"][0], 22, INK)
+    text(d, (x, 230), words["role"][1], 22, INK)
+    text(d, (x, 290), words["stack"][0], 18, MUTED)
+    text(d, (x, 320), words["stack"][1], 18, MUTED)
+    text(d, (x, 380), words["cta"][0], 16, INK)
+    text(d, (x, 406), words["cta"][1], 16, INK)
 
     # Os itens da jornada, em fila.
     for i, item in enumerate(ITEMS):
@@ -93,8 +110,12 @@ def icons(public):
     return small, big
 
 
-def main(public_dir):
+def main(public_dir, lang="pt"):
     public = Path(public_dir)
+    if lang != "pt":
+        og_image(public, lang).save(public / f"og-image.{lang}.png", optimize=True)
+        print("ok", lang)
+        return
     og_image(public).save(public / "og-image.png", optimize=True)
     small, big = icons(public)
     small.save(public / "favicon-32.png")
@@ -103,4 +124,12 @@ def main(public_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    args = sys.argv[1:]
+    lang = "pt"
+    if "--lang" in args:
+        i = args.index("--lang")
+        lang = args[i + 1]
+        del args[i : i + 2]
+    if lang not in CARD_TEXT:
+        raise SystemExit(f"unknown language: {lang}")
+    main(args[0], lang)

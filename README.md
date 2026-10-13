@@ -3,12 +3,22 @@
 Portfólio do Daniel Porto: resumo, currículo e, opcionalmente, a trajetória contada
 como um jogo em pixel art, da casa da avó até a IA em produção.
 
-- `/` — home com o resumo e a escolha entre jogar a história ou ler o currículo
-- `/historia/` — 8 fases em pixel art, uma por vez, com inventário
-- `/curriculo/` — o currículo em texto
-- `/creditos/` — autores e licenças dos sprites e da fonte
+O site inteiro existe em português e em inglês:
 
-Os links antigos com hash (`#/curriculo`) continuam funcionando: o app leva para o caminho novo.
+| Página | Português | Inglês |
+| --- | --- | --- |
+| home com o resumo e a escolha entre jogar a história ou ler o currículo | `/` | `/en/` |
+| 8 fases em pixel art, uma por vez, com inventário | `/historia/` | `/en/story/` |
+| o currículo em texto | `/curriculo/` | `/en/resume/` |
+| autores e licenças dos sprites e da fonte | `/creditos/` | `/en/credits/` |
+
+Link direto para uma fase: `/historia/?fase=3` ou `/en/story/?phase=3`. Link para um emprego no
+currículo: `/curriculo/#<id do emprego>` (os ids são os mesmos nos dois idiomas). O seletor PT · EN
+no topo leva para a mesma página no outro idioma, mantendo a fase da história e o emprego do
+currículo.
+
+Os links antigos continuam funcionando: os com hash (`#/curriculo`, `#/en/curriculo`) e o
+`/en/curriculo/`, que ficou no ar por alguns minutos, levam para o caminho novo.
 
 ## Rodar
 
@@ -28,16 +38,24 @@ A publicação é automática: cada push na `main` faz o build e publica no GitH
 - `src/engine/` — o motor das cenas: falas com texto digitado, animação por fala, botão de
   continuar, pular e inventário. Multiplicadores de velocidade em `src/engine/config.ts`
   (gerais) e em cada fala (`speed` e `textSpeed`).
-- `src/phases/` — cada fase é só configuração: sprites, falas e a função de desenho.
+- `src/phases/` — cada fase é só configuração: sprites, o tempo de cada fala e a função de
+  desenho. O texto das falas fica nos locales (`story.phases.<fase>.beats`), com um id por fala;
+  o `definePhase` confere no TypeScript que os ids da fase são exatamente os dos locales (faltar
+  ou sobrar fala é erro de tipo). Sprites com texto desenhado são marcados com `withText(...)` e
+  têm uma variante em inglês ao lado (`<nome>.en.png`).
 - `src/i18n/` — traduções com i18next: `locales/pt.ts` e `locales/en.ts` têm a interface, o
-  conteúdo da home e do currículo e o título e a descrição de cada página (vão para o `<title>`,
-  a meta description e o compartilhamento). As chaves são tipadas a partir do `pt.ts`, e o
-  `en.ts` precisa ter as mesmas. O idioma vem da página (`/en/` e `/en/curriculo/`), não do
-  navegador; a história e os créditos ficam só em português.
+  conteúdo da home e do currículo, a história (título, descrição da cena, item e falas de cada
+  fase), os créditos e o título e a descrição de cada página (vão para o `<title>`, a meta
+  description e o compartilhamento). As chaves são tipadas a partir do `pt.ts`, e o `en.ts`
+  precisa ter as mesmas. O idioma vem da página (prefixo `/en/`), não do navegador.
 - Rotas por caminho com a History API (`src/lib/route.ts`), sem biblioteca de rotas. No build,
   `scripts/prerender.js` renderiza cada rota com `react-dom/server` a partir dos componentes
   (`src/entry-server.ts`) e grava `dist/<rota>/index.html`, com título, descrição, canonical e
-  `og:url` de cada página, mais um `dist/404.html` que abre o app em caminhos desconhecidos. No
+  `og:url` de cada página, `hreflang` apontando para a versão no outro idioma e, em inglês, a
+  imagem de compartilhamento em inglês (`og-image.en.png`). Também grava o `dist/404.html`, que
+  abre o app em caminhos desconhecidos, uma página que só redireciona em cada endereço antigo
+  (`dist/en/curriculo/`) e o `dist/sitemap.xml`, com todas as páginas e as alternativas de
+  idioma. O build falha se alguma fala estiver sem texto ou se faltar algum sprite. No
   navegador, o React hidrata o HTML que já veio pronto.
 
 ## Métricas
@@ -78,12 +96,19 @@ Os sprites em `public/sprites/` são gerados pelos scripts em `tools/` (Python +
 - `tools/build_character.py` monta o personagem e os NPCs a partir das camadas do
   [Universal LPC Spritesheet Character Generator](https://github.com/LiberatedPixelCup/Universal-LPC-Spritesheet-Character-Generator)
   (clone em outra pasta; o script só lê os PNGs e JSONs) e gera o `CREDITS.csv`.
-- `tools/build_props*.py` desenham em código os cenários, objetos e telas de cada fase.
+- `tools/build_props*.py` desenham em código os cenários, objetos e telas de cada fase. Com
+  `--lang en`, desenham de novo em inglês e gravam só os sprites que mudaram (os que têm texto),
+  como `<nome>.en.png`; a lista sai no terminal e precisa bater com os `withText(...)` da fase.
+- `tools/build_share_assets.py` gera a imagem de compartilhamento e os ícones; com `--lang en`,
+  só a `og-image.en.png`.
 
 ```bash
 python -I tools/build_character.py <pasta-do-lpc> public/sprites/character
 python -I tools/build_props.py public/sprites/phase0
 python -I tools/build_props_phase1.py public/sprites/phase1   # e assim por diante até a fase 7
+python -I tools/build_props_phase1.py public/sprites/phase1 --lang en   # variantes em inglês
+python -I tools/build_share_assets.py public
+python -I tools/build_share_assets.py public --lang en
 ```
 
 ## Licenças da arte

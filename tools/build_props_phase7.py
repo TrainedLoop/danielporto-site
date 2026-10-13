@@ -1,10 +1,11 @@
-"""Desenha em pixel art os objetos da fase 7 (Purple Metrics, de casa).
+"""Draws the phase 7 objects in pixel art (Purple Metrics, from home).
 
-Uso:
-    python -I tools/build_props_phase7.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props_phase7.py <output-dir> [--lang en]
 
-O home office (com o Pão de Açúcar na janela), a troca de stack, a esteira de
-CI/CD, o chat de IA do produto e o item final, "IA aplicada".
+The home office (with Sugarloaf Mountain in the window), the stack change, the CI/CD
+pipeline, the product's AI chat and the final item, "applied AI".
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text.
 """
 
 import sys
@@ -12,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from build_props import H, OUTLINE, W, WHITE, WOOD, box, canvas, rect  # noqa: E402
+from build_props import H, OUTLINE, W, WHITE, WOOD, box, canvas, rect, run, tr  # noqa: E402
 from build_props_phase1 import CLOSE_H, CLOSE_W, PLANT, text  # noqa: E402
 from build_props_phase3 import FLOOR_Y  # noqa: E402
 
@@ -96,7 +97,10 @@ def badge(label, color):
 
 # ---------------------------------------------------------------- telas de perto
 
-STAGES = ["build", "lint", "testes", "deploy"]
+def stages():
+    return ["build", "lint", tr("testes", "tests"), "deploy"]
+
+
 # Posição de cada etapa na tela de perto; o código acende a bolinha da etapa.
 STAGE_Y0, STAGE_STEP = 20, 18
 
@@ -106,16 +110,16 @@ def close_pipeline():
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (24, 26, 34))
     rect(d, 0, 0, CLOSE_W, 12, (44, 48, 60))
-    text(d, 4, 2, "CI/CD do front", (220, 220, 230))
-    for i, stage in enumerate(STAGES):
+    text(d, 4, 2, tr("CI/CD do front", "Front-end CI/CD"), (220, 220, 230))
+    for i, stage in enumerate(stages()):
         y = STAGE_Y0 + i * STAGE_STEP
         box(d, 6, y, 72, 14, (50, 54, 66), (70, 74, 86), (30, 32, 40))
         d.ellipse((9, y + 3, 16, y + 10), fill=(80, 84, 100))
         text(d, 20, y + 3, stage, (190, 194, 210))
-        if i < len(STAGES) - 1:
+        if i < len(stages()) - 1:
             rect(d, 40, y + 14, 2, 4, (90, 94, 110))
     text(d, 92, 30, "deploys", (180, 184, 200))
-    text(d, 92, 40, "em prod", (180, 184, 200))
+    text(d, 92, 40, tr("em prod", "to prod"), (180, 184, 200))
     box(d, 90, 54, 80, 22, (30, 32, 40), None, (70, 74, 86))
     return img
 
@@ -141,7 +145,7 @@ def close_dashboard():
     # Painel do chat à direita.
     box(d, 80, 16, 92, 88, WHITE, None, (210, 206, 226))
     rect(d, 81, 17, 90, 10, PURPLE[0])
-    text(d, 84, 18, "Chat IA", WHITE)
+    text(d, 84, 18, tr("Chat IA", "AI chat"), WHITE)
     box(d, 83, 92, 86, 10, (240, 238, 248), None, (210, 206, 226))
     return img
 
@@ -155,7 +159,7 @@ def close_call():
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (30, 30, 40))
     rect(d, 0, 0, CLOSE_W, 12, (50, 50, 64))
-    text(d, 4, 2, "Call do time", (220, 220, 230))
+    text(d, 4, 2, tr("Call do time", "Team call"), (220, 220, 230))
     for x, y in CALL_TILES:
         box(d, x, y, CALL_TILE[0], CALL_TILE[1], (60, 60, 76), (80, 80, 96), (40, 40, 52))
     rect(d, 0, CLOSE_H - 10, CLOSE_W, 10, (50, 50, 64))
@@ -166,18 +170,22 @@ def close_call():
 def live_label():
     img, d = canvas(84, 12)
     box(d, 0, 0, 84, 12, (40, 150, 80), (70, 190, 110), (20, 100, 50))
-    text(d, 3, 2, "chat no ar", WHITE)
+    text(d, 3, 2, tr("chat no ar", "chat live"), WHITE)
     return img
 
 
-TERMINAL_LINES = [
-    ("$ mcp conectar", (200, 200, 210)),
-    ("  APIs da Purple ok", GREEN),
-    ("$ agente spec", (200, 200, 210)),
-    ("  plano ok", GREEN),
-    ("  testes ok", GREEN),
-    ("  deploy ok", GREEN),
-]
+TERMINAL_LINES = 6
+
+
+def terminal_lines():
+    return [
+        (tr("$ mcp conectar", "$ mcp connect"), (200, 200, 210)),
+        (tr("  APIs da Purple ok", "  Purple APIs ok"), GREEN),
+        (tr("$ agente spec", "$ agent spec"), (200, 200, 210)),
+        (tr("  plano ok", "  plan ok"), GREEN),
+        (tr("  testes ok", "  tests ok"), GREEN),
+        ("  deploy ok", GREEN),
+    ]
 
 
 def close_terminal(lines):
@@ -185,9 +193,9 @@ def close_terminal(lines):
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (16, 18, 24))
     rect(d, 0, 0, CLOSE_W, 12, (44, 48, 60))
     text(d, 4, 2, "terminal", (200, 200, 210))
-    for i, (line, color) in enumerate(TERMINAL_LINES[:lines]):
+    for i, (line, color) in enumerate(terminal_lines()[:lines]):
         text(d, 4, 16 + i * 14, line, color)
-    if lines < len(TERMINAL_LINES):
+    if lines < TERMINAL_LINES:
         rect(d, 4, 16 + lines * 14, 6, 8, (200, 200, 210))
     return img
 
@@ -195,15 +203,15 @@ def close_terminal(lines):
 def user_message():
     img, d = canvas(84, 20)
     box(d, 0, 0, 84, 20, PURPLE[0], PURPLE[0], PURPLE[1])
-    text(d, 3, 2, "Qual canal", WHITE)
-    text(d, 3, 11, "rende mais", WHITE)
+    text(d, 3, 2, tr("Qual canal", "Best ROI"), WHITE)
+    text(d, 3, 11, tr("rende mais", "channel?"), WHITE)
     return img
 
 
 def ai_message():
     img, d = canvas(84, 46)
     box(d, 0, 0, 84, 46, (238, 236, 246), None, (210, 206, 226))
-    text(d, 3, 2, "Busca paga", (40, 40, 60))
+    text(d, 3, 2, tr("Busca paga", "Search ads"), (40, 40, 60))
     rect(d, 4, 42, 76, 1, (180, 176, 200))
     return img
 
@@ -236,9 +244,7 @@ def ia_item(size):
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+def build():
     sprites = {
         "room": home_office(),
         "desk": home_desk(),
@@ -256,14 +262,12 @@ def main(out_dir):
     }
     sprites["call"] = close_call()
     sprites["live"] = live_label()
-    for lines in range(len(TERMINAL_LINES) + 1):
+    for lines in range(TERMINAL_LINES + 1):
         sprites[f"terminal-{lines}"] = close_terminal(lines)
     for value in range(0, 900, 100):
         sprites[f"count-{value}"] = deploy_counter(value)
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", len(sprites), "sprites")
+    return sprites
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

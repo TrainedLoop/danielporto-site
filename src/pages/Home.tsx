@@ -44,7 +44,7 @@ export function Home() {
           {t("home.choiceTitle")}
         </h2>
         <div className="choice__options">
-          <a className="choice__card choice__card--play" href={href("historia")} onClick={() => track("escolha_home", { opcao: "historia" })}>
+          <a className="choice__card choice__card--play" href={href("historia", lang)} onClick={() => track("escolha_home", { opcao: "historia" })}>
             <span className="choice__icon" aria-hidden="true">
               ▶
             </span>

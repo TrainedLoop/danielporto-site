@@ -1,5 +1,5 @@
-// Textos em inglês: mesmas chaves de pt.ts (o tipo Messages garante isso).
-// A história em pixel art continua só em português.
+// English texts: the same keys as pt.ts (the Messages type enforces it), including the
+// pixel-art story and the credits.
 
 import type { Job, Messages } from "./pt";
 
@@ -149,9 +149,9 @@ const languages = [
   { name: "English", level: "intermediate" },
 ];
 
-/** Textos fixos da interface (topo, home e currículo). */
+/** Fixed UI texts (top bar, home, résumé and credits). */
 const ui = {
-  nav: { label: "Navigation", story: "story", resume: "résumé" },
+  nav: { label: "Navigation", story: "story", resume: "résumé", language: "Language" },
   footerCredits: "sprite and font credits",
   home: {
     avatarAlt: "Daniel in pixel art",
@@ -159,8 +159,7 @@ const ui = {
     roleAt: "at",
     choiceTitle: "How would you like to get to know my career?",
     playLabel: "Play the story",
-    playHint:
-      "From my grandmother's house to AI in production, in 8 pixel-art levels. About 5 minutes. The story is in Portuguese.",
+    playHint: "From my grandmother's house to AI in production, in 8 pixel-art levels. About 5 minutes.",
     resumeLabel: "Read the résumé",
     resumeHint: "The text version, straight to the point, starting with my current role.",
     highlightsLabel: "What I do",
@@ -168,7 +167,7 @@ const ui = {
   },
   resume: {
     roleAt: "at",
-    playStory: "▶ play the story (in Portuguese)",
+    playStory: "▶ play the story",
     downloadPdf: "download PDF",
     pdfTitle: "Daniel Porto - Resume",
     summary: "Summary",
@@ -176,7 +175,149 @@ const ui = {
     skills: "Skills",
     languages: "Languages",
   },
+  credits: {
+    title: "Credits",
+    intro:
+      "The characters were put together with the <lpc>Universal LPC Spritesheet Character Generator</lpc>, using art from the Liberated Pixel Cup and the OpenGameArt community. Backgrounds, objects and screens were drawn for this site. On-screen text uses the Press Start 2P font by CodeMan38; the story's dialogue and hints use VT323 by Peter Hull; and body text uses Inter by Rasmus Andersson. All three are under the SIL Open Font License.",
+    downloadCsv: "Download the full list (CSV)",
+  },
 };
+
+/** Story UI: the scene, the ending and the inventory. */
+const storyUi = {
+  scene: {
+    loading: "loading…",
+    loadError: "LOADING FAILED",
+    loadErrorHint: "The images for this level didn't load.",
+    retry: "try again",
+    skipPhase: "skip level",
+    pressStart: "PRESS START",
+    startHint: "click, or press Enter",
+    continue: "continue",
+    finish: "finish",
+    skip: "skip",
+    phaseClear: "LEVEL CLEAR",
+    replay: "watch again",
+    nextPhase: "next level",
+    seeOnResume: "see it on my résumé",
+  },
+  ending: {
+    title: "TO BE CONTINUED…",
+    text: "Today I'm a senior full stack developer at Purple Metrics, taking AI to production.",
+    resume: "read the résumé",
+    home: "back to the start",
+    credits: "credits",
+    restart: "play again",
+  },
+  inventory: { label: "Inventory", title: "ITEMS" },
+};
+
+/** Texts of each phase, with the same beat ids as pt.ts. */
+const phases: Messages["story"]["phases"] = {
+  phase0: {
+    title: "Level 0: Grandma's house",
+    description:
+      "A child sits at a beige Windows 95 computer in a bedroom at his grandmother's house, next to a stack of CD-ROM magazines.",
+    item: "CD-ROM",
+    beats: {
+      holidays: "The '90s. I was about 8 and spent my school holidays at my grandma's house.",
+      unclePc: "My uncle's PC was there, running Windows 95. I'd spend hours on it.",
+      cdrom:
+        "He used to buy a CD-ROM magazine that came with a disc full of programs and games. That's where it all began.",
+    },
+  },
+  phase1: {
+    title: "Level 1: My first PC",
+    description:
+      "A teenager sits at a Windows XP computer in the living room. A friend hands him an HTML workbook. On screen, a homemade Final Fantasy fan site and an alert that says Hello, world.",
+    item: "HTML workbook",
+    beats: {
+      firstPc: "2004. My first PC, in our living room. A lot like my uncle's, but now with Windows XP.",
+      workbook: "A friend lent me an HTML workbook from his school.",
+      firstSites: "I started making my first websites, like a Final Fantasy fan site that never actually went live.",
+      javascript: "Then came JavaScript and my first alert(). And the MSN Messenger sound going off all the time.",
+    },
+  },
+  phase2: {
+    title: "Level 2: The neighborhood tech guy",
+    description:
+      "A teenager has set up a computer repair bench in his family's garage. Neighbors show up carrying PC towers; he swaps memory and hard drives, reinstalls Windows and heads out with his toolbox to fix a computer at a customer's home.",
+    item: "Screwdriver",
+    beats: {
+      courses: "At 16, I took courses in PC assembly and repair, and in Microsoft Office.",
+      neighborhood: "I became the neighborhood tech guy: every PC on the block went through my hands.",
+      repairs: "I wiped and reinstalled Windows and swapped parts, like hard drives and memory.",
+      houseCalls: "Sometimes at my place, sometimes at the customer's.",
+    },
+  },
+  phase3: {
+    title: "Level 3: Tech support and college",
+    description:
+      "By day, a young man answers calls at a radio internet provider's support desk and fixes a customer's connection through remote access. At night, he sits in a C++ class in his Information Systems degree, and in the small hours he finishes an online C# course.",
+    item: "Support headset",
+    beats: {
+      support: "Working tech support at a radio internet provider, I answered customers' calls…",
+      remoteAccess: "…and fixed their problems through remote access.",
+      college: "At night, college: Information Systems. That's where I met C and C++.",
+      csharpCourse: "Halfway through college, I took an online C# course.",
+    },
+  },
+  phase4: {
+    title: "Level 4: Hebara, my first dev job",
+    description:
+      "A young man with a mohawk walks into an office with scratch-card posters and picks up the badge for his first job. On the monitor, he writes the intranet code in C#, makes his first production deploy and scratches a scratch card that reveals: new site.",
+    item: "First job badge",
+    beats: {
+      firstJob: "In 2013, a C# course led me to my first job as a junior developer, at Hebara.",
+      intranet: "I started by building the company intranet, with C#, .NET MVC, WebForms and an Oracle database.",
+      firstDeploys: "Then came my first production deploys.",
+      lotterySites: "I also helped restructure the Raspadinha do Rio and Rio de Prêmios websites.",
+    },
+  },
+  phase5: {
+    title: "Level 5: Fulllab, e-commerce and mobile",
+    description:
+      "In an open-plan office, a young man with a mohawk uncovers the VTEX API endpoints with a magnifying glass, connects the app to stores like Sephora and Magento through an API and, surrounded by a team of four, levels up to tech lead.",
+    item: "Phone with the app",
+    beats: {
+      fulllab: "In 2015 I moved to Fulllab, to work on e-commerce and mobile apps.",
+      vtex: "I integrated VTEX through reverse engineering, back when it had no documentation yet.",
+      apis: "I built the apps' APIs, a Magento plugin and Selenium bots for stores with no API, like Sephora.",
+      techLead: "In 2017 I became tech lead, with a team of 4.",
+    },
+  },
+  phase6: {
+    title: "Level 6: Fu2re and computer vision",
+    description:
+      "In an office with a fish tank, a bearded man works on SmartVision, a platform that trains computer vision models. Out on the street, a car with a camera on its roof photographs the utility poles of Light, Rio's power company, and they get detection boxes. Finally, a black box labeled AI opens up.",
+    item: "The AI black box, opened",
+    beats: {
+      fu2re: "In 2019 I moved to Fu2re, where I first heard about AI for real, before the boom.",
+      smartVision:
+        "On SmartVision, the company's computer vision platform, I built everything from the APIs with the training queue to the React interface.",
+      polesCar:
+        "I worked on the software for a car that photographed the utility poles of Light, Rio's power company, around the city, like Google's cars.",
+      blackBox: "And bit by bit I opened the black box to understand how a model gets trained.",
+    },
+  },
+  phase7: {
+    title: "Level 7: Purple Metrics, it all connects",
+    description:
+      "In a home office with Sugarloaf Mountain in the window, a bearded man swaps C# for React and TypeScript and watches the CI/CD pipeline pass 800 deploys. The items from the journey merge into a star: applied AI. With it comes the product's AI chat, built with the team on a video call, and a terminal connecting MCP and AI agents.",
+    item: "Applied AI",
+    beats: {
+      purple:
+        "In 2022 I joined Purple Metrics, working from home, and switched stacks: from back end to front end, with React and TypeScript.",
+      pipeline: "I built the front end's CI/CD pipeline, with over 800 production deploys.",
+      appliedAi: "Then it all clicked: everything I'd picked up along the way became applied AI.",
+      chat: "With that, I built the first version of Purple's conversational chat.",
+      today: "Today I keep building the current version with the team, already live with customers.",
+      mcp: "I also built Purple's first MCP proof of concept, and I help the team develop with AI agents.",
+    },
+  },
+};
+
+const story = { ...storyUi, phases };
 
 /** Título e descrição de cada página, gravados no HTML estático de cada rota no build. */
 const meta = {
@@ -193,14 +334,19 @@ const meta = {
   historia: {
     title: "The story in pixel art · Daniel Porto",
     description:
-      "Daniel Porto's career told as a pixel-art game (in Portuguese): 8 levels, from his grandmother's house to AI in production at Purple Metrics.",
+      "Daniel Porto's career told as a pixel-art game: 8 levels, from his grandmother's house to AI in production at Purple Metrics.",
   },
   creditos: {
     title: "Sprite and font credits · Daniel Porto",
     description:
-      "Authors and licenses of the pixel art on Daniel Porto's site: sprites from the Liberated Pixel Cup and OpenGameArt, and the fonts.",
+      "Authors and licenses of the pixel art on Daniel Porto's site: sprites from the Liberated Pixel Cup and OpenGameArt, and the Press Start 2P font.",
   },
 };
 
-const en: Messages = { ...ui, meta, profile, summary, highlights, experience, skills, languages };
+/** Sharing: alt text of the English Open Graph image (public/og-image.en.png). */
+const share = {
+  imageAlt: "Pixel-art card with Daniel Porto's avatar, his role and the items from the story.",
+};
+
+const en: Messages = { ...ui, meta, share, story, profile, summary, highlights, experience, skills, languages };
 export default en;

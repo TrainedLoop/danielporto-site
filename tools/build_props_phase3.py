@@ -1,10 +1,11 @@
-"""Desenha em pixel art os objetos da fase 3 (suporte no provedor e faculdade).
+"""Draws the phase 3 objects in pixel art (ISP tech support and college).
 
-Uso:
-    python -I tools/build_props_phase3.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props_phase3.py <output-dir> [--lang en]
 
-Três ambientes: o escritório do provedor de internet a rádio (de dia), a sala de
-aula da faculdade (à noite) e o quarto, de madrugada, com o curso online de C#.
+Three settings: the radio internet provider's office (by day), the college classroom
+(at night) and the bedroom, in the small hours, with the online C# course.
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text.
 """
 
 import sys
@@ -12,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from build_props import H, OUTLINE, W, WHITE, WOOD, box, canvas, rect  # noqa: E402
+from build_props import H, OUTLINE, W, WHITE, WOOD, box, canvas, rect, run, tr  # noqa: E402
 from build_props_phase1 import CLOSE_H, CLOSE_W, XP_BLUE, XP_GREEN, text  # noqa: E402
 
 FLOOR_Y = 140
@@ -66,8 +67,8 @@ def office():
 
     # Faixa do provedor.
     box(d, 120, 18, 160, 22, XP_BLUE[0], XP_BLUE[1], XP_BLUE[2])
-    text(d, 128, 21, "INTERNET VIA", WHITE)
-    text(d, 128, 30, "RÁDIO", (250, 220, 90))
+    text(d, 128, 21, tr("INTERNET VIA", "RADIO"), WHITE)
+    text(d, 128, 30, tr("RÁDIO", "INTERNET"), (250, 220, 90))
     # Ondinhas de sinal ao lado do texto.
     for i, r in enumerate((3, 6, 9)):
         d.arc((250 - r, 30 - r, 250 + r, 30 + r), 300, 60, fill=WHITE)
@@ -115,7 +116,7 @@ def ring():
     box(d, 0, 0, 44, 12, WHITE)
     rect(d, 6, 11, 4, 3, WHITE)
     rect(d, 6, 13, 1, 1, OUTLINE)
-    text(d, 3, 2, "TRIM!", (200, 40, 40))
+    text(d, 3, 2, tr("TRIM!", "RING!"), (200, 40, 40))
     return img
 
 
@@ -165,7 +166,7 @@ def close_remote(ok):
     x, y, w, h = 8, 6, CLOSE_W - 16, CLOSE_H - 22
     rect(d, x, y, w, h, XP_BLUE[2])
     rect(d, x + 1, y + 1, w - 2, 11, XP_BLUE[0])
-    text(d, x + 4, y + 3, "Acesso remoto", WHITE)
+    text(d, x + 4, y + 3, tr("Acesso remoto", "Remote access"), WHITE)
     # Desktop do cliente dentro da janela.
     ix, iy, iw, ih = x + 3, y + 14, w - 6, h - 17
     rect(d, ix, iy, iw, ih, (0, 128, 128))
@@ -177,10 +178,10 @@ def close_remote(ok):
     tray_icon(d, ix + iw - 16, iy + ih - 8, ok)
     if ok:
         box(d, ix + 34, iy + 18, 92, 16, (255, 255, 225))
-        text(d, ix + 38, iy + 22, "Conectado!", (20, 120, 40))
+        text(d, ix + 38, iy + 22, tr("Conectado!", "Connected!"), (20, 120, 40))
     else:
         box(d, ix + 30, iy + 18, 100, 16, (255, 255, 225))
-        text(d, ix + 34, iy + 22, "Sem conexão", (190, 30, 30))
+        text(d, ix + 34, iy + 22, tr("Sem conexão", "No internet"), (190, 30, 30))
     return img
 
 
@@ -199,12 +200,16 @@ def cursor():
 # ---------------------------------------------------------------- faculdade
 
 
-BOARD_LINES = [
-    "#include <iostream>",
-    "int main() {",
-    '  cout << "Oi";',
-    "}",
-]
+BOARD_LINES = 4
+
+
+def board_lines():
+    return [
+        "#include <iostream>",
+        "int main() {",
+        f'  cout << "{tr("Oi", "Hi")}";',
+        "}",
+    ]
 
 
 def classroom():
@@ -238,7 +243,7 @@ def blackboard(lines):
     rect(d, 4, 4, 176, 56, BOARD[1])
     for x in range(10, 176, 23):
         d.point((x, 50), fill=BOARD[0])
-    for i, line in enumerate(BOARD_LINES[:lines]):
+    for i, line in enumerate(board_lines()[:lines]):
         text(d, 8, 8 + i * 12, line, CHALK)
     rect(d, 20, 60, 30, 3, (220, 220, 220))
     return img
@@ -308,25 +313,23 @@ def close_course(done):
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (240, 240, 244))
     rect(d, 0, 0, CLOSE_W, 12, (104, 33, 122))
-    text(d, 4, 2, "Curso de C#", WHITE)
+    text(d, 4, 2, tr("Curso de C#", "C# course"), WHITE)
     # Player.
     rect(d, 8, 18, 160, 66, (20, 20, 28))
     text(d, 66, 38, "C#", (180, 120, 230))
-    text(d, 34, 56, "Aula 12/12", (200, 200, 210))
+    text(d, tr(34, 28), 56, tr("Aula 12/12", "Lesson 12/12"), (200, 200, 210))
     rect(d, 8, 86, 160, 4, (80, 80, 90))
     rect(d, 8, 86, 160 if done else 120, 4, (104, 33, 122))
     if done:
         box(d, 26, 26, 124, 50, (255, 250, 230), WHITE, (200, 180, 120))
         rect(d, 30, 30, 116, 42, (255, 250, 230))
-        text(d, 38, 34, "Certificado", (104, 33, 122))
-        text(d, 46, 48, "Curso C#", OUTLINE)
-        text(d, 42, 60, "Concluído!", (20, 120, 40))
+        text(d, 38, 34, tr("Certificado", "Certificate"), (104, 33, 122))
+        text(d, tr(46, 42), 48, tr("Curso C#", "C# course"), OUTLINE)
+        text(d, 42, 60, tr("Concluído!", "Completed!"), (20, 120, 40))
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+def build():
     sprites = {
         "office": office(),
         "office-desk": office_desk(),
@@ -347,12 +350,10 @@ def main(out_dir):
         "close-course": close_course(False),
         "close-course-done": close_course(True),
     }
-    for lines in range(len(BOARD_LINES) + 1):
+    for lines in range(BOARD_LINES + 1):
         sprites[f"board-{lines}"] = blackboard(lines)
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", len(sprites), "sprites")
+    return sprites
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

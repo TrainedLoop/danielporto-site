@@ -1,6 +1,7 @@
-// Textos em português (idioma padrão): a interface, os títulos das páginas e o conteúdo
-// da home e do currículo. A home usa um resumo e a versão em texto é o currículo completo.
-// Fonte: o perfil do LinkedIn revisado (linkdin-update/linkedin-ptbr.md) e o currículo antigo.
+// Portuguese texts (default language): the UI, page titles, home and résumé content, the
+// pixel-art story and the credits. The home page uses a summary; the text version is the
+// full résumé.
+// Source: the revised LinkedIn profile (linkdin-update/linkedin-ptbr.md) and the old résumé.
 
 const profile = {
   name: "Daniel Porto",
@@ -158,9 +159,9 @@ const languages = [
   { name: "Inglês", level: "intermediário" },
 ];
 
-/** Textos fixos da interface (topo, home e currículo), traduzidos junto com o conteúdo. */
+/** Fixed UI texts (top bar, home, résumé and credits), translated along with the content. */
 const ui = {
-  nav: { label: "Navegação", story: "história", resume: "currículo" },
+  nav: { label: "Navegação", story: "história", resume: "currículo", language: "Idioma" },
   footerCredits: "créditos dos sprites e da fonte",
   home: {
     avatarAlt: "Daniel em pixel art",
@@ -184,7 +185,156 @@ const ui = {
     skills: "Competências",
     languages: "Idiomas",
   },
+  credits: {
+    title: "Créditos",
+    // <lpc> becomes the link to the character generator (Trans component, in src/pages/Credits.tsx).
+    intro:
+      "Os personagens foram montados a partir do <lpc>Universal LPC Spritesheet Character Generator</lpc>, com arte do Liberated Pixel Cup e da comunidade do OpenGameArt. Cenários, objetos e telas foram desenhados para este site. Os textos nas telas usam a fonte Press Start 2P, de CodeMan38; os diálogos e as dicas da história, a VT323, de Peter Hull; e o texto corrido, a Inter, de Rasmus Andersson. As três estão sob a SIL Open Font License.",
+    downloadCsv: "Baixar a lista completa (CSV)",
+  },
 };
+
+/** Story UI: the scene (src/engine/Scene.tsx), the ending and the inventory. */
+const storyUi = {
+  scene: {
+    loading: "carregando…",
+    loadError: "ERRO AO CARREGAR",
+    loadErrorHint: "As imagens desta fase não carregaram.",
+    retry: "tentar de novo",
+    skipPhase: "pular fase",
+    pressStart: "PRESS START",
+    startHint: "clique, ou aperte Enter",
+    continue: "continuar",
+    finish: "concluir",
+    skip: "pular",
+    phaseClear: "FASE COMPLETA",
+    replay: "ver de novo",
+    nextPhase: "próxima fase",
+    seeOnResume: "ver no currículo",
+  },
+  ending: {
+    title: "CONTINUA…",
+    text: "Hoje sou desenvolvedor full stack sênior na Purple Metrics, levando IA para produção.",
+    resume: "ler o currículo",
+    home: "voltar ao início",
+    credits: "créditos",
+    restart: "jogar de novo",
+  },
+  inventory: { label: "Inventário", title: "ITENS" },
+};
+
+/**
+ * Texts of each phase: the title (counter and screen readers), the scene description for
+ * screen readers, the name of the item earned and the beats (dialogue lines). Each beat has
+ * an id; the order and timing of each one live in the phase file (src/phases), and
+ * definePhase checks, at the type level, that the ids there are exactly the ones here.
+ */
+const phases = {
+  phase0: {
+    title: "Fase 0: a casa da avó",
+    description:
+      "Uma criança em frente a um computador bege com Windows 95, no quarto da casa da avó, ao lado de uma pilha de revistas CD-ROM.",
+    item: "CD-ROM",
+    beats: {
+      holidays: "Anos 90. Eu tinha uns 8 anos e passava as férias na casa da minha avó.",
+      unclePc: "Lá tinha o PC do meu tio, com Windows 95. Eu ficava horas nele.",
+      cdrom:
+        "Ele comprava a revista CD-ROM, que vinha com um CD cheio de programas e jogos. Foi ali que tudo começou.",
+    },
+  },
+  phase1: {
+    title: "Fase 1: o primeiro PC",
+    description:
+      "Um adolescente sentado em frente ao computador com Windows XP na sala de casa. Um amigo entrega uma apostila de HTML. Na tela, um fã-site de Final Fantasy feito em casa e um alerta escrito Olá, mundo.",
+    item: "Apostila de HTML",
+    beats: {
+      firstPc: "2004. Meu primeiro PC, na sala de casa. Bem parecido com o do meu tio, mas agora com Windows XP.",
+      workbook: "Um amigo me emprestou uma apostila de HTML do colégio dele.",
+      firstSites:
+        "Comecei a fazer os meus primeiros sites, como um fã-site de Final Fantasy que nunca chegou a ir pro ar.",
+      javascript: "Depois veio o JavaScript, com o primeiro alert(). E o som do MSN tocando o tempo todo.",
+    },
+  },
+  phase2: {
+    title: "Fase 2: o técnico da rua",
+    description:
+      "Um adolescente montou uma bancada de conserto de computadores na garagem de casa. Vizinhos chegam com gabinetes; ele troca memória e HD, formata o Windows e sai com a caixa de ferramentas para atender na casa de um cliente.",
+    item: "Chave de fenda",
+    beats: {
+      courses: "Aos 16 anos fiz cursos de montagem e manutenção de micro e de pacote Office.",
+      neighborhood: "Virei o técnico da rua: todo PC da vizinhança passava pela minha mão.",
+      repairs: "Formatava o Windows e trocava peças, como HD e memória.",
+      houseCalls: "Às vezes na minha casa, às vezes na casa do cliente.",
+    },
+  },
+  phase3: {
+    title: "Fase 3: suporte e faculdade",
+    description:
+      "De dia, um rapaz atende ligações no suporte de um provedor de internet a rádio e conserta a conexão de um cliente por acesso remoto. À noite, assiste aula de C++ na faculdade de Sistemas de Informação e, de madrugada, termina um curso online de C#.",
+    item: "Headset do suporte",
+    beats: {
+      support: "Trabalhando no suporte de um provedor de internet a rádio, eu atendia as ligações dos clientes…",
+      remoteAccess: "…e resolvia os problemas por acesso remoto.",
+      college: "À noite, a faculdade de Sistemas de Informação. Foi lá que conheci C e C++.",
+      csharpCourse: "No meio da faculdade, fiz um curso online de C#.",
+    },
+  },
+  phase4: {
+    title: "Fase 4: Hebara, o primeiro emprego como dev",
+    description:
+      "Um rapaz de moicano entra num escritório com pôsteres de raspadinha e pega o crachá do primeiro emprego. No monitor, escreve o código da intranet em C#, faz o primeiro deploy em produção e raspa uma raspadinha que revela: site novo.",
+    item: "Crachá do primeiro emprego",
+    beats: {
+      firstJob: "Em 2013, um curso de C# me levou ao primeiro emprego como programador júnior, na Hebara.",
+      intranet: "Comecei desenvolvendo a intranet da empresa, com C#, .NET MVC, WebForms e banco Oracle.",
+      firstDeploys: "E vieram os meus primeiros deploys em produção.",
+      lotterySites: "Também ajudei a reestruturar os sites da Raspadinha do Rio e do Rio de Prêmios.",
+    },
+  },
+  phase5: {
+    title: "Fase 5: Fulllab, e-commerce e mobile",
+    description:
+      "Num escritório aberto, um rapaz de moicano descobre os endpoints da API da VTEX com uma lupa, liga o app a lojas como Sephora e Magento por uma API e, rodeado por um time de quatro pessoas, sobe de nível para líder técnico.",
+    item: "Celular com o app",
+    beats: {
+      fulllab: "Em 2015 fui para a Fulllab, trabalhar com e-commerce e aplicativos mobile.",
+      vtex: "Integrei a VTEX por engenharia reversa, quando ainda não tinha documentação.",
+      apis: "Criei as APIs dos apps, um plugin para Magento e robôs com Selenium para lojas sem API, como a Sephora.",
+      techLead: "Em 2017 virei líder técnico, com um time de 4 pessoas.",
+    },
+  },
+  phase6: {
+    title: "Fase 6: Fu2re e a visão computacional",
+    description:
+      "Num escritório com aquário, um homem de barba trabalha na SmartVision, uma plataforma que treina modelos de visão computacional. Na rua, um carro com uma câmera no teto fotografa os postes da Light, que ganham caixas de detecção. Por fim, uma caixa-preta escrita IA se abre.",
+    item: "Caixa-preta da IA, aberta",
+    beats: {
+      fu2re: "Em 2019 fui para a Fu2re, onde ouvi falar de IA a sério, antes do boom.",
+      smartVision:
+        "Na SmartVision, a plataforma de visão computacional da empresa, fiz das APIs com fila de treino à interface em React.",
+      polesCar:
+        "Participei do software de um carro que fotografava os postes da Light pela cidade, como os do Google.",
+      blackBox: "E fui abrindo a caixa-preta para entender como se treina um modelo.",
+    },
+  },
+  phase7: {
+    title: "Fase 7: Purple Metrics, tudo se conecta",
+    description:
+      "No home office com o Pão de Açúcar na janela, um homem de barba troca o C# pelo React e TypeScript e vê a esteira de CI/CD passar dos 800 deploys. Os itens da jornada se juntam numa estrela, IA aplicada. Com ela vem o chat de IA do produto, construído junto com o time numa chamada de vídeo, e um terminal conectando o MCP e os agentes de IA.",
+    item: "IA aplicada",
+    beats: {
+      purple:
+        "Em 2022 entrei na Purple Metrics, trabalhando de casa, e mudei de stack: do back-end para o front-end, com React e TypeScript.",
+      pipeline: "Criei a esteira de CI/CD do front, com mais de 800 deploys em produção.",
+      appliedAi: "Aí tudo se conectou: tudo o que juntei pelo caminho virou IA aplicada.",
+      chat: "Com isso, criei a primeira versão do chat conversacional da Purple.",
+      today: "Hoje continuo construindo a versão atual junto com o time, já em produção com clientes.",
+      mcp: "Também criei a primeira prova de conceito de MCP da Purple e ajudo o time a desenvolver com agentes de IA.",
+    },
+  },
+};
+
+const story = { ...storyUi, phases };
 
 /** Título e descrição de cada página, gravados no HTML estático de cada rota no build. */
 const meta = {
@@ -210,7 +360,12 @@ const meta = {
   },
 };
 
-const pt = { ...ui, meta, profile, summary, highlights, experience, skills, languages };
+/** Sharing: alt text of the Open Graph image (public/og-image.png). */
+const share = {
+  imageAlt: "Cartão em pixel art com o avatar do Daniel Porto, o cargo e os itens da história.",
+};
+
+const pt = { ...ui, meta, share, story, profile, summary, highlights, experience, skills, languages };
 
 /** O formato das mensagens: en.ts precisa ter exatamente as mesmas chaves. */
 export type Messages = typeof pt;

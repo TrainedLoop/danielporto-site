@@ -7,54 +7,84 @@ export type Route = "home" | "historia" | "curriculo" | "creditos";
 
 export const ROUTES: Route[] = ["home", "historia", "curriculo", "creditos"];
 
-/** Idioma da página: português por padrão, inglês sob o prefixo /en/. */
+/** Page language: Portuguese by default, English under the /en/ prefix. */
 export type Lang = "pt" | "en";
 
-/** Rotas com versão em inglês. A história e os créditos ficam só em português. */
-export const EN_ROUTES: Route[] = ["home", "curriculo"];
+export const LANGS: Lang[] = ["pt", "en"];
 
-/** Uma página do site: a rota e o idioma. */
+/** A page of the site: route and language. */
 export type Page = { route: Route; lang: Lang };
 
-/** Todas as páginas, na ordem em que o build gera o HTML estático. */
-export const PAGES: Page[] = [
-  ...ROUTES.map((route) => ({ route, lang: "pt" as const })),
-  ...EN_ROUTES.map((route) => ({ route, lang: "en" as const })),
-];
+/**
+ * Path of each page from the site root, without BASE_PATH. Every route exists in both
+ * languages; English pages use English slugs (/en/story/, /en/resume/...).
+ */
+const PATHS: Record<Lang, Record<Route, string>> = {
+  pt: { home: "", historia: "historia/", curriculo: "curriculo/", creditos: "creditos/" },
+  en: { home: "en/", historia: "en/story/", curriculo: "en/resume/", creditos: "en/credits/" },
+};
 
-/** Identifica a página no HTML do build (data-route): "curriculo", "en/curriculo"... */
+/**
+ * Old addresses that keep working: /en/curriculo/ was live for a few minutes before
+ * /en/resume/. main.tsx sends visitors to the new address, and the build writes a
+ * redirect-only page there (scripts/prerender.js).
+ */
+export const LEGACY_PATHS: Record<string, Page> = {
+  "en/curriculo/": { route: "curriculo", lang: "en" },
+};
+
+/** Every page, in the order the build writes the static HTML. */
+export const PAGES: Page[] = LANGS.flatMap((lang) => ROUTES.map((route) => ({ route, lang })));
+
+/** Identifies the page in the build's HTML (data-route): "curriculo", "en/curriculo"... */
 export const pageKey = ({ route, lang }: Page) => (lang === "en" ? `en/${route}` : route);
 
 const BASE = import.meta.env.BASE_URL;
 
-/** Caminho da página a partir da raiz do site, sem o BASE_PATH: "" para a home, "curriculo/", "en/curriculo/" etc. */
+/** Page path from the site root, without BASE_PATH: "" for home, "curriculo/", "en/resume/", etc. */
 export function routePath(route: Route, lang: Lang = "pt") {
-  const prefix = lang === "en" && EN_ROUTES.includes(route) ? "en/" : "";
-  return prefix + (route === "home" ? "" : `${route}/`);
+  return PATHS[lang][route];
 }
 
-/** Link para a página, já com o BASE_PATH: "/", "/curriculo/", "/en/"... */
+/** Link to the page, including BASE_PATH: "/", "/curriculo/", "/en/"... */
 export const href = (route: Route, lang: Lang = "pt") => `${BASE}${routePath(route, lang)}`;
 
-/** A página de um caminho do navegador, ou `null` se não for uma página do site. */
-export function pageFromPath(pathname: string): Page | null {
+/** The browser path without BASE_PATH, in the PATHS format ("", "curriculo/", "en/story/"), or null if outside the site. */
+function sitePath(pathname: string): string | null {
   const base = BASE.replace(/\/$/, "");
   if (!pathname.startsWith(base)) return null;
-  let name = pathname
+  const name = pathname
     .slice(base.length)
-    .replace(/^\/+|\/+$/g, "")
-    .replace(/\/?index\.html$/, "");
-  let lang: Lang = "pt";
-  if (/^en(\/|$)/.test(name)) {
-    lang = "en";
-    name = name.replace(/^en\/?/, "");
-  }
-  const route: Route | null = name === "" ? "home" : ROUTES.includes(name as Route) ? (name as Route) : null;
-  if (!route) return null;
-  return { route, lang: EN_ROUTES.includes(route) ? lang : "pt" };
+    .replace(/\/?index\.html$/, "")
+    .replace(/^\/+|\/+$/g, "");
+  return name === "" ? "" : `${name}/`;
 }
 
-/** Links antigos com hash (#/curriculo, #/en/curriculo) apontam para o caminho novo (/curriculo/). */
+/** The page for a browser path (including old ones from LEGACY_PATHS), or `null` if it isn't a page of the site. */
+export function pageFromPath(pathname: string): Page | null {
+  const path = sitePath(pathname);
+  if (path === null) return null;
+  for (const lang of LANGS) {
+    const route = ROUTES.find((r) => PATHS[lang][r] === path);
+    if (route) return { route, lang };
+  }
+  return LEGACY_PATHS[path] ?? null;
+}
+
+/** The page for the path, or the home page in the prefix's language (/en/... → English home) when the path doesn't exist. */
+export function pageOrHome(pathname: string): Page {
+  const path = sitePath(pathname) ?? "";
+  return pageFromPath(pathname) ?? { route: "home", lang: path.startsWith("en/") ? "en" : "pt" };
+}
+
+/** New address for an old path (/en/curriculo/ → /en/resume/), keeping search and hash; null if it isn't an old path. */
+export function pathFromLegacyPath(pathname: string, search = "", hash = ""): string | null {
+  const path = sitePath(pathname);
+  const page = path === null ? undefined : LEGACY_PATHS[path];
+  return page ? `${href(page.route, page.lang)}${search}${hash}` : null;
+}
+
+/** Old hash links (#/curriculo, #/en/curriculo) point to the new path (/curriculo/, /en/resume/). */
 export function pathFromLegacyHash(hash: string): string | null {
   if (!hash.startsWith("#/")) return null;
   const name = hash.slice(2).replace(/\/+$/, "");
@@ -64,10 +94,18 @@ export function pathFromLegacyHash(hash: string): string | null {
   return href(page.route, page.lang);
 }
 
+/** Scrolls to the job in the hash (/curriculo/#id) if it is on screen; returns whether it was found. */
+export function scrollToHash(): boolean {
+  const id = decodeURIComponent(window.location.hash.slice(1));
+  const target = id ? document.getElementById(id) : null;
+  target?.scrollIntoView();
+  return Boolean(target);
+}
+
 /**
- * Rotas por caminho (/historia/, /curriculo/, /en/), com a History API: os links internos
- * trocam de página sem recarregar, e voltar/avançar do navegador continuam funcionando.
- * Cada página também existe como HTML estático, gerado no build (scripts/prerender.js).
+ * Path-based routes (/historia/, /curriculo/, /en/resume/) with the History API: internal
+ * links switch pages without reloading, and the browser's back/forward keep working. Each
+ * page also exists as static HTML generated by the build (scripts/prerender.js).
  */
 export function useRoute(initial: Page): Page {
   const [page, setPage] = useState<Page>(initial);
@@ -78,10 +116,12 @@ export function useRoute(initial: Page): Page {
       setPage(next);
       document.title = pageMeta(next).title;
       window.scrollTo(0, 0);
+      // Switching language on the résumé (/curriculo/#job → /en/resume/#job) returns to the same job.
+      if (window.location.hash) requestAnimationFrame(() => scrollToHash());
       trackPageview();
     };
 
-    const onPopState = () => show(pageFromPath(window.location.pathname) ?? { route: "home", lang: "pt" });
+    const onPopState = () => show(pageOrHome(window.location.pathname));
 
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0) return;
@@ -107,15 +147,35 @@ export function useRoute(initial: Page): Page {
   return page;
 }
 
-/** Fase pedida no link (/historia/?fase=3 → 3, contando a partir de 1), ou null se não houver. */
+/** Name of the phase parameter in story links: /historia/?fase=3 and /en/story/?phase=3. */
+const PHASE_PARAM: Record<Lang, string> = { pt: "fase", en: "phase" };
+
+/** Phase requested in the link (?fase=3 or ?phase=3 → 3, counting from 1), or null if there is none. */
 export function storyPhase(): number | null {
   if (typeof window === "undefined") return null;
-  const fase = new URLSearchParams(window.location.search).get("fase");
-  return fase && /^\d+$/.test(fase) ? Number(fase) : null;
+  const params = new URLSearchParams(window.location.search);
+  const phase = params.get(PHASE_PARAM.pt) ?? params.get(PHASE_PARAM.en);
+  return phase && /^\d+$/.test(phase) ? Number(phase) : null;
 }
 
-/** Link direto para uma fase da história (contando a partir de 1, como o contador "3/8"). */
-export const storyHref = (phase: number) => `${href("historia")}?fase=${phase}`;
+/** Direct link to a story phase (counting from 1, like the "3/8" counter). */
+export const storyHref = (phase: number, lang: Lang = "pt") =>
+  `${href("historia", lang)}?${PHASE_PARAM[lang]}=${phase}`;
 
-/** Link para um emprego no currículo (/curriculo/#id); o Resume rola até ele ao abrir. */
-export const jobHref = (jobId: string) => `${href("curriculo")}#${jobId}`;
+/** Link to a job on the résumé (/curriculo/#id); Resume scrolls to it on open. Ids are the same in both languages. */
+export const jobHref = (jobId: string, lang: Lang = "pt") => `${href("curriculo", lang)}#${jobId}`;
+
+/**
+ * The same page in another language, for the PT · EN switch: keeps the story phase
+ * (?fase=3 ↔ ?phase=3) and the résumé job (#id). Reads the current address, which the
+ * story updates on every phase, so it is called at click time.
+ */
+export function equivalentHref(route: Route, lang: Lang): string {
+  if (typeof window === "undefined") return href(route, lang);
+  if (route === "historia") {
+    const phase = storyPhase();
+    return phase === null ? href(route, lang) : storyHref(phase, lang);
+  }
+  if (route === "curriculo") return `${href(route, lang)}${window.location.hash}`;
+  return href(route, lang);
+}

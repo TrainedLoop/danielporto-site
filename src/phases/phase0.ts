@@ -20,9 +20,6 @@ const TIMELINE = {
 
 export const phase0 = definePhase({
   id: "phase0",
-  title: "Fase 0: a casa da avó",
-  description:
-    "Uma criança em frente a um computador bege com Windows 95, no quarto da casa da avó, ao lado de uma pilha de revistas CD-ROM.",
   sprites: {
     room: `${BASE}sprites/phase0/room.png`,
     desk: `${BASE}sprites/phase0/desk.png`,
@@ -37,33 +34,30 @@ export const phase0 = definePhase({
     cd: `${BASE}sprites/phase0/cd.png`,
     kid: `${BASE}sprites/character/kid-walk.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase0.beats), under the same ids.
+  beats: {
+    holidays: {
       to: TIMELINE.walk[1],
       seconds: 1.7,
       speed: 0.7,
       textSpeed: 1,
-      text: "Anos 90. Eu tinha uns 8 anos e passava as férias na casa da minha avó.",
     },
-    {
+    unclePc: {
       to: TIMELINE.desktop[1],
       seconds: 2.6,
       speed: 1,
       textSpeed: 1.3,
-      text: "Lá tinha o PC do meu tio, com Windows 95. Eu ficava horas nele.",
     },
-    {
+    cdrom: {
       to: TIMELINE.game[1],
       seconds: 2.2,
       speed: 0.5,
       textSpeed: 1,
-      text: "Ele comprava a revista CD-ROM, que vinha com um CD cheio de programas e jogos. Foi ali que tudo começou.",
     },
-  ],
+  },
   item: {
     id: "cd",
-    label: "CD-ROM",
     src: `${BASE}sprites/phase0/item-cd.png`,
     at: TIMELINE.item,
   },

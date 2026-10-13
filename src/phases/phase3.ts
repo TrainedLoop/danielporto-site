@@ -1,6 +1,6 @@
 import { drawEmptySeat, drawSeated, drawWalk } from "../engine/character";
 import { definePhase } from "../engine/types";
-import { segment } from "../lib/sprites";
+import { segment, withText } from "../lib/sprites";
 
 const BASE = import.meta.env.BASE_URL;
 const P = `${BASE}sprites/phase3`;
@@ -68,71 +68,64 @@ function zoom(
 
 export const phase3 = definePhase({
   id: "phase3",
-  title: "Fase 3: suporte e faculdade",
-  description:
-    "De dia, um rapaz atende ligações no suporte de um provedor de internet a rádio e conserta a conexão de um cliente por acesso remoto. À noite, assiste aula de C++ na faculdade de Sistemas de Informação e, de madrugada, termina um curso online de C#.",
   sprites: {
-    office: `${P}/office.png`,
+    office: withText(`${P}/office.png`),
     officeDesk: `${P}/office-desk.png`,
     lcd: `${P}/lcd.png`,
     lcdNight: `${P}/lcd-night.png`,
     phone: `${P}/phone.png`,
-    ring: `${P}/ring.png`,
+    ring: withText(`${P}/ring.png`),
     chair: `${P}/chair.png`,
     lcdFrame: `${P}/lcd-frame.png`,
-    remote: `${P}/close-remote.png`,
-    remoteOk: `${P}/close-remote-ok.png`,
+    remote: withText(`${P}/close-remote.png`),
+    remoteOk: withText(`${P}/close-remote-ok.png`),
     cursor: `${P}/cursor.png`,
     classroom: `${P}/classroom.png`,
     schoolChair: `${P}/school-chair.png`,
     board0: `${P}/board-0.png`,
     board1: `${P}/board-1.png`,
     board2: `${P}/board-2.png`,
-    board3: `${P}/board-3.png`,
-    board4: `${P}/board-4.png`,
+    board3: withText(`${P}/board-3.png`),
+    board4: withText(`${P}/board-4.png`),
     bedroom: `${P}/bedroom.png`,
     nightDesk: `${P}/night-desk.png`,
-    course: `${P}/close-course.png`,
-    courseDone: `${P}/close-course-done.png`,
+    course: withText(`${P}/close-course.png`),
+    courseDone: withText(`${P}/close-course-done.png`),
     danielWalk: `${C}/young-walk.png`,
     danielSit: `${C}/young-sit.png`,
     friendSit: `${C}/friend-sit.png`,
     womanSit: `${C}/neighbor-woman-sit.png`,
   },
-  // Cada fala toca o seu pedaço da animação; speed e textSpeed valem só para ela.
-  beats: [
-    {
+  // Each beat plays its own slice of the animation; speed and textSpeed apply to it only.
+  // The lines are in the locales (story.phases.phase3.beats), under the same ids.
+  beats: {
+    support: {
       to: TIMELINE.ring[1],
       seconds: 2.2,
       speed: 1,
       textSpeed: 1,
-      text: "Trabalhando no suporte de um provedor de internet a rádio, eu atendia as ligações dos clientes…",
     },
-    {
+    remoteAccess: {
       to: TIMELINE.toClass - FADE,
       seconds: 3,
       speed: 1,
       textSpeed: 1,
-      text: "…e resolvia os problemas por acesso remoto.",
     },
-    {
+    college: {
       to: TIMELINE.board[1],
       seconds: 3.4,
       speed: 1,
       textSpeed: 1,
-      text: "À noite, a faculdade de Sistemas de Informação. Foi lá que conheci C e C++.",
     },
-    {
+    csharpCourse: {
       to: 1,
       seconds: 3.6,
       speed: 1,
       textSpeed: 1,
-      text: "No meio da faculdade, fiz um curso online de C#.",
     },
-  ],
+  },
   item: {
     id: "headset",
-    label: "Headset do suporte",
     src: `${P}/item-headset.png`,
     at: TIMELINE.item,
   },

@@ -1,11 +1,12 @@
-"""Desenha em pixel art os objetos da fase 5 (Fulllab, e-commerce e mobile).
+"""Draws the phase 5 objects in pixel art (Fulllab, e-commerce and mobile).
 
-Uso:
-    python -I tools/build_props_phase5.py <pasta-de-saida>
+Usage:
+    python -I tools/build_props_phase5.py <output-dir> [--lang en]
 
-Escritório aberto e mais chique, a engenharia reversa da API da VTEX (com a lupa
-revelando os endpoints), o diagrama dos apps com as lojas e o "LEVEL UP!".
-Os nomes dos clientes aparecem só em texto, sem logos.
+A fancier open-plan office, the reverse engineering of the VTEX API (with the magnifying
+glass revealing the endpoints), the diagram of the apps and stores, and the "LEVEL UP!".
+Client names appear only as text, no logos.
+With --lang en, writes only the English variants (<name>.en.png) of the sprites with text.
 """
 
 import sys
@@ -13,7 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from build_props import H, OUTLINE, W, WHITE, WOOD, box, canvas, rect  # noqa: E402
+from build_props import H, OUTLINE, W, WHITE, WOOD, box, canvas, rect, run, tr  # noqa: E402
 from build_props_phase1 import CLOSE_H, CLOSE_W, PLANT, text  # noqa: E402
 from build_props_phase3 import FLOOR_Y  # noqa: E402
 
@@ -95,7 +96,7 @@ def close_reverse(revealed):
     rect(d, 0, 0, CLOSE_W, CLOSE_H, TERMINAL)
     rect(d, 0, 0, CLOSE_W, 12, VTEX_PINK)
     text(d, 4, 2, "VTEX API", WHITE)
-    text(d, 84, 2, "sem docs", (255, 210, 230))
+    text(d, 84, 2, tr("sem docs", "no docs"), (255, 210, 230))
     for i, endpoint in enumerate(ENDPOINTS):
         y = 20 + i * 16
         if i < revealed:
@@ -169,10 +170,13 @@ def level_up():
         text(d, 20 + dx, 2 + dy, "LEVEL UP!", OUTLINE)
     text(d, 20, 2, "LEVEL UP!", GOLD[0])
     box(d, 0, 14, 112, 16, (42, 33, 51), (60, 50, 70), (27, 22, 34))
-    # A fonte desenha "Í" e "É" como minúsculas: escreve sem acento e desenha os acentos à mão.
     gold = (243, 192, 63)
+    if tr(False, True):  # English: no accents to draw by hand
+        text(d, 20, 19, "TECH LEAD", gold)
+        return img
+    # The font draws "Í" and "É" as lowercase: write without accents and draw them by hand.
     text(d, 4, 19, "LIDER TECNICO", gold)
-    for char_index in (1, 7):  # o "I" de LIDER e o "E" de TECNICO
+    for char_index in (1, 7):  # the "I" of LIDER and the "E" of TECNICO
         x = 4 + char_index * 8
         rect(d, x + 4, 16, 2, 1, gold)
         d.point((x + 3, 17), fill=gold)
@@ -200,9 +204,7 @@ def phone_item():
     return img
 
 
-def main(out_dir):
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
+def build():
     sprites = {
         "office": office(),
         "desk": wood_desk(),
@@ -214,10 +216,8 @@ def main(out_dir):
     }
     for revealed in range(len(ENDPOINTS) + 1):
         sprites[f"reverse-{revealed}"] = close_reverse(revealed)
-    for name, image in sprites.items():
-        image.save(out / f"{name}.png")
-    print("ok", len(sprites), "sprites")
+    return sprites
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    run(build)

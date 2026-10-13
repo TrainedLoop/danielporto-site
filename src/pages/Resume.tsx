@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { href } from "../lib/route";
+import { href, type Lang } from "../lib/route";
 
 /** Abre a caixa de impressão; o título vira o nome sugerido do PDF e volta ao original depois. */
 function printResume(pdfTitle: string) {
@@ -12,7 +12,8 @@ function printResume(pdfTitle: string) {
 
 /** A versão em texto: o currículo completo, da experiência atual para a mais antiga. */
 export function Resume() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language as Lang;
   const profile = t("profile");
   const summary = t("summary");
   const experience = t("experience");
@@ -43,7 +44,7 @@ export function Resume() {
           ))}
         </p>
         <p className="resume__actions no-print">
-          <a href={href("historia")}>{t("resume.playStory")}</a>
+          <a href={href("historia", lang)}>{t("resume.playStory")}</a>
           <button type="button" className="resume__pdf" onClick={() => printResume(t("resume.pdfTitle"))}>
             {t("resume.downloadPdf")}
           </button>
