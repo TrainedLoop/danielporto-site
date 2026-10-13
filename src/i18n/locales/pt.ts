@@ -1,7 +1,8 @@
-// Conteúdo do portfólio: a home usa um resumo e a versão em texto é o currículo completo.
+// Textos em português (idioma padrão): a interface, os títulos das páginas e o conteúdo
+// da home e do currículo. A home usa um resumo e a versão em texto é o currículo completo.
 // Fonte: o perfil do LinkedIn revisado (linkdin-update/linkedin-ptbr.md) e o currículo antigo.
 
-export const profile = {
+const profile = {
   name: "Daniel Porto",
   role: "Desenvolvedor Full Stack Sênior",
   company: "Purple Metrics",
@@ -17,7 +18,7 @@ export const profile = {
 };
 
 /** Resumo do currículo (o "Sobre" do LinkedIn). */
-export const summary = {
+const summary = {
   aiProjectsTitle: "Projetos de IA que desenvolvi",
   aiProjects: [
     "Projetei e implementei um copiloto de IA para uma plataforma analítica corporativa (Google ADK, Gemini): o agente consulta os dados com as permissões de quem pergunta, só lê da réplica de leitura, mascara dados pessoais antes de chegarem ao modelo (LGPD) e tem limite de custo por pergunta.",
@@ -31,7 +32,7 @@ export const summary = {
 };
 
 /** Destaques curtos para a home. */
-export const highlights = [
+const highlights = [
   {
     title: "IA em produção",
     text: "O chat de IA da Purple, um copiloto com permissões e LGPD, visão computacional, MCP e agentes no dia a dia do time.",
@@ -47,6 +48,8 @@ export const highlights = [
 ];
 
 export type Job = {
+  /** Âncora estável no currículo, igual nos dois idiomas (a história linka por ela). */
+  id: string;
   company: string;
   role: string;
   period: string;
@@ -54,18 +57,10 @@ export type Job = {
   bullets: string[];
 };
 
-/** Âncora estável de um emprego no currículo: slug de empresa + cargo. */
-export const jobId = (job: Pick<Job, "company" | "role">) =>
-  `${job.company} ${job.role}`
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-
 /** Experiência, da mais recente para a mais antiga. */
-export const experience: Job[] = [
+const experience: Job[] = [
   {
+    id: "purple-metrics-desenvolvedor-full-stack-senior",
     company: "Purple Metrics",
     role: "Desenvolvedor Full Stack Sênior",
     period: "set 2022 – o momento",
@@ -82,6 +77,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "fu2re-smart-solutions-desenvolvedor-full-stack-senior",
     company: "Fu2re Smart Solutions",
     role: "Desenvolvedor Full Stack Sênior",
     period: "ago 2019 – jun 2023",
@@ -94,6 +90,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "fulllab-retail-solutions-lider-tecnico",
     company: "Fulllab | retail solutions",
     role: "Líder técnico",
     period: "mai 2017 – ago 2019",
@@ -106,6 +103,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "fulllab-retail-solutions-desenvolvedor-net",
     company: "Fulllab | retail solutions",
     role: "Desenvolvedor .NET",
     period: "set 2015 – mai 2017",
@@ -115,6 +113,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
     company: "Hebara Distribuidora de Produtos Lotéricos",
     role: "Programador júnior",
     period: "set 2013 – set 2015",
@@ -127,7 +126,7 @@ export const experience: Job[] = [
 ];
 
 /** Competências (as cinco primeiras são as principais). */
-export const skills = [
+const skills = [
   "Inteligência artificial (IA)",
   "React",
   "TypeScript",
@@ -154,13 +153,13 @@ export const skills = [
   "Terraform",
 ];
 
-export const languages = [
+const languages = [
   { name: "Português", level: "nativo" },
   { name: "Inglês", level: "intermediário" },
 ];
 
 /** Textos fixos da interface (topo, home e currículo), traduzidos junto com o conteúdo. */
-export const ui = {
+const ui = {
   nav: { label: "Navegação", story: "história", resume: "currículo" },
   footerCredits: "créditos dos sprites e da fonte",
   home: {
@@ -187,6 +186,32 @@ export const ui = {
   },
 };
 
-/** Tudo o que a home e o currículo mostram, num objeto só: cada idioma tem o seu. */
-export const content = { profile, summary, highlights, experience, skills, languages, ui };
-export type Content = typeof content;
+/** Título e descrição de cada página, gravados no HTML estático de cada rota no build. */
+const meta = {
+  home: {
+    title: "Daniel Porto · Desenvolvedor Full Stack Sênior · IA aplicada",
+    description:
+      "Desenvolvedor full stack sênior na Purple Metrics. Levo IA para produção: LLMs, agentes e visão computacional, com React, TypeScript e C#/.NET. Currículo e a minha história em pixel art.",
+  },
+  historia: {
+    title: "A história em pixel art · Daniel Porto",
+    description:
+      "A trajetória do Daniel Porto contada como um jogo em pixel art: 8 fases, da casa da avó até a IA em produção na Purple Metrics.",
+  },
+  curriculo: {
+    title: "Currículo · Daniel Porto · Desenvolvedor Full Stack Sênior",
+    description:
+      "Currículo do Daniel Porto: desenvolvedor full stack sênior na Purple Metrics, com IA em produção (LLMs, MCP, agentes e visão computacional), React, TypeScript, C#/.NET e mais de 10 anos de experiência.",
+  },
+  creditos: {
+    title: "Créditos dos sprites e da fonte · Daniel Porto",
+    description:
+      "Autores e licenças da arte em pixel art do site do Daniel Porto: sprites do Liberated Pixel Cup e do OpenGameArt e a fonte Press Start 2P.",
+  },
+};
+
+const pt = { ...ui, meta, profile, summary, highlights, experience, skills, languages };
+
+/** O formato das mensagens: en.ts precisa ter exatamente as mesmas chaves. */
+export type Messages = typeof pt;
+export default pt;

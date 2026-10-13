@@ -1,27 +1,30 @@
-import type { Content } from "../content/profile";
+import { useTranslation } from "react-i18next";
 import { track } from "../lib/analytics";
 import { href, type Lang } from "../lib/route";
 
 const BASE = import.meta.env.BASE_URL;
 
-/** A home recebe o conteúdo do idioma (profile.ts ou profile.en.ts) e o idioma para os links. */
-export function Home({ content, lang }: { content: Content; lang: Lang }) {
-  const { profile, highlights, skills } = content;
-  const t = content.ui.home;
+/** A home, no idioma da página (textos em src/i18n/locales). */
+export function Home() {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language as Lang;
+  const profile = t("profile");
+  const highlights = t("highlights");
+  const skills = t("skills");
   return (
     <main className="home">
       <section className="hero">
         <div
           className="hero__avatar"
           role="img"
-          aria-label={t.avatarAlt}
+          aria-label={t("home.avatarAlt")}
           style={{ backgroundImage: `url(${BASE}sprites/character/adult-idle.png)` }}
         />
         <div className="hero__text">
-          <p className="hero__hello">{t.hello}</p>
+          <p className="hero__hello">{t("home.hello")}</p>
           <h1 className="hero__name">{profile.name}</h1>
           <p className="hero__role">
-            {profile.role} {t.roleAt} {profile.company}
+            {profile.role} {t("home.roleAt")} {profile.company}
           </p>
           <p className="hero__headline">{profile.headline}</p>
           <p className="hero__intro">{profile.intro}</p>
@@ -38,27 +41,27 @@ export function Home({ content, lang }: { content: Content; lang: Lang }) {
 
       <section className="choice" aria-labelledby="choice-title">
         <h2 id="choice-title" className="choice__title">
-          {t.choiceTitle}
+          {t("home.choiceTitle")}
         </h2>
         <div className="choice__options">
           <a className="choice__card choice__card--play" href={href("historia")} onClick={() => track("escolha_home", { opcao: "historia" })}>
             <span className="choice__icon" aria-hidden="true">
               ▶
             </span>
-            <span className="choice__label">{t.playLabel}</span>
-            <span className="choice__hint">{t.playHint}</span>
+            <span className="choice__label">{t("home.playLabel")}</span>
+            <span className="choice__hint">{t("home.playHint")}</span>
           </a>
           <a className="choice__card" href={href("curriculo", lang)} onClick={() => track("escolha_home", { opcao: "curriculo" })}>
             <span className="choice__icon" aria-hidden="true">
               ≡
             </span>
-            <span className="choice__label">{t.resumeLabel}</span>
-            <span className="choice__hint">{t.resumeHint}</span>
+            <span className="choice__label">{t("home.resumeLabel")}</span>
+            <span className="choice__hint">{t("home.resumeHint")}</span>
           </a>
         </div>
       </section>
 
-      <section className="highlights" aria-label={t.highlightsLabel}>
+      <section className="highlights" aria-label={t("home.highlightsLabel")}>
         {highlights.map((item) => (
           <article key={item.title} className="highlight">
             <h3>{item.title}</h3>
@@ -67,7 +70,7 @@ export function Home({ content, lang }: { content: Content; lang: Lang }) {
         ))}
       </section>
 
-      <section className="home-skills" aria-label={t.skillsLabel}>
+      <section className="home-skills" aria-label={t("home.skillsLabel")}>
         <ul className="chips">
           {skills.slice(0, 12).map((skill) => (
             <li key={skill}>{skill}</li>
