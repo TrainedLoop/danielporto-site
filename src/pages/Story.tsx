@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Scene } from "../engine/Scene";
 import { href } from "../lib/route";
+import { loadSprites } from "../lib/sprites";
 import { phase0 } from "../phases/phase0";
 import { phase1 } from "../phases/phase1";
 import { phase2 } from "../phases/phase2";
@@ -29,6 +30,23 @@ export function Story() {
     setCurrent((index) => index + 1);
     window.scrollTo(0, 0);
   }, []);
+
+  // Enquanto uma fase roda, baixa as imagens da próxima, para não ter pausa entre elas.
+  // Espera a atual terminar de carregar, para não disputar a conexão com ela.
+  useEffect(() => {
+    const now = PHASES[current];
+    const next = PHASES[current + 1];
+    if (!now || !next) return;
+    let cancelled = false;
+    loadSprites(now.sprites)
+      .then(() => {
+        if (!cancelled) return loadSprites(next.sprites);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [current]);
 
   const finished = current >= PHASES.length;
   const phase = PHASES[current];
