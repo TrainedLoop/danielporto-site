@@ -28,7 +28,7 @@ export type Phase<K extends string = string> = {
   beats: Beat[];
   /** Item ganho na fase e o ponto da animação (0 a 1) em que ele entra no inventário. */
   item: InventoryItem & { at: number };
-  /** Emprego desta fase no currículo (`jobId` do profile); sem ele, a fase não mostra o link. */
+  /** Emprego desta fase no currículo (`id` do emprego em src/i18n/locales); sem ele, a fase não mostra o link. */
   job?: string;
   /** Ponto da animação mostrado parado para quem prefere menos movimento. */
   staticAt: number;

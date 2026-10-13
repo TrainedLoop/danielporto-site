@@ -29,9 +29,11 @@ A publicação é automática: cada push na `main` faz o build e publica no GitH
   continuar, pular e inventário. Multiplicadores de velocidade em `src/engine/config.ts`
   (gerais) e em cada fala (`speed` e `textSpeed`).
 - `src/phases/` — cada fase é só configuração: sprites, falas e a função de desenho.
-- `src/content/profile.ts` — o conteúdo da home e do currículo.
-- `src/content/pages.ts` — título e descrição de cada página (vão para o `<title>`, a meta
-  description e o compartilhamento).
+- `src/i18n/` — traduções com i18next: `locales/pt.ts` e `locales/en.ts` têm a interface, o
+  conteúdo da home e do currículo e o título e a descrição de cada página (vão para o `<title>`,
+  a meta description e o compartilhamento). As chaves são tipadas a partir do `pt.ts`, e o
+  `en.ts` precisa ter as mesmas. O idioma vem da página (`/en/` e `/en/curriculo/`), não do
+  navegador; a história e os créditos ficam só em português.
 - Rotas por caminho com a History API (`src/lib/route.ts`), sem biblioteca de rotas. No build,
   `scripts/prerender.js` renderiza cada rota com `react-dom/server` a partir dos componentes
   (`src/entry-server.ts`) e grava `dist/<rota>/index.html`, com título, descrição, canonical e

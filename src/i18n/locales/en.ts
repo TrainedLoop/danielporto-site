@@ -1,9 +1,9 @@
-// Versão em inglês do conteúdo da home e do currículo (mesmo formato de profile.ts).
+// Textos em inglês: mesmas chaves de pt.ts (o tipo Messages garante isso).
 // A história em pixel art continua só em português.
 
-import type { Content, Job } from "./profile";
+import type { Job, Messages } from "./pt";
 
-export const profile = {
+const profile = {
   name: "Daniel Porto",
   role: "Senior Full Stack Developer",
   company: "Purple Metrics",
@@ -19,7 +19,7 @@ export const profile = {
 };
 
 /** Resumo do currículo (o "Sobre" do LinkedIn). */
-export const summary = {
+const summary = {
   aiProjectsTitle: "AI projects I have built",
   aiProjects: [
     "Designed and built an AI copilot for an enterprise analytics platform (Google ADK, Gemini): the agent queries data with the permissions of the person asking, reads only from the read replica, masks personal data before it reaches the model (LGPD, Brazil's data protection law) and has a cost limit per question.",
@@ -33,7 +33,7 @@ export const summary = {
 };
 
 /** Destaques curtos para a home. */
-export const highlights = [
+const highlights = [
   {
     title: "AI in production",
     text: "Purple's AI chat, a copilot with permissions and LGPD compliance, computer vision, MCP and agents in the team's daily work.",
@@ -49,8 +49,9 @@ export const highlights = [
 ];
 
 /** Experiência, da mais recente para a mais antiga. */
-export const experience: Job[] = [
+const experience: Job[] = [
   {
+    id: "purple-metrics-desenvolvedor-full-stack-senior",
     company: "Purple Metrics",
     role: "Senior Full Stack Developer",
     period: "Sep 2022 – present",
@@ -67,6 +68,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "fu2re-smart-solutions-desenvolvedor-full-stack-senior",
     company: "Fu2re Smart Solutions",
     role: "Senior Full Stack Developer",
     period: "Aug 2019 – Jun 2023",
@@ -79,6 +81,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "fulllab-retail-solutions-lider-tecnico",
     company: "Fulllab | retail solutions",
     role: "Tech Lead",
     period: "May 2017 – Aug 2019",
@@ -91,6 +94,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "fulllab-retail-solutions-desenvolvedor-net",
     company: "Fulllab | retail solutions",
     role: ".NET Developer",
     period: "Sep 2015 – May 2017",
@@ -100,6 +104,7 @@ export const experience: Job[] = [
     ],
   },
   {
+    id: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
     company: "Hebara Distribuidora de Produtos Lotéricos",
     role: "Junior Developer",
     period: "Sep 2013 – Sep 2015",
@@ -112,7 +117,7 @@ export const experience: Job[] = [
 ];
 
 /** Competências (as cinco primeiras são as principais). */
-export const skills = [
+const skills = [
   "Artificial intelligence (AI)",
   "React",
   "TypeScript",
@@ -139,13 +144,13 @@ export const skills = [
   "Terraform",
 ];
 
-export const languages = [
+const languages = [
   { name: "Portuguese", level: "native" },
   { name: "English", level: "intermediate" },
 ];
 
 /** Textos fixos da interface (topo, home e currículo). */
-export const ui = {
+const ui = {
   nav: { label: "Navigation", story: "story", resume: "résumé" },
   footerCredits: "sprite and font credits",
   home: {
@@ -173,4 +178,29 @@ export const ui = {
   },
 };
 
-export const content: Content = { profile, summary, highlights, experience, skills, languages, ui };
+/** Título e descrição de cada página, gravados no HTML estático de cada rota no build. */
+const meta = {
+  home: {
+    title: "Daniel Porto · Senior Full Stack Developer · Applied AI",
+    description:
+      "Senior full stack developer at Purple Metrics. I take AI to production: LLMs, agents and computer vision, with React, TypeScript and C#/.NET. Résumé and my story in pixel art.",
+  },
+  curriculo: {
+    title: "Résumé · Daniel Porto · Senior Full Stack Developer",
+    description:
+      "Daniel Porto's résumé: senior full stack developer at Purple Metrics, with AI in production (LLMs, MCP, agents and computer vision), React, TypeScript, C#/.NET and over 10 years of experience.",
+  },
+  historia: {
+    title: "The story in pixel art · Daniel Porto",
+    description:
+      "Daniel Porto's career told as a pixel-art game (in Portuguese): 8 levels, from his grandmother's house to AI in production at Purple Metrics.",
+  },
+  creditos: {
+    title: "Sprite and font credits · Daniel Porto",
+    description:
+      "Authors and licenses of the pixel art on Daniel Porto's site: sprites from the Liberated Pixel Cup and OpenGameArt, and the fonts.",
+  },
+};
+
+const en: Messages = { ...ui, meta, profile, summary, highlights, experience, skills, languages };
+export default en;

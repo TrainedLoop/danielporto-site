@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { pageMeta } from "../content/pages";
+import { setLang } from "../i18n";
 import { trackPageview } from "./analytics";
 
 export type Route = "home" | "historia" | "curriculo" | "creditos";
@@ -73,6 +74,7 @@ export function useRoute(initial: Page): Page {
 
   useEffect(() => {
     const show = (next: Page) => {
+      setLang(next.lang);
       setPage(next);
       document.title = pageMeta(next).title;
       window.scrollTo(0, 0);

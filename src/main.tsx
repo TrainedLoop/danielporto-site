@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App'
 import { pageMeta } from './content/pages'
+import { setLang } from './i18n'
 import { pageFromPath, pageKey, pathFromLegacyHash } from './lib/route'
 import { initAnalytics } from './lib/analytics'
 import './styles.css'
@@ -15,6 +16,7 @@ if (legacy) {
   initAnalytics()
   const container = document.getElementById('root')!
   const page = pageFromPath(window.location.pathname) ?? { route: 'home', lang: 'pt' }
+  setLang(page.lang)
   const app = (
     <StrictMode>
       <App page={page} />
