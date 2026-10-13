@@ -205,6 +205,21 @@ button {
   color: var(--ink);
 }
 
+.phase__done .phase__hint {
+  margin-bottom: 16px;
+}
+
+/* Enquanto as imagens da fase carregam. */
+.phase__loading {
+  position: absolute;
+  top: 40%;
+  margin: 0;
+  font-family: var(--pixel-font);
+  font-size: 12px;
+  color: var(--muted);
+  animation: blink 1s steps(1) infinite;
+}
+
 /* Caixa de diálogo estilo RPG. */
 .dialog {
   position: relative;
@@ -329,6 +344,7 @@ button {
 
 @media (prefers-reduced-motion: reduce) {
   .phase__press,
+  .phase__loading,
   .dialog,
   .inventory__slot--new {
     animation: none;
