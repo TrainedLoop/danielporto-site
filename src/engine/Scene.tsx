@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import gsap from "gsap";
+import { jobHref } from "../lib/route";
 import { loadSprites, type SpriteMap } from "../lib/sprites";
 import {
   ANIMATION_SPEED,
@@ -334,6 +335,7 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
                   </span>
                 </button>
               )}
+              {phase.job && <a href={jobHref(phase.job)}>ver no currículo</a>}
             </div>
           </div>
         )}

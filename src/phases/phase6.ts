@@ -120,6 +120,7 @@ export const phase6 = definePhase({
     src: `${P}/item-box.png`,
     at: TIMELINE.item,
   },
+  job: "fu2re-smart-solutions-desenvolvedor-full-stack-senior",
   staticAt: 1,
   draw(ctx, s, p) {
     if (p < TIMELINE.toStreet || p >= TIMELINE.toOffice) {

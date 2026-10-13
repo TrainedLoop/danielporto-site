@@ -84,3 +84,6 @@ export function storyPhase(): number | null {
 
 /** Link direto para uma fase da história (contando a partir de 1, como o contador "3/8"). */
 export const storyHref = (phase: number) => `${href("historia")}?fase=${phase}`;
+
+/** Link para um emprego no currículo (/curriculo/#id); o Resume rola até ele ao abrir. */
+export const jobHref = (jobId: string) => `${href("curriculo")}#${jobId}`;

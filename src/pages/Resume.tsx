@@ -1,4 +1,5 @@
-import { experience, languages, profile, skills, summary } from "../content/profile";
+import { useEffect } from "react";
+import { experience, jobId, languages, profile, skills, summary } from "../content/profile";
 import { href } from "../lib/route";
 
 const PDF_TITLE = "Daniel Porto - Currículo";
@@ -13,6 +14,12 @@ function printResume() {
 
 /** A versão em texto: o currículo completo, da experiência atual para a mais antiga. */
 export function Resume() {
+  // Vindo da história (/curriculo/#id-do-emprego), rola até o emprego da fase.
+  useEffect(() => {
+    const exp = decodeURIComponent(window.location.hash.slice(1));
+    if (exp) document.getElementById(exp)?.scrollIntoView();
+  }, []);
+
   return (
     <main className="resume">
       <header className="resume__header">
@@ -54,7 +61,7 @@ export function Resume() {
       <section className="resume__section">
         <h2>Experiência</h2>
         {experience.map((job) => (
-          <article key={`${job.company}-${job.role}`} className="job">
+          <article key={jobId(job)} id={jobId(job)} className="job">
             <header className="job__header">
               <h3>
                 {job.company} <span className="job__role">· {job.role}</span>
