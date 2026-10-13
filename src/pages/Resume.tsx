@@ -1,6 +1,16 @@
 import { experience, languages, profile, skills, summary } from "../content/profile";
 import { href } from "../lib/route";
 
+const PDF_TITLE = "Daniel Porto - Currículo";
+
+/** Abre a caixa de impressão; o título vira o nome sugerido do PDF e volta ao original depois. */
+function printResume() {
+  const original = document.title;
+  document.title = PDF_TITLE;
+  window.addEventListener("afterprint", () => (document.title = original), { once: true });
+  window.print();
+}
+
 /** A versão em texto: o currículo completo, da experiência atual para a mais antiga. */
 export function Resume() {
   return (
@@ -22,6 +32,9 @@ export function Resume() {
         </p>
         <p className="resume__actions no-print">
           <a href={href("historia")}>▶ jogar a história</a>
+          <button type="button" className="resume__pdf" onClick={printResume}>
+            baixar PDF
+          </button>
         </p>
       </header>
 
