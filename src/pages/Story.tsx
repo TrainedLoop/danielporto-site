@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Scene } from "../engine/Scene";
 import { href, storyHref, storyPhase } from "../lib/route";
+import { loadSprites } from "../lib/sprites";
 import { phase0 } from "../phases/phase0";
 import { phase1 } from "../phases/phase1";
 import { phase2 } from "../phases/phase2";
@@ -20,6 +21,7 @@ type Progress = { current: number; items: Record<string, boolean> };
 const STORAGE_KEY = "historia:progresso";
 
 function readProgress(): Progress | null {
+  if (typeof window === "undefined") return null;
   try {
     const saved: unknown = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "null");
     if (!saved || typeof saved !== "object") return null;
@@ -50,7 +52,7 @@ function writeProgress({ current, items }: Progress) {
   }
 }
 
-/** Abrir direto numa fase (#/historia/3) já entrega os itens das fases anteriores. */
+/** Abrir direto numa fase (/historia/?fase=3) já entrega os itens das fases anteriores. */
 function progressAt(phase: number): Progress {
   const current = Math.min(Math.max(phase, 1), PHASES.length) - 1;
   const items = Object.fromEntries(PHASES.slice(0, current).map((p) => [p.item.id, true]));
@@ -85,6 +87,23 @@ export function Story() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Enquanto uma fase roda, baixa as imagens da próxima, para não ter pausa entre elas.
+  // Espera a atual terminar de carregar, para não disputar a conexão com ela.
+  useEffect(() => {
+    const now = PHASES[current];
+    const next = PHASES[current + 1];
+    if (!now || !next) return;
+    let cancelled = false;
+    loadSprites(now.sprites)
+      .then(() => {
+        if (!cancelled) return loadSprites(next.sprites);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [current]);
+
   // Guarda o progresso e mostra a fase atual na URL. replaceState para o "voltar"
   // do navegador não passar fase por fase.
   useEffect(() => {
@@ -92,12 +111,14 @@ export function Story() {
   }, [current, items]);
   useEffect(() => {
     const target = current < PHASES.length ? storyHref(current + 1) : href("historia");
-    if (window.location.hash !== target) window.history.replaceState(null, "", target);
+    if (window.location.pathname + window.location.search !== target) {
+      window.history.replaceState(null, "", target);
+    }
   }, [current]);
 
-  // Trocar o número da fase na URL com a história aberta também leva até ela.
+  // Voltar/avançar do navegador para um link de fase também leva até ela.
   useEffect(() => {
-    const onHashChange = () => {
+    const onPopState = () => {
       const linked = storyPhase();
       if (linked === null) return;
       const next = progressAt(linked);
@@ -105,8 +126,8 @@ export function Story() {
       setItems(next.items);
       setCameFromPrevious(false);
     };
-    window.addEventListener("hashchange", onHashChange);
-    return () => window.removeEventListener("hashchange", onHashChange);
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
   const finished = current >= PHASES.length;
