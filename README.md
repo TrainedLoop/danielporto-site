@@ -3,17 +3,20 @@
 Portfólio do Daniel Porto: resumo, currículo e, opcionalmente, a trajetória contada
 como um jogo em pixel art, da casa da avó até a IA em produção.
 
-- `#/` — home com o resumo e a escolha entre jogar a história ou ler o currículo
-- `#/historia` — 8 fases em pixel art, uma por vez, com inventário
-- `#/curriculo` — o currículo em texto
-- `#/creditos` — autores e licenças dos sprites e da fonte
+- `/` — home com o resumo e a escolha entre jogar a história ou ler o currículo
+- `/historia/` — 8 fases em pixel art, uma por vez, com inventário
+- `/curriculo/` — o currículo em texto
+- `/creditos/` — autores e licenças dos sprites e da fonte
+
+Os links antigos com hash (`#/curriculo`) continuam funcionando: o app leva para o caminho novo.
 
 ## Rodar
 
 ```bash
 pnpm install
 pnpm dev      # http://localhost:5173
-pnpm build    # gera dist/
+pnpm build    # gera dist/, com o HTML de cada página já renderizado
+pnpm preview  # serve o dist/ para conferir
 ```
 
 A publicação é automática: cada push na `main` faz o build e publica no GitHub Pages
@@ -27,6 +30,13 @@ A publicação é automática: cada push na `main` faz o build e publica no GitH
   (gerais) e em cada fala (`speed` e `textSpeed`).
 - `src/phases/` — cada fase é só configuração: sprites, falas e a função de desenho.
 - `src/content/profile.ts` — o conteúdo da home e do currículo.
+- `src/content/pages.ts` — título e descrição de cada página (vão para o `<title>`, a meta
+  description e o compartilhamento).
+- Rotas por caminho com a History API (`src/lib/route.ts`), sem biblioteca de rotas. No build,
+  `scripts/prerender.js` renderiza cada rota com `react-dom/server` a partir dos componentes
+  (`src/entry-server.ts`) e grava `dist/<rota>/index.html`, com título, descrição, canonical e
+  `og:url` de cada página, mais um `dist/404.html` que abre o app em caminhos desconhecidos. No
+  navegador, o React hidrata o HTML que já veio pronto.
 
 ## Arte
 
@@ -47,7 +57,7 @@ python -I tools/build_props_phase1.py public/sprites/phase1   # e assim por dian
 
 Os personagens usam arte do Liberated Pixel Cup e da comunidade do OpenGameArt
 (CC-BY-SA 3.0, OGA-BY 3.0 e GPL 3.0); os autores estão em
-`public/sprites/character/CREDITS.csv` e na página `#/creditos`.
+`public/sprites/character/CREDITS.csv` e na página `/creditos/`.
 
 As fontes Press Start 2P, VT323 e Inter são servidas pelo próprio site (arquivos
 woff2 em `src/assets/fonts`, tirados dos pacotes do Fontsource) e estão sob a
