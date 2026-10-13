@@ -1,12 +1,22 @@
 import { useEffect } from "react";
 import { experience, jobId, languages, profile, skills, summary } from "../content/profile";
-import { hashParam, href } from "../lib/route";
+import { href } from "../lib/route";
+
+const PDF_TITLE = "Daniel Porto - Currículo";
+
+/** Abre a caixa de impressão; o título vira o nome sugerido do PDF e volta ao original depois. */
+function printResume() {
+  const original = document.title;
+  document.title = PDF_TITLE;
+  window.addEventListener("afterprint", () => (document.title = original), { once: true });
+  window.print();
+}
 
 /** A versão em texto: o currículo completo, da experiência atual para a mais antiga. */
 export function Resume() {
-  // Vindo da história (#/curriculo?exp=...), rola até o emprego da fase.
+  // Vindo da história (/curriculo/#id-do-emprego), rola até o emprego da fase.
   useEffect(() => {
-    const exp = hashParam("exp");
+    const exp = decodeURIComponent(window.location.hash.slice(1));
     if (exp) document.getElementById(exp)?.scrollIntoView();
   }, []);
 
@@ -29,6 +39,9 @@ export function Resume() {
         </p>
         <p className="resume__actions no-print">
           <a href={href("historia")}>▶ jogar a história</a>
+          <button type="button" className="resume__pdf" onClick={printResume}>
+            baixar PDF
+          </button>
         </p>
       </header>
 
