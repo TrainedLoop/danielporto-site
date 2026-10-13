@@ -37,7 +37,8 @@ export function Credits() {
           Universal LPC Spritesheet Character Generator
         </a>
         , com arte do Liberated Pixel Cup e da comunidade do OpenGameArt. Cenários, objetos e telas foram desenhados para
-        este site. Os textos nas telas usam a fonte Press Start 2P, de CodeMan38, sob a SIL Open Font License.
+        este site. Os textos nas telas usam a fonte Press Start 2P, de CodeMan38; os diálogos e as dicas da história, a
+        VT323, de Peter Hull; e o texto corrido, a Inter, de Rasmus Andersson. As três estão sob a SIL Open Font License.
       </p>
       <p>
         <a href={`${BASE}sprites/character/CREDITS.csv`}>Baixar a lista completa (CSV)</a>
