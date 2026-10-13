@@ -70,6 +70,7 @@ export default function App({ page: initial }: { page: Page }) {
         <footer className="site-footer no-print">
           <span>© Daniel Porto</span>
           <a href={href('credits', lang)}>{t('footerCredits')}</a>
+          <small className="site-footer__privacy">{t('privacyNotice')}</small>
         </footer>
       )}
     </>

@@ -153,6 +153,7 @@ const languages = [
 const ui = {
   nav: { label: "Navigation", story: "story", resume: "résumé", language: "Language" },
   footerCredits: "sprite and font credits",
+  privacyNotice: "This site records anonymous visits and sessions, without cookies, to improve its content.",
   home: {
     avatarAlt: "Daniel in pixel art",
     hello: "Hi, I'm",

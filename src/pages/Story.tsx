@@ -191,6 +191,8 @@ export function Story() {
                 {t("story.ending.restart")}
               </button>
             </p>
+            {/* This page has no footer, so the privacy notice shows up here. */}
+            <small className="next__privacy">{t("privacyNotice")}</small>
           </section>
         )}
       </main>
