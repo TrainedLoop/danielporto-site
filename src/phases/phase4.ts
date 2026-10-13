@@ -119,6 +119,7 @@ export const phase4 = definePhase({
     src: `${P}/item-badge.png`,
     at: TIMELINE.item,
   },
+  job: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
   staticAt: 0.94,
   draw(ctx, s, p) {
     // ---- Escritório

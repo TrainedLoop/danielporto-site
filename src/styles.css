@@ -186,7 +186,15 @@ button {
 .phase__actions {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+}
+
+.phase__actions a {
+  font-family: var(--pixel-font);
+  font-size: 8px;
+  color: var(--accent);
 }
 
 .phase__press {
@@ -641,6 +649,10 @@ button {
 
 .resume li + li {
   margin-top: 6px;
+}
+
+.job {
+  scroll-margin-top: 64px;
 }
 
 .job + .job {

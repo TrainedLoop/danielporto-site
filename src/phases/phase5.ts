@@ -139,6 +139,7 @@ export const phase5 = definePhase({
     src: `${P}/item-phone.png`,
     at: TIMELINE.item,
   },
+  job: "fulllab-retail-solutions-lider-tecnico",
   staticAt: 1,
   draw(ctx, s, p) {
     // ---- Escritório

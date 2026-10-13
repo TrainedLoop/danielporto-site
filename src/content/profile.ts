@@ -54,6 +54,15 @@ export type Job = {
   bullets: string[];
 };
 
+/** Âncora estável de um emprego no currículo: slug de empresa + cargo. */
+export const jobId = (job: Pick<Job, "company" | "role">) =>
+  `${job.company} ${job.role}`
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 /** Experiência, da mais recente para a mais antiga. */
 export const experience: Job[] = [
   {

@@ -1,8 +1,15 @@
-import { experience, languages, profile, skills, summary } from "../content/profile";
-import { href } from "../lib/route";
+import { useEffect } from "react";
+import { experience, jobId, languages, profile, skills, summary } from "../content/profile";
+import { hashParam, href } from "../lib/route";
 
 /** A versão em texto: o currículo completo, da experiência atual para a mais antiga. */
 export function Resume() {
+  // Vindo da história (#/curriculo?exp=...), rola até o emprego da fase.
+  useEffect(() => {
+    const exp = hashParam("exp");
+    if (exp) document.getElementById(exp)?.scrollIntoView();
+  }, []);
+
   return (
     <main className="resume">
       <header className="resume__header">
@@ -41,7 +48,7 @@ export function Resume() {
       <section className="resume__section">
         <h2>Experiência</h2>
         {experience.map((job) => (
-          <article key={`${job.company}-${job.role}`} className="job">
+          <article key={jobId(job)} id={jobId(job)} className="job">
             <header className="job__header">
               <h3>
                 {job.company} <span className="job__role">· {job.role}</span>
