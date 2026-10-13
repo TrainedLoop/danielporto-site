@@ -1,4 +1,5 @@
 import { highlights, profile, skills } from "../content/profile";
+import { track } from "../lib/analytics";
 import { href } from "../lib/route";
 
 const BASE = import.meta.env.BASE_URL;
@@ -37,7 +38,7 @@ export function Home() {
           Como você quer conhecer a minha trajetória?
         </h2>
         <div className="choice__options">
-          <a className="choice__card choice__card--play" href={href("historia")}>
+          <a className="choice__card choice__card--play" href={href("historia")} onClick={() => track("escolha_home", { opcao: "historia" })}>
             <span className="choice__icon" aria-hidden="true">
               ▶
             </span>
@@ -46,7 +47,7 @@ export function Home() {
               Da casa da minha avó até a IA em produção, em 8 fases de pixel art. Uns 5 minutos.
             </span>
           </a>
-          <a className="choice__card" href={href("curriculo")}>
+          <a className="choice__card" href={href("curriculo")} onClick={() => track("escolha_home", { opcao: "curriculo" })}>
             <span className="choice__icon" aria-hidden="true">
               ≡
             </span>

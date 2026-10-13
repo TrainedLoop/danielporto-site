@@ -1,0 +1,3 @@
+# O postinstall do core-js (dependência do posthog-js) só imprime uma mensagem.
+allowBuilds:
+  core-js: false

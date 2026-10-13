@@ -28,6 +28,37 @@ A publicação é automática: cada push na `main` faz o build e publica no GitH
 - `src/phases/` — cada fase é só configuração: sprites, falas e a função de desenho.
 - `src/content/profile.ts` — o conteúdo da home e do currículo.
 
+## Métricas
+
+O site usa o [PostHog](https://posthog.com) para saber como as pessoas navegam
+(`src/lib/analytics.ts`). O `posthog-js` vem num chunk separado, carregado só depois
+que a página aparece (`requestIdleCallback`), então não pesa no bundle inicial.
+
+A chave vem do build: `VITE_POSTHOG_KEY` e `VITE_POSTHOG_HOST` (padrão
+`https://us.i.posthog.com`). No deploy, o workflow lê as duas das variáveis do
+repositório (`vars.*`). Sem a chave (rodando local, num fork), nada é carregado nem
+enviado. Para testar local: `VITE_POSTHOG_KEY=phc_... pnpm dev`.
+
+Privacidade:
+
+- nada de cookie, localStorage ou sessionStorage (`persistence: "memory"`): cada visita é
+  um visitante anônimo novo e não precisa de banner de consentimento;
+- sem gravação de sessão, sem autocapture (cliques e campos não são capturados
+  automaticamente), sem heatmaps, surveys, feature flags ou scripts extras do PostHog;
+- com Do Not Track ou Global Privacy Control ligado no navegador, o PostHog nem é carregado.
+
+Eventos:
+
+| Evento | Quando | Propriedades |
+| --- | --- | --- |
+| `$pageview` | ao abrir o site e a cada troca de rota (hash) | `rota` |
+| `escolha_home` | clique em "Jogar a história" ou "Ler o currículo" na home | `opcao`: `historia` \| `curriculo` |
+| `fase_iniciada` | uma fase da história começa (inclusive "ver de novo") | `fase` (0 a 7), `fase_id` |
+| `fase_concluida` | a pessoa chega ao fim das falas de uma fase | `fase`, `fase_id` |
+| `fase_pulada` | clique em "pular" | `fase`, `fase_id` |
+| `historia_concluida` | a tela de encerramento ("CONTINUA…") aparece | — |
+| `link_externo` | clique em link para LinkedIn, GitHub ou email | `destino`: `linkedin` \| `github` \| `email`, `url` |
+
 ## Arte
 
 Os sprites em `public/sprites/` são gerados pelos scripts em `tools/` (Python + Pillow):

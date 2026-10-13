@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { trackFase } from "../lib/analytics";
 import { loadSprites, type SpriteMap } from "../lib/sprites";
 import {
   ANIMATION_SPEED,
@@ -115,7 +116,8 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
     render(0);
     setStatus("playing");
     startBeat(0);
-  }, [render, startBeat]);
+    trackFase("fase_iniciada", phase.id);
+  }, [render, startBeat, phase.id]);
 
   // Vindo da fase anterior, não precisa de outro "PRESS START".
   useEffect(() => {
@@ -130,14 +132,16 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
       startBeat(beat + 1);
     } else {
       setStatus("done");
+      trackFase("fase_concluida", phase.id);
     }
-  }, [status, beat, beats, typed, animating, startBeat]);
+  }, [status, beat, beats, typed, animating, startBeat, phase.id]);
 
   const skip = () => {
     animRef.current?.kill();
     typeRef.current?.kill();
     render(1);
     setStatus("done");
+    trackFase("fase_pulada", phase.id);
   };
 
   // Enter ou espaço fazem o mesmo que clicar: começar ou avançar.

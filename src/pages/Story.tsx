@@ -1,5 +1,6 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Scene } from "../engine/Scene";
+import { track } from "../lib/analytics";
 import { href } from "../lib/route";
 import { phase0 } from "../phases/phase0";
 import { phase1 } from "../phases/phase1";
@@ -32,6 +33,7 @@ export function Story() {
 
   const finished = current >= PHASES.length;
   const phase = PHASES[current];
+  useEffect(() => void (finished && track("historia_concluida")), [finished]);
   const collected = PHASES.filter((p) => items[p.item.id]).map((p) => p.item);
 
   return (
