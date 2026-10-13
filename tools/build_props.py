@@ -92,7 +92,7 @@ def rect(d, x, y, w, h, color):
 
 
 def box(d, x, y, w, h, fill, light=None, shade=None, outline=OUTLINE):
-    """Caixa com contorno, borda clara em cima/esquerda e sombra embaixo/direita."""
+    """Outlined box, with a light edge at the top/left and a shadow at the bottom/right."""
     rect(d, x, y, w, h, outline)
     rect(d, x + 1, y + 1, w - 2, h - 2, fill)
     if light:
@@ -105,7 +105,7 @@ def box(d, x, y, w, h, fill, light=None, shade=None, outline=OUTLINE):
 
 def room():
     img, d = canvas(W, H)
-    # Parede com papel de parede listrado e florzinhas.
+    # Wall with striped wallpaper and tiny flowers.
     rect(d, 0, 0, W, FLOOR_Y, WALL[0])
     for x in range(0, W, 12):
         rect(d, x, 0, 4, FLOOR_Y, WALL[1])
@@ -115,11 +115,11 @@ def room():
             d.point((x - 1, y + 1), fill=ROSE[0])
             d.point((x + 1, y + 1), fill=ROSE[0])
             d.point((x, y + 2), fill=ROSE[2])
-    # Rodapé.
+    # Baseboard.
     rect(d, 0, FLOOR_Y - 8, W, 8, WOOD[2])
     rect(d, 0, FLOOR_Y - 8, W, 1, WOOD[1])
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
-    # Piso de tacos.
+    # Parquet floor.
     rect(d, 0, FLOOR_Y, W, H - FLOOR_Y, FLOOR[1])
     for row, y in enumerate(range(FLOOR_Y, H, 8)):
         rect(d, 0, y, W, 1, FLOOR[3])
@@ -127,7 +127,7 @@ def room():
         for x in range(offset, W, 24):
             rect(d, x, y + 1, 1, 7, FLOOR[3])
             rect(d, x + 1, y + 1, 11, 1, FLOOR[0])
-    # Tapete.
+    # Rug.
     rx, ry, rw, rh = 120, 150, 120, 22
     rect(d, rx, ry, rw, rh, OUTLINE)
     rect(d, rx + 1, ry + 1, rw - 2, rh - 2, ROSE[2])
@@ -137,7 +137,7 @@ def room():
     for x in range(rx, rx + rw, 3):
         d.point((x, ry - 1), fill=(232, 220, 190))
         d.point((x, ry + rh), fill=(232, 220, 190))
-    # Janela com cortinas.
+    # Window with curtains.
     wx, wy, ww, wh = 24, 22, 64, 56
     box(d, wx, wy, ww, wh, WHITE)
     rect(d, wx + 4, wy + 4, ww - 8, wh - 8, SKY[1])
@@ -155,7 +155,7 @@ def room():
             rect(d, x, wy - 2, 1, wh + 10, ROSE[2])
         rect(d, side, wy - 2, 1, wh + 10, OUTLINE)
         rect(d, side + 13, wy - 2, 1, wh + 10, OUTLINE)
-    # Quadro na parede.
+    # Picture on the wall.
     box(d, 236, 34, 34, 26, WOOD[1], WOOD[0], WOOD[3])
     rect(d, 240, 38, 26, 18, (196, 220, 180))
     rect(d, 240, 48, 26, 8, (110, 160, 90))
@@ -164,7 +164,7 @@ def room():
 
 
 def desk():
-    """Mesa de madeira com gaveteiro; tampo em y=0."""
+    """Wooden desk with drawers; top at y=0."""
     img, d = canvas(112, 34)
     box(d, 0, 0, 112, 6, WOOD[1], WOOD[0], WOOD[3])
     box(d, 4, 5, 4, 29, WOOD[2], None, WOOD[4])
@@ -176,7 +176,7 @@ def desk():
 
 
 def doily(d, x, y, w):
-    """Paninho de crochê da avó."""
+    """Grandma's crochet doily."""
     for i in range(w):
         if i % 2 == 0:
             d.point((x + i, y + 1), fill=WHITE)
@@ -186,7 +186,7 @@ def doily(d, x, y, w):
 
 
 def monitor():
-    """Monitor de tubo bege; a tela (30x22) começa em (7, 6)."""
+    """Beige CRT monitor; the screen (30x22) starts at (7, 6)."""
     img, d = canvas(44, 44)
     box(d, 2, 2, 40, 32, BEIGE[1], BEIGE[0], BEIGE[3])
     rect(d, 6, 5, 32, 24, BEIGE[3])
@@ -207,7 +207,7 @@ def screen_off():
 
 
 def screen_boot():
-    """Tela de abertura: céu azul com nuvens e a bandeirinha de quatro cores."""
+    """Boot screen: blue sky with clouds and the four-color flag."""
     img, d = canvas(30, 22)
     for y in range(22):
         shade = int(40 + y * 4)
@@ -233,7 +233,7 @@ def screen_desktop():
     rect(d, 1, 20, 6, 1, WHITE)
     rect(d, 2, 21, 2, 1, (230, 60, 40))
     rect(d, 26, 20, 3, 2, WIN_DARK)
-    # Janela aberta do "Meu computador".
+    # Open "My Computer" window.
     rect(d, 10, 3, 17, 12, WIN_GRAY)
     rect(d, 10, 3, 17, 2, WIN_BLUE)
     rect(d, 25, 3, 2, 2, WIN_GRAY)
@@ -242,7 +242,7 @@ def screen_desktop():
 
 
 def screen_game():
-    """Um joguinho de plataforma dos CDs da revista."""
+    """A little platform game from the magazine CDs."""
     img, d = canvas(30, 22)
     rect(d, 0, 0, 30, 22, (20, 24, 60))
     for x, y in ((3, 3), (12, 5), (24, 2), (19, 8)):
@@ -258,7 +258,7 @@ def screen_game():
 
 
 def tower():
-    """Gabinete bege em pé, com drive de CD e de disquete."""
+    """Upright beige tower, with CD and floppy drives."""
     img, d = canvas(20, 40)
     box(d, 0, 0, 20, 40, BEIGE[1], BEIGE[0], BEIGE[3])
     box(d, 3, 4, 14, 4, BEIGE[2], None, BEIGE[3])
@@ -282,7 +282,7 @@ def keyboard():
 
 
 def magazines():
-    """Pilha de revistas CD-ROM no chão, cada uma de uma cor."""
+    """Stack of CD-ROM magazines on the floor, each a different color."""
     img, d = canvas(28, 24)
     colors = [((210, 60, 60), (240, 200, 60)), ((60, 110, 210), (250, 250, 250)), ((240, 170, 40), (210, 60, 60)), ((90, 170, 80), (250, 250, 250)), ((150, 80, 170), (240, 200, 60))]
     y = 22
@@ -295,7 +295,7 @@ def magazines():
 
 
 def cd(size):
-    """Disco prateado com reflexo de arco-íris (também é o item do inventário)."""
+    """Silver disc with a rainbow sheen (also the inventory item)."""
     img, d = canvas(size, size)
     r = size // 2
     d.ellipse((0, 0, size - 1, size - 1), fill=OUTLINE)

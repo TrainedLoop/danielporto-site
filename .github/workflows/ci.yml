@@ -1,4 +1,4 @@
-name: Verificar PR
+name: Check PR
 
 on:
   pull_request:
@@ -12,12 +12,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verificar:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # Versão do pnpm vem do campo packageManager do package.json
+      # The pnpm version comes from the packageManager field in package.json
       - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
@@ -25,7 +25,7 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      - name: Instalar dependências
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Lint
@@ -34,5 +34,5 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          # Chave falsa: o build do PR passa pelo mesmo caminho do deploy, com o PostHog ligado.
-          VITE_POSTHOG_KEY: phc_ci_falsa
+          # Fake key: the PR build goes through the same path as the deploy, with PostHog on.
+          VITE_POSTHOG_KEY: phc_ci_fake

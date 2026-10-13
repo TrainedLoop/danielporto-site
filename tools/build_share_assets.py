@@ -67,14 +67,14 @@ def og_image(public, lang="pt"):
     words = CARD_TEXT[lang]
     img = Image.new("RGB", (1200, 630), BG)
     d = ImageDraw.Draw(img)
-    # Moldura e grade sutil, no clima de pixel art.
+    # Frame and a subtle grid, in a pixel-art mood.
     for x in range(0, 1200, 30):
         d.line((x, 0, x, 630), fill=(32, 26, 40))
     for y in range(0, 630, 30):
         d.line((0, y, 1200, y), fill=(32, 26, 40))
     d.rectangle((24, 24, 1175, 605), outline=INK, width=6)
 
-    # Avatar ampliado 6x, sem suavizar.
+    # Avatar scaled up 6x, without smoothing.
     d.rectangle((70, 90, 70 + 360, 90 + 360), fill=PANEL, outline=INK, width=6)
     face = avatar(public).resize((FRAME * 6, FRAME * 6), Image.NEAREST)
     img.paste(face, (70 - 12, 90 - 30), face)
@@ -88,7 +88,7 @@ def og_image(public, lang="pt"):
     text(d, (x, 380), words["cta"][0], 16, INK)
     text(d, (x, 406), words["cta"][1], 16, INK)
 
-    # Os itens da jornada, em fila.
+    # The journey's items, in a row.
     for i, item in enumerate(ITEMS):
         icon = Image.open(public / f"sprites/{item}.png").convert("RGBA").resize((64, 64), Image.NEAREST)
         bx = 70 + i * 84
@@ -100,7 +100,7 @@ def og_image(public, lang="pt"):
 
 
 def icons(public):
-    """Rosto do personagem (recorte da cabeça, de frente) sobre fundo escuro."""
+    """The character's face (head crop, facing front) on a dark background."""
     head = avatar(public).crop((16, 12, 48, 44))
     icon = Image.new("RGBA", (32, 32), BG + (255,))
     icon.alpha_composite(head)

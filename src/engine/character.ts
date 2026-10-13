@@ -1,9 +1,9 @@
 import { segment } from "../lib/sprites";
 
-/** Tamanho de um quadro das folhas LPC. */
+/** Size of one frame in the LPC sheets. */
 export const FRAME = 64;
 
-/** Linhas das folhas LPC por direção. */
+/** LPC sheet rows per facing direction. */
 export const FACING = { up: 0, left: 1, down: 2, right: 3 } as const;
 export type Facing = keyof typeof FACING;
 
@@ -29,8 +29,8 @@ export function drawFrame(
 }
 
 /**
- * Desenha alguém andando de `fromX` até `toX` durante o trecho [start, end] da animação.
- * Antes do trecho fica parado em `fromX`; depois, parado em `toX` virado para `endFacing`.
+ * Draws someone walking from `fromX` to `toX` during the [start, end] slice of the animation.
+ * Before the slice they stand still at `fromX`; after it, still at `toX` facing `endFacing`.
  */
 export function drawWalk(
   ctx: CanvasRenderingContext2D,
@@ -51,14 +51,14 @@ export function drawWalk(
   drawFrame(ctx, walkSheet, facing, col, x, y);
 }
 
-// No quadro "sentado de costas" (coluna 2), o corpo ocupa x 20–43 e termina em y 52.
+// In the "seated, back turned" frame (column 2), the body spans x 20–43 and ends at y 52.
 const SEATED_CENTER_X = 32;
 const SEATED_HIP_Y = 47;
 
 /**
- * Desenha alguém sentado de costas numa cadeira ou banquinho: a cadeira fica
- * centralizada embaixo do quadril e o assento passa por cima da parte de baixo
- * do corpo, para não parecer que a pessoa flutua.
+ * Draws someone seated with their back turned on a chair or stool: the chair is
+ * centered under the hips and the seat is drawn over the lower body, so the
+ * person doesn't look like they're floating.
  */
 export function drawSeated(
   ctx: CanvasRenderingContext2D,
@@ -75,7 +75,7 @@ export function drawSeated(
   );
 }
 
-/** A cadeira vazia, no mesmo lugar em que fica quando alguém senta (para antes de sentar). */
+/** The empty chair, in the same spot as when someone sits (for before they sit down). */
 export function drawEmptySeat(
   ctx: CanvasRenderingContext2D,
   chair: HTMLImageElement,

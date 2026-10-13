@@ -24,7 +24,7 @@ IDE_BG = (30, 30, 36)
 
 
 def ticket(d, x, y, w, h, color, label):
-    """Bilhete de raspadinha genérico, para os pôsteres da parede."""
+    """Generic scratch-card ticket, for the wall posters."""
     box(d, x, y, w, h, color[0], color[1], color[2])
     rect(d, x + 3, y + 3, w - 6, 7, WHITE)
     rect(d, x + 4, y + 5, len(label) * 2, 3, color[2])
@@ -43,14 +43,14 @@ def office():
         for x in range((y // 6 % 2) * 3, W, 6):
             d.point((x, y), fill=CARPET[2])
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
-    # Pôsteres de raspadinha na parede.
+    # Scratch-card posters on the wall.
     ticket(d, 14, 24, 30, 44, [(70, 160, 230), (110, 190, 250), (40, 110, 180)], "RIO")
     ticket(d, 52, 30, 30, 44, [(240, 110, 60), (255, 150, 90), (190, 70, 30)], "SORTE")
     ticket(d, 90, 24, 30, 44, [(90, 190, 90), (130, 220, 120), (50, 140, 60)], "PREMIO")
-    # Placa da empresa.
+    # The company's sign.
     box(d, 200, 22, 76, 18, (40, 60, 120), (70, 90, 160), (20, 36, 80))
     text(d, 214, 27, "HEBARA", GOLD[0])
-    # Estrelinhas de "prêmio" ao redor dos pôsteres.
+    # Little "prize" sparkles around the posters.
     for sx, sy in ((10, 20), (48, 78), (124, 20), (126, 70)):
         rect(d, sx, sy + 1, 3, 1, GOLD[0])
         rect(d, sx + 1, sy, 1, 3, GOLD[0])
@@ -58,7 +58,7 @@ def office():
 
 
 def badge():
-    """Crachá do primeiro emprego, com cordão (item do inventário)."""
+    """First job badge, with a lanyard (inventory item)."""
     img, d = canvas(32, 32)
     lanyard = (60, 90, 200)
     for i in range(10):
@@ -69,14 +69,14 @@ def badge():
     box(d, 6, 11, 20, 20, WHITE, None, SILVER[2])
     rect(d, 7, 12, 18, 4, (40, 60, 120))
     box(d, 9, 17, 7, 8, (250, 210, 170))
-    rect(d, 10, 17, 5, 2, (40, 30, 26))  # cabelo da foto
-    rect(d, 9, 23, 7, 2, (30, 30, 30))  # camiseta preta
+    rect(d, 10, 17, 5, 2, (40, 30, 26))  # photo's hair
+    rect(d, 9, 23, 7, 2, (30, 30, 30))  # black t-shirt
     for y in (18, 21, 24):
         rect(d, 18, y, 6, 1, (150, 150, 160))
     return img
 
 
-# ---------------------------------------------------------------- telas de perto
+# ---------------------------------------------------------------- close-up screens
 
 IDE_LINES = [
     ("public class", (90, 160, 250)),
@@ -121,12 +121,12 @@ def intranet():
 
 
 def deploy(done):
-    """Publicação no servidor; a barra (x=24, y=60, 128x10) é preenchida no código."""
+    """Publishing to the server; the bar (x=24, y=60, 128x10) is filled in code."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (240, 240, 236))
     rect(d, 0, 0, CLOSE_W, 12, (60, 60, 70))
     text(d, 3, 2, tr("Publicar", "Publish"), WHITE)
-    # Servidor de produção.
+    # Production server.
     box(d, 12, 20, 24, 34, (60, 62, 70), (90, 92, 100), (30, 32, 36))
     for y in (24, 32, 40):
         rect(d, 15, y, 18, 5, (40, 42, 48))
@@ -144,7 +144,7 @@ def deploy(done):
     return img
 
 
-# Raspadinha: o cartão e a camada prateada que vai sendo raspada em zigue-zague.
+# Scratch card: the card and the silver layer that gets scratched off in a zigzag.
 CARD = {"x": 8, "y": 6, "w": 160, "h": 96}
 SCRATCH = {"x": 24, "y": 44, "w": 128, "h": 40}
 SCRATCH_FRAMES = 8
@@ -169,7 +169,7 @@ def card_base():
 
 
 def scratch_layer(frame):
-    """Camada prateada; a cada quadro mais um trecho é raspado."""
+    """Silver layer; each frame scratches off one more strip."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     s = SCRATCH
     rect(d, s["x"], s["y"], s["w"], s["h"], SILVER[1])
@@ -177,7 +177,7 @@ def scratch_layer(frame):
     for _ in range(140):
         d.point((s["x"] + rng.randrange(s["w"]), s["y"] + rng.randrange(s["h"])), fill=SILVER[0])
     text(d, s["x"] + 36, s["y"] + 16, tr("RASPE", "SCRATCH"), SILVER[2])
-    # Zigue-zague: cada quadro raspa uma faixa diagonal.
+    # Zigzag: each frame scratches a diagonal strip.
     total = SCRATCH_FRAMES
     width = s["w"] / total
     for k in range(frame):

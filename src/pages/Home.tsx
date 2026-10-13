@@ -4,7 +4,7 @@ import { href, type Lang } from "../lib/route";
 
 const BASE = import.meta.env.BASE_URL;
 
-/** A home, no idioma da página (textos em src/i18n/locales). */
+/** The home page, in the page's language (texts in src/i18n/locales). */
 export function Home() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
@@ -44,14 +44,14 @@ export function Home() {
           {t("home.choiceTitle")}
         </h2>
         <div className="choice__options">
-          <a className="choice__card choice__card--play" href={href("historia", lang)} onClick={() => track("escolha_home", { opcao: "historia" })}>
+          <a className="choice__card choice__card--play" href={href("story", lang)} onClick={() => track("home_choice", { option: "story" })}>
             <span className="choice__icon" aria-hidden="true">
               ▶
             </span>
             <span className="choice__label">{t("home.playLabel")}</span>
             <span className="choice__hint">{t("home.playHint")}</span>
           </a>
-          <a className="choice__card" href={href("curriculo", lang)} onClick={() => track("escolha_home", { opcao: "curriculo" })}>
+          <a className="choice__card" href={href("resume", lang)} onClick={() => track("home_choice", { option: "resume" })}>
             <span className="choice__icon" aria-hidden="true">
               ≡
             </span>

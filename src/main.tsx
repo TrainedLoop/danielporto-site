@@ -15,10 +15,11 @@ const legacy = pathFromLegacyHash(hash) ?? pathFromLegacyPath(pathname, search, 
 if (legacy) {
   window.location.replace(legacy)
 } else {
-  initAnalytics()
   const container = document.getElementById('root')!
   const page = pageOrHome(pathname)
+  // Language first: analytics events carry it.
   setLang(page.lang)
+  initAnalytics()
   const app = (
     <StrictMode>
       <App page={page} />
@@ -29,7 +30,7 @@ if (legacy) {
   // If the HTML belongs to another page (404.html, or /curriculo without the trailing slash),
   // render from scratch. The story too: it resumes the progress saved in the browser,
   // which the build's HTML can't know about.
-  if (container.dataset.route === pageKey(page) && page.route !== 'historia') {
+  if (container.dataset.route === pageKey(page) && page.route !== 'story') {
     hydrateRoot(container, app)
   } else {
     document.title = pageMeta(page).title

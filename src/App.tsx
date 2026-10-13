@@ -47,10 +47,10 @@ export default function App({ page: initial }: { page: Page }) {
           Daniel Porto
         </a>
         <nav className="topbar__nav" aria-label={t('nav.label')}>
-          <a href={href('historia', lang)} aria-current={route === 'historia' ? 'page' : undefined}>
+          <a href={href('story', lang)} aria-current={route === 'story' ? 'page' : undefined}>
             {t('nav.story')}
           </a>
-          <a href={href('curriculo', lang)} aria-current={route === 'curriculo' ? 'page' : undefined}>
+          <a href={href('resume', lang)} aria-current={route === 'resume' ? 'page' : undefined}>
             {t('nav.resume')}
           </a>
           <span className="topbar__lang" role="group" aria-label={t('nav.language')}>
@@ -62,14 +62,14 @@ export default function App({ page: initial }: { page: Page }) {
       </header>
 
       {route === 'home' && <Home />}
-      {route === 'historia' && <Story />}
-      {route === 'curriculo' && <Resume />}
-      {route === 'creditos' && <Credits />}
+      {route === 'story' && <Story />}
+      {route === 'resume' && <Resume />}
+      {route === 'credits' && <Credits />}
 
-      {route !== 'historia' && (
+      {route !== 'story' && (
         <footer className="site-footer no-print">
           <span>© Daniel Porto</span>
-          <a href={href('creditos', lang)}>{t('footerCredits')}</a>
+          <a href={href('credits', lang)}>{t('footerCredits')}</a>
         </footer>
       )}
     </>

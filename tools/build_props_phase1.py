@@ -43,7 +43,7 @@ XP_GREEN = (60, 160, 60)
 XP_SKY = [(92, 156, 236), (130, 186, 246), (180, 214, 250)]
 XP_HILL = [(110, 180, 50), (84, 156, 36), (60, 126, 28)]
 
-# Telas de perto: área útil de 176x108 dentro de uma moldura de 200x130.
+# Close-up screens: a 176x108 usable area inside a 200x130 frame.
 CLOSE_W, CLOSE_H = 176, 108
 
 
@@ -52,16 +52,16 @@ def text(d, x, y, value, color=OUTLINE):
     d.text((x, y), value, font=FONT, fill=color)
 
 
-# ---------------------------------------------------------------- sala
+# ---------------------------------------------------------------- living room
 
 
 def living_room():
     img, d = canvas(W, H)
-    # Parede pintada com rodameio.
+    # Painted wall with a chair rail.
     rect(d, 0, 0, W, FLOOR_Y, WALL[0])
     rect(d, 0, 92, W, 2, WALL[2])
     rect(d, 0, 94, W, FLOOR_Y - 94, WALL[1])
-    # Rodapé e piso de cerâmica.
+    # Baseboard and ceramic tile floor.
     rect(d, 0, FLOOR_Y - 6, W, 6, (236, 236, 228))
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
     rect(d, 0, FLOOR_Y, W, H - FLOOR_Y, TILE[0])
@@ -72,7 +72,7 @@ def living_room():
             rect(d, x, y, 1, 10, TILE[2])
             rect(d, x + 1, y + 1, 18, 1, (240, 232, 214))
 
-    # Janela com persiana.
+    # Window with blinds.
     wx, wy, ww, wh = 104, 24, 60, 52
     box(d, wx, wy, ww, wh, WHITE)
     rect(d, wx + 3, wy + 3, ww - 6, wh - 6, SKY[1])
@@ -81,25 +81,25 @@ def living_room():
         rect(d, wx + 3, y + 2, ww - 6, 1, (200, 200, 192))
     rect(d, wx + ww - 8, wy + 3, 1, 30, (180, 180, 172))
 
-    # Relógio de parede.
+    # Wall clock.
     d.ellipse((44, 26, 62, 44), fill=OUTLINE)
     d.ellipse((45, 27, 61, 43), fill=WHITE)
     rect(d, 53, 30, 1, 6, OUTLINE)
     rect(d, 53, 35, 5, 1, OUTLINE)
 
-    # Porta aberta à direita, por onde o amigo entra.
+    # Open door on the right, where the friend comes in.
     rect(d, 288, 34, 32, FLOOR_Y - 34, (120, 84, 60))
     rect(d, 292, 38, 28, FLOOR_Y - 38, (70, 52, 44))
     rect(d, 292, 38, 28, 2, (50, 36, 30))
 
-    # Fotos da família.
+    # Family photos.
     for fx, fy in ((228, 36), (250, 44)):
         box(d, fx, fy, 16, 20, WOOD[2], WOOD[1], WOOD[4])
         rect(d, fx + 3, fy + 3, 10, 14, (200, 220, 236))
         rect(d, fx + 6, fy + 6, 4, 4, (236, 196, 160))
         rect(d, fx + 5, fy + 10, 6, 7, (90, 120, 170))
 
-    # Sofá.
+    # Sofa.
     sx, sy = 6, 98
     box(d, sx, sy, 84, 22, SOFA[1], SOFA[0], SOFA[2])
     box(d, sx, sy + 18, 84, 22, SOFA[0], SOFA[0], SOFA[2])
@@ -111,16 +111,16 @@ def living_room():
 
 
 def computer_desk():
-    """Mesa de computador de MDF com bandeja do teclado; tampo em y=0."""
+    """MDF computer desk with a keyboard tray; top at y=0."""
     img, d = canvas(76, 36)
     light, mid, dark = (236, 230, 216), (214, 206, 188), (176, 166, 146)
     box(d, 0, 0, 76, 5, light, WHITE, dark)
     box(d, 2, 4, 5, 32, mid, None, dark)
     box(d, 69, 4, 5, 32, mid, None, dark)
-    box(d, 8, 8, 60, 4, mid, light, dark)  # bandeja do teclado
+    box(d, 8, 8, 60, 4, mid, light, dark)  # keyboard tray
     for x in range(12, 64, 3):
         d.point((x, 9), fill=BEIGE[3])
-    box(d, 8, 26, 60, 4, mid, light, dark)  # prateleira de baixo
+    box(d, 8, 26, 60, 4, mid, light, dark)  # bottom shelf
     return img
 
 
@@ -151,7 +151,7 @@ def plant():
 
 
 def monitor_plain():
-    """Mesmo monitor de tubo da fase 0, sem o paninho; a tela (30x22) começa em (7, 6)."""
+    """Same CRT monitor as phase 0, without the doily; the screen (30x22) starts at (7, 6)."""
     img, d = canvas(44, 44)
     box(d, 2, 2, 40, 32, BEIGE[1], BEIGE[0], BEIGE[3])
     rect(d, 6, 5, 32, 24, BEIGE[3])
@@ -173,11 +173,11 @@ def tower():
     return img
 
 
-# ---------------------------------------------------------------- tela pequena (30x22)
+# ---------------------------------------------------------------- small screen (30x22)
 
 
 def bliss(d, w, h, taskbar):
-    """O papel de parede do XP: céu azul, nuvens e o morro verde."""
+    """The XP wallpaper: blue sky, clouds and the green hill."""
     for y in range(h):
         c = XP_SKY[0] if y < h * 0.3 else XP_SKY[1] if y < h * 0.55 else XP_SKY[2]
         rect(d, 0, y, w, 1, c)
@@ -215,11 +215,11 @@ def screen(kind):
     return img
 
 
-# ---------------------------------------------------------------- telas de perto (176x108)
+# ---------------------------------------------------------------- close-up screens (176x108)
 
 
 def close_frame():
-    """Moldura do monitor de perto: 200x130, tela começa em (12, 10)."""
+    """Close-up monitor frame: 200x130, the screen starts at (12, 10)."""
     img, d = canvas(200, 130)
     box(d, 0, 0, 200, 130, BEIGE[1], BEIGE[0], BEIGE[3])
     rect(d, 10, 8, 180, 112, BEIGE[3])
@@ -271,7 +271,7 @@ def close_notepad(lines):
 
 
 def crystal(d, cx, top):
-    """Cristal azul flutuando, com brilho (o símbolo clássico dos jogos, desenhado do zero)."""
+    """Floating blue crystal with sparkles (the classic game symbol, drawn from scratch)."""
     light, mid, dark = (170, 230, 255), (80, 170, 240), (30, 90, 190)
     height = 34
     for i in range(height):
@@ -287,7 +287,7 @@ def crystal(d, cx, top):
 
 
 def close_site():
-    """O fã-site de Final Fantasy, aberto direto do disco: nunca foi pro ar."""
+    """The Final Fantasy fan site, opened straight from disk: it never went live."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     bliss(d, CLOSE_W, CLOSE_H, True)
     xp_window(d, 4, 2, CLOSE_W - 8, CLOSE_H - 14, "index.html")
@@ -322,7 +322,7 @@ def close_alert():
 
 
 def msn_toast():
-    """Aviso do MSN no canto da tela: 'Amigo entrou'."""
+    """MSN notification in the corner of the screen: 'Amigo entrou' (a friend signed in)."""
     img, d = canvas(82, 30)
     rect(d, 0, 0, 82, 30, XP_BLUE[2])
     for y in range(1, 29):
@@ -330,7 +330,7 @@ def msn_toast():
         rect(d, 1, y, 80, 1, (shade - 30, shade - 14, 255))
     rect(d, 1, 1, 80, 7, XP_BLUE[0])
     text(d, 3, 1, "MSN", WHITE)
-    # Bonequinho verde.
+    # Little green buddy icon.
     d.ellipse((5, 12, 11, 18), fill=XP_GREEN, outline=OUTLINE)
     rect(d, 4, 18, 9, 7, XP_GREEN)
     rect(d, 4, 18, 9, 1, OUTLINE)
@@ -340,7 +340,7 @@ def msn_toast():
 
 
 def music_note():
-    """Notinha musical clara com contorno, para aparecer sobre o fundo escuro do zoom."""
+    """Light music note with an outline, to show over the dark zoom background."""
     img, d = canvas(9, 11)
     color = (243, 192, 63)
     for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1)):
@@ -354,11 +354,11 @@ def music_note():
     return img
 
 
-# ---------------------------------------------------------------- apostila
+# ---------------------------------------------------------------- HTML workbook
 
 
-def apostila(size):
-    """Apostila de HTML encadernada (prop pequeno e item do inventário)."""
+def workbook(size):
+    """Bound HTML workbook (small prop and inventory item)."""
     if size == "small":
         img, d = canvas(10, 13)
         box(d, 0, 0, 10, 13, WHITE)
@@ -370,7 +370,7 @@ def apostila(size):
     box(d, 5, 3, 22, 27, (236, 236, 228))
     box(d, 3, 2, 22, 27, WHITE)
     rect(d, 4, 3, 20, 9, (210, 60, 60))
-    # "</>" desenhado à mão, pequeno, para caber na capa.
+    # "</>" drawn by hand, small, to fit on the cover.
     for px, py in ((8, 7), (9, 6), (10, 5), (9, 8), (10, 9), (18, 5), (19, 6), (20, 7), (19, 8), (18, 9)):
         d.point((px, py), fill=WHITE)
     for i in range(5):
@@ -401,8 +401,8 @@ def build():
         "close-alert": close_alert(),
         "msn-toast": msn_toast(),
         "note": music_note(),
-        "apostila": apostila("small"),
-        "item-apostila": apostila("item"),
+        "apostila": workbook("small"),
+        "item-apostila": workbook("item"),
     }
     for lines in range(len(NOTEPAD_LINES) + 1):
         sprites[f"close-notepad-{lines}"] = close_notepad(lines)

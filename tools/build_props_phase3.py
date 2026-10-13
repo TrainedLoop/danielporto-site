@@ -26,11 +26,11 @@ CHALK = (232, 240, 230)
 BOARD = [(40, 96, 70), (30, 80, 58), (22, 62, 44)]
 
 
-# ---------------------------------------------------------------- escritório do provedor
+# ---------------------------------------------------------------- the ISP's office
 
 
 def radio_tower(d, x, base, height):
-    """Torre treliçada com antenas, vista pela janela."""
+    """Lattice tower with antennas, seen through the window."""
     color = (200, 60, 50)
     top = base - height
     for y in range(top, base):
@@ -57,7 +57,7 @@ def office():
             d.point((x, y), fill=CARPET[2])
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
 
-    # Janela com a torre de rádio lá fora.
+    # Window with the radio tower outside.
     wx, wy, ww, wh = 18, 22, 76, 60
     box(d, wx, wy, ww, wh, (230, 230, 236))
     rect(d, wx + 3, wy + 3, ww - 6, wh - 6, (150, 204, 240))
@@ -65,22 +65,22 @@ def office():
     radio_tower(d, wx + 46, wy + wh - 14, 40)
     rect(d, wx + ww // 2, wy + 3, 2, wh - 6, (230, 230, 236))
 
-    # Faixa do provedor.
+    # The ISP's banner.
     box(d, 120, 18, 160, 22, XP_BLUE[0], XP_BLUE[1], XP_BLUE[2])
     text(d, 128, 21, tr("INTERNET VIA", "RADIO"), WHITE)
     text(d, 128, 30, tr("RÁDIO", "INTERNET"), (250, 220, 90))
-    # Ondinhas de sinal ao lado do texto.
+    # Little signal waves next to the text.
     for i, r in enumerate((3, 6, 9)):
         d.arc((250 - r, 30 - r, 250 + r, 30 + r), 300, 60, fill=WHITE)
 
-    # Divisória de baia à direita.
+    # Cubicle divider on the right.
     box(d, 262, 78, 58, FLOOR_Y - 78, (150, 160, 176), (170, 180, 196), (120, 130, 146))
     rect(d, 262, 78, 58, 4, (90, 96, 110))
     return img
 
 
 def office_desk():
-    """Mesa de escritório; tampo em y=0."""
+    """Office desk; top at y=0."""
     img, d = canvas(104, 36)
     box(d, 0, 0, 104, 5, (220, 220, 214), WHITE, (170, 170, 164))
     box(d, 2, 4, 5, 32, (150, 150, 150), None, (110, 110, 110))
@@ -92,7 +92,7 @@ def office_desk():
 
 
 def lcd_monitor(screen_color=(0, 84, 227)):
-    """Monitor LCD fininho; a tela (28x18) começa em (3, 3)."""
+    """Slim LCD monitor; the screen (28x18) starts at (3, 3)."""
     img, d = canvas(34, 32)
     box(d, 0, 0, 34, 24, LCD[1], LCD[0], LCD[2])
     rect(d, 3, 3, 28, 18, screen_color)
@@ -111,7 +111,7 @@ def phone():
 
 
 def ring():
-    """Balão "TRIM!" do telefone tocando."""
+    """The ringing phone's "TRIM!" (ring) bubble."""
     img, d = canvas(44, 14)
     box(d, 0, 0, 44, 12, WHITE)
     rect(d, 6, 11, 4, 3, WHITE)
@@ -131,7 +131,7 @@ def office_chair():
 
 
 def lcd_frame():
-    """Monitor LCD visto de perto: 200x130, tela começa em (12, 10)."""
+    """LCD monitor close-up: 200x130, the screen starts at (12, 10)."""
     img, d = canvas(200, 130)
     box(d, 0, 0, 200, 124, LCD[1], LCD[0], LCD[2])
     rect(d, 11, 9, 178, 110, OUTLINE)
@@ -141,7 +141,7 @@ def lcd_frame():
 
 
 def tray_icon(d, x, y, ok):
-    """Ícone de rede da bandeja: dois computadores; X vermelho ou sinal verde."""
+    """Network tray icon: two computers; a red X or a green check."""
     rect(d, x, y + 2, 7, 5, (200, 220, 250))
     rect(d, x + 5, y, 7, 5, (200, 220, 250))
     rect(d, x, y + 2, 7, 1, OUTLINE)
@@ -157,17 +157,17 @@ def tray_icon(d, x, y, ok):
 
 
 def close_remote(ok):
-    """Janela de acesso remoto mostrando o PC do cliente."""
+    """Remote access window showing the customer's PC."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (58, 110, 165))
     rect(d, 0, CLOSE_H - 10, CLOSE_W, 10, XP_BLUE[0])
     rect(d, 0, CLOSE_H - 10, 26, 10, XP_GREEN)
-    # Janela do acesso remoto.
+    # Remote access window.
     x, y, w, h = 8, 6, CLOSE_W - 16, CLOSE_H - 22
     rect(d, x, y, w, h, XP_BLUE[2])
     rect(d, x + 1, y + 1, w - 2, 11, XP_BLUE[0])
     text(d, x + 4, y + 3, tr("Acesso remoto", "Remote access"), WHITE)
-    # Desktop do cliente dentro da janela.
+    # The customer's desktop inside the window.
     ix, iy, iw, ih = x + 3, y + 14, w - 6, h - 17
     rect(d, ix, iy, iw, ih, (0, 128, 128))
     for yy in (iy + 4, iy + 18, iy + 32):
@@ -197,7 +197,7 @@ def cursor():
     return img
 
 
-# ---------------------------------------------------------------- faculdade
+# ---------------------------------------------------------------- college
 
 
 BOARD_LINES = 4
@@ -221,7 +221,7 @@ def classroom():
     for y in range(FLOOR_Y, H, 8):
         rect(d, 0, y, W, 1, (130, 120, 110))
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
-    # Janela de noite.
+    # Window at night.
     wx, wy = 262, 30
     box(d, wx, wy, 46, 50, (200, 200, 200))
     rect(d, wx + 3, wy + 3, 40, 44, NIGHT[1])
@@ -229,7 +229,7 @@ def classroom():
     d.ellipse((wx + 29, wy + 7, wx + 39, wy + 17), fill=NIGHT[1])
     for sx, sy in ((wx + 8, wy + 10), (wx + 16, wy + 26), (wx + 34, wy + 34)):
         d.point((sx, sy), fill=WHITE)
-    # Relógio marcando de noite.
+    # Clock showing night time.
     d.ellipse((20, 20, 36, 36), fill=OUTLINE)
     d.ellipse((21, 21, 35, 35), fill=WHITE)
     rect(d, 28, 23, 1, 6, OUTLINE)
@@ -250,7 +250,7 @@ def blackboard(lines):
 
 
 def school_chair():
-    """Cadeira de sala de aula, vista de trás."""
+    """Classroom chair, seen from behind."""
     img, d = canvas(22, 20)
     box(d, 0, 0, 22, 4, WOOD[1], WOOD[0], WOOD[3])
     for x in (2, 17):
@@ -261,14 +261,14 @@ def school_chair():
 
 
 def headset():
-    """Headset do suporte (item do inventário)."""
+    """Support headset (inventory item)."""
     img, d = canvas(32, 32)
     band, pad, mic = (176, 180, 192), (110, 114, 126), (150, 154, 166)
     d.arc((5, 3, 27, 25), 180, 360, fill=OUTLINE, width=4)
     d.arc((6, 4, 26, 24), 180, 360, fill=band, width=2)
     for x in (3, 22):
         box(d, x, 13, 7, 11, pad, (210, 214, 224), OUTLINE)
-    # Haste do microfone até a boca.
+    # Microphone boom down to the mouth.
     for i in range(10):
         rect(d, 8 + i, 24 + i // 3, 2, 2, mic)
     rect(d, 18, 26, 5, 4, OUTLINE)
@@ -276,7 +276,7 @@ def headset():
     return img
 
 
-# ---------------------------------------------------------------- quarto de madrugada
+# ---------------------------------------------------------------- bedroom in the small hours
 
 
 def bedroom_night():
@@ -285,16 +285,16 @@ def bedroom_night():
     rect(d, 0, 96, W, FLOOR_Y - 96, NIGHT[0])
     rect(d, 0, FLOOR_Y, W, H - FLOOR_Y, (40, 36, 52))
     rect(d, 0, FLOOR_Y - 1, W, 1, OUTLINE)
-    # Janela com a lua.
+    # Window with the moon.
     box(d, 40, 26, 50, 44, (70, 76, 110))
     rect(d, 43, 29, 44, 38, (14, 18, 40))
     d.ellipse((62, 34, 74, 46), fill=(250, 240, 200))
     for sx, sy in ((50, 40), (80, 56), (56, 60)):
         d.point((sx, sy), fill=WHITE)
-    # Cama no canto.
+    # Bed in the corner.
     box(d, 236, 112, 84, 28, (120, 60, 70), (150, 80, 90), (90, 40, 50))
     box(d, 240, 106, 22, 10, (220, 220, 230), WHITE, (170, 170, 190))
-    # Relógio digital marcando madrugada.
+    # Digital clock showing the small hours.
     box(d, 248, 70, 40, 16, (20, 20, 24))
     text(d, 251, 74, "02:13", (255, 70, 70))
     return img
@@ -309,7 +309,7 @@ def night_desk():
 
 
 def close_course(done):
-    """Curso online de C#: player de vídeo e, no fim, o certificado."""
+    """Online C# course: video player and, at the end, the certificate."""
     img, d = canvas(CLOSE_W, CLOSE_H)
     rect(d, 0, 0, CLOSE_W, CLOSE_H, (240, 240, 244))
     rect(d, 0, 0, CLOSE_W, 12, (104, 33, 122))

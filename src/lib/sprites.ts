@@ -19,7 +19,7 @@ export function spritePaths<K extends string>(sprites: Record<K, SpriteSrc>, lan
   return Object.fromEntries(entries.map(([key, src]) => [key, typeof src === 'string' ? src : src[lang]])) as Record<K, string>
 }
 
-// Uma promessa por arquivo: a fase que pré-carregou e a que desenha usam a mesma imagem.
+// One promise per file: the phase that preloaded and the one that draws share the same image.
 const cache = new Map<string, Promise<HTMLImageElement>>()
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -28,21 +28,21 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     promise = new Promise<HTMLImageElement>((resolve, reject) => {
       const image = new Image()
       image.onload = () => resolve(image)
-      image.onerror = () => reject(new Error(`Falha ao carregar ${src}`))
+      image.onerror = () => reject(new Error(`Failed to load ${src}`))
       image.src = src
     }).then(async (image) => {
-      // Decodifica antes do primeiro desenho; se o navegador recusar, o canvas decodifica depois.
+      // Decode before the first draw; if the browser refuses, the canvas decodes later.
       await image.decode?.().catch(() => undefined)
       return image
     })
-    // Se falhar, sai do cache para a próxima tentativa baixar de novo.
+    // On failure, drop it from the cache so the next attempt downloads again.
     promise.catch(() => cache.delete(src))
     cache.set(src, promise)
   }
   return promise
 }
 
-/** Carrega as imagens da cena antes de começar a desenhar. */
+/** Loads the scene's images before drawing starts. */
 export function loadSprites<K extends string>(paths: Record<K, string>): Promise<SpriteMap<K>> {
   const entries = Object.entries(paths) as [K, string][]
   return Promise.all(
@@ -50,7 +50,7 @@ export function loadSprites<K extends string>(paths: Record<K, string>): Promise
   ).then((loaded) => Object.fromEntries(loaded) as SpriteMap<K>)
 }
 
-/** Interpola de 0 a 1 dentro de um trecho [start, end] do progresso. */
+/** Interpolates from 0 to 1 within a [start, end] slice of the progress. */
 export function segment(progress: number, start: number, end: number) {
   return Math.min(1, Math.max(0, (progress - start) / (end - start)))
 }

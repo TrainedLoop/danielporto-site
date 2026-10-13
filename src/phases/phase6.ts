@@ -15,7 +15,7 @@ const CLOSE_FRAME: Rect = { x: 60, y: 14, w: 200, h: 130 };
 const CLOSE_SCREEN: Rect = { x: 72, y: 24, w: 176, h: 108 };
 const SIT = { x: 156, y: 82 };
 
-// Aquário: área de água e os peixinhos.
+// Fish tank: water area and the little fish.
 const TANK = { x: 248, y: 54, w: 54, h: 28 };
 const FISH = [
   { color: "#ff8a30", speed: 1, phase: 0, y: 60 },
@@ -23,7 +23,7 @@ const FISH = [
   { color: "#ff5a7a", speed: 0.8, phase: 0.2, y: 75 },
 ];
 
-// SmartVision (coordenadas da tela de perto): barras da fila e o gráfico da perda.
+// SmartVision (close-up screen coordinates): queue bars and the loss chart.
 const QUEUE = [
   { y: 39, rate: 1.4 },
   { y: 57, rate: 0.9 },
@@ -31,12 +31,12 @@ const QUEUE = [
 ];
 const CHART = { x: 94, y: 32, w: 74, h: 46 };
 
-// Rua: postes e o carro com a câmera no teto.
+// Street: utility poles and the car with the roof camera.
 const POLES = [40, 120, 200, 280];
 const CAR_Y = 112;
 const CAMERA_OFFSET = 29;
 
-// Trechos (0 a 1) da animação. Cada fala termina quando a última animação dela acaba.
+// Slices (0 to 1) of the animation. Each beat ends exactly when its last animation ends.
 const TIMELINE = {
   walkIn: [0, 0.12],
   zoom: [0.14, 0.18],
@@ -117,7 +117,7 @@ export const phase6 = definePhase({
   staticAt: 1,
   draw(ctx, s, p) {
     if (p < TIMELINE.toStreet || p >= TIMELINE.toOffice) {
-      // ---- Escritório, com os peixinhos nadando no aquário.
+      // ---- Office, with the fish swimming in the tank.
       ctx.drawImage(s.office, 0, 0);
       for (const fish of FISH) {
         const t = (p * 6 * fish.speed + fish.phase) % 2;
@@ -138,7 +138,7 @@ export const phase6 = definePhase({
       }
 
       if (p >= TIMELINE.toOffice) {
-        // ---- A caixa-preta se abrindo no meio da tela.
+        // ---- The black box opening in the middle of the screen.
         const t = segment(p, TIMELINE.box[0], TIMELINE.box[1]);
         ctx.fillStyle = `rgba(27, 22, 34, ${0.8 * Math.min(1, segment(p, TIMELINE.toOffice, TIMELINE.box[0]) * 2)})`;
         ctx.fillRect(0, 0, 320, 180);
@@ -146,7 +146,7 @@ export const phase6 = definePhase({
         const lift = t > 0 && t < 1 ? Math.round(Math.sin(t * Math.PI * 6) * 1) : 0;
         ctx.drawImage(s[`box${frame}` as keyof typeof s], 120, 40 + lift, 80, 72);
       } else {
-        // ---- Zoom na SmartVision: fila de treino andando e a perda caindo.
+        // ---- Zoom into SmartVision: the training queue moving and the loss dropping.
         const zoomT = easeOut(segment(p, TIMELINE.zoom[0], TIMELINE.zoom[1]));
         if (zoomT > 0) {
           ctx.fillStyle = `rgba(27, 22, 34, ${0.8 * zoomT})`;
@@ -160,7 +160,7 @@ export const phase6 = definePhase({
               ctx.fillStyle = "#3c6ed2";
               ctx.fillRect(CLOSE_SCREEN.x + 7, CLOSE_SCREEN.y + job.y, Math.round(70 * Math.min(1, t * job.rate)), 3);
             }
-            // Curva da perda descendo, desenhada aos poucos.
+            // Loss curve going down, drawn bit by bit.
             ctx.fillStyle = "#e6455a";
             const points = Math.round(CHART.w * t);
             for (let i = 0; i < points; i++) {
@@ -172,7 +172,7 @@ export const phase6 = definePhase({
         }
       }
     } else {
-      // ---- Rua: o carro passa, fotografa cada poste e o modelo detecta.
+      // ---- Street: the car drives by, photographs each pole and the model detects it.
       ctx.drawImage(s.avenue, 0, 0);
       const carX = lerp(-70, 340, segment(p, TIMELINE.car[0], TIMELINE.car[1]));
       const cameraX = carX + CAMERA_OFFSET;
@@ -190,7 +190,7 @@ export const phase6 = definePhase({
       ctx.drawImage(s.car, Math.round(carX), CAR_Y + bump);
     }
 
-    // ---- Escurece na troca de ambiente.
+    // ---- Fade to dark when the setting changes.
     for (const cut of [TIMELINE.toStreet, TIMELINE.toOffice]) {
       const alpha = 1 - Math.abs(p - cut) / FADE;
       if (alpha > 0) {
