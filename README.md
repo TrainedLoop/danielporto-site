@@ -47,5 +47,11 @@ python -I tools/build_props_phase1.py public/sprites/phase1   # e assim por dian
 
 Os personagens usam arte do Liberated Pixel Cup e da comunidade do OpenGameArt
 (CC-BY-SA 3.0, OGA-BY 3.0 e GPL 3.0); os autores estão em
-`public/sprites/character/CREDITS.csv` e na página `#/creditos`. A fonte
-Press Start 2P está sob a SIL Open Font License (`tools/fonts/OFL.txt`).
+`public/sprites/character/CREDITS.csv` e na página `#/creditos`.
+
+As fontes Press Start 2P, VT323 e Inter são servidas pelo próprio site (arquivos
+woff2 em `src/assets/fonts`, tirados dos pacotes do Fontsource) e estão sob a
+SIL Open Font License 1.1. As licenças ficam ao lado dos arquivos:
+`src/assets/fonts/PressStart2P-OFL.txt`, `VT323-OFL.txt` e `Inter-OFL.txt`
+(a Press Start 2P também em `tools/fonts/OFL.txt`, junto do TTF usado pelos
+scripts).
