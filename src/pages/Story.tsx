@@ -152,12 +152,13 @@ export function Story() {
       <main className="story">
         {!finished && (
           <>
-            <p className="story__progress" aria-live="polite">
+            {/* The page's only heading: the current phase (or, at the end, the ending title). */}
+            <h1 className="story__progress" aria-live="polite">
               {texts[phase.id].title}
               <span className="story__count">
                 {current + 1}/{PHASES.length}
               </span>
-            </p>
+            </h1>
             {/* Keyed by language too: switching language restarts the phase with its texts and sprites. */}
             <Scene
               key={`${phase.id}-${lang}`}
@@ -172,7 +173,7 @@ export function Story() {
         {/* Ending: the story continues at Purple. */}
         {finished && (
           <section className="next">
-            <p className="next__level">{t("story.ending.title")}</p>
+            <h1 className="next__level">{t("story.ending.title")}</h1>
             <p className="next__soon">{t("story.ending.text")}</p>
             <p className="next__links">
               <a href={href("resume", lang)}>{t("story.ending.resume")}</a> ·{" "}
