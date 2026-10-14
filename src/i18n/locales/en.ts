@@ -1,7 +1,7 @@
 // English texts: the same keys as pt.ts (the Messages type enforces it), including the
 // pixel-art story and the credits.
 
-import type { EarlyJob, Job, Messages, Project, SkillGroup } from "./pt";
+import type { Achievement, EarlyJob, Job, Messages, Project, SkillGroup } from "./pt";
 
 const profile = {
   name: "Daniel Porto",
@@ -198,6 +198,35 @@ const ui = {
     resumeHint: "The text version, straight to the point, starting with my current role.",
     highlightsLabel: "What I do",
     skillsLabel: "Skills",
+    viewResume: "View résumé",
+    achievementsLabel: "Highlights",
+    achievementLink: "see on résumé",
+    storyTitle: "Rather get to know me by playing?",
+    storyText: "From my grandmother's house to AI in production, in 8 pixel-art levels. About 5 minutes.",
+    storyCta: "▶ Play the story",
+    achievements: [
+      {
+        id: "ai-chat",
+        result: "**in production** with customers",
+        title: "AI chat in production",
+        text: "I was responsible for the interface, the LLM integration and the prompts of an AI chat that answers questions about the product's data; it started as a **3-day** prototype at an internal team hackathon.",
+        target: "purple-metrics-desenvolvedor-full-stack-senior",
+      },
+      {
+        id: "ai-agents",
+        result: "**spec → plan → execution**",
+        title: "AI agents on the team",
+        text: "I led the adoption of AI agents in the team's development, with skills and rules for Claude Code and Cursor integrated with Linear.",
+        target: "purple-metrics-desenvolvedor-full-stack-senior",
+      },
+      {
+        id: "computer-vision",
+        result: "**~95%** precision and recall",
+        title: "Computer vision in production",
+        text: "YOLO models trained on ~50k images, served in production and retrained with the operators' corrections.",
+        target: "projects",
+      },
+    ] as Achievement[],
   },
   resume: {
     roleAt: "at",

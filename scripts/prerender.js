@@ -32,6 +32,7 @@ const {
   ogImage,
   shareText,
   checkStory,
+  checkHomeAchievements,
   structuredData,
   llmsTxt,
   llmsFullTxt,
@@ -40,7 +41,7 @@ const {
 const template = await readFile(join(dist, "index.html"), "utf8");
 
 // Fails the build if a story beat has no text or a sprite (e.g. an .en.png variant) is missing.
-const problems = checkStory((path) => existsSync(join(dist, path)));
+const problems = [...checkStory((path) => existsSync(join(dist, path))), ...checkHomeAchievements()];
 if (problems.length) throw new Error(`Story check failed:\n- ${problems.join("\n- ")}`);
 
 // Fails the build if a title or description is too short or would be cut off in search results.
