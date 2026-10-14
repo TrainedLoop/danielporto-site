@@ -76,7 +76,7 @@ const experience: Job[] = [
     description: "Where I had my first serious contact with AI, before the boom.",
     bullets: [
       "Built the APIs of **SmartVision**, a computer vision training and inference platform, with the training and inference queue on Hangfire and CQRS (MySQL for writes, MongoDB for reads).",
-      "Worked on the software for a car that photographed Light's utility poles around the city, like Google's cars.",
+      "Worked on the software for a car that photographed the utility poles of Light, Rio's power company, around the city, like Google's cars.",
       "Contributed to the **Urban** mobility app (React Native, Google Maps) and to the SmartVision front end (React, Redux).",
       "Maintained and extended the SmartAssets platform (WebForms, DevExpress, MySQL).",
     ],
@@ -120,7 +120,7 @@ const earlyCareer: EarlyJob[] = [
 const projects: Project[] = [
   {
     id: "ai-copilot",
-    title: "AI copilot with permissions and LGPD",
+    title: "AI copilot with permissions and LGPD (Brazil's data-protection law)",
     did: "An agent that queries an analytics platform's data with the permissions of the person asking, only on the read replica, masking personal data before it reaches the model.",
     result: "Cost capped per question.",
     stack: ["Google ADK", "Gemini"],

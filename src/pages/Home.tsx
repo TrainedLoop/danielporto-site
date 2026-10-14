@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { flatSkills } from "../content/skills";
+import { homeSkills } from "../content/skills";
 import { track } from "../lib/analytics";
 import { href, type Lang } from "../lib/route";
 
@@ -11,7 +11,7 @@ export function Home() {
   const lang = i18n.language as Lang;
   const profile = t("profile");
   const highlights = t("highlights");
-  const skills = flatSkills(t("skillGroups"));
+  const skills = homeSkills(t("skillGroups"));
   return (
     <main className="home">
       <section className="hero">
@@ -73,7 +73,7 @@ export function Home() {
 
       <section className="home-skills" aria-label={t("home.skillsLabel")}>
         <ul className="chips">
-          {skills.slice(0, 12).map((skill) => (
+          {skills.map((skill) => (
             <li key={skill}>{skill}</li>
           ))}
         </ul>

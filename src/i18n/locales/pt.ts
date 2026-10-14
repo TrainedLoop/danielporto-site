@@ -1,6 +1,6 @@
 // Portuguese texts (default language): the UI, page titles, home and résumé content, the
-// pixel-art story and the credits. The home page uses a summary; the text version is the
-// full résumé.
+// pixel-art story and the credits. Content keys: profile and highlights (home), glance (résumé
+// summary), experience, earlyCareer, projects and skillGroups (full résumé, also used by llms.txt).
 // Source: the revised LinkedIn profile (linkdin-update/linkedin-ptbr.md) and the old résumé.
 
 const profile = {

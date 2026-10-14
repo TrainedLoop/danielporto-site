@@ -1036,7 +1036,7 @@ button {
 }
 
 .early-career__title .job__period {
-  white-space: normal;
+  white-space: nowrap;
 }
 
 /* Selected projects: the home cards' border, result on top. */

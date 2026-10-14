@@ -88,7 +88,7 @@ function resumeMarkdown(lang: Lang): string[] {
     lines.push(...job.bullets.map((bullet) => `- ${bullet}`), "", `Stack: ${job.stack.join(" · ")}`, "");
   }
   lines.push(`### ${t("resume.earlyCareer")}`, "");
-  lines.push(...t("earlyCareer").map((job) => `- **${job.company}** · ${job.role} · ${job.period}: ${job.line}`), "");
+  lines.push(...t("earlyCareer").map((job) => `- **${job.company}** · ${job.role} · ${job.period} — ${job.line}`), "");
   // The projects block stays self-contained: no dates, clients or employers next to it.
   lines.push(`### ${t("resume.projects")}`, "");
   for (const project of t("projects")) {
