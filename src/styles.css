@@ -548,6 +548,7 @@ button {
 
 .home,
 .resume {
+  /* .resume overrides the width and line height in its own block below. */
   max-width: 920px;
   margin: 0 auto;
   padding: 88px 16px 64px;
@@ -686,20 +687,20 @@ button {
   margin-top: 48px;
 }
 
-.highlight {
+.highlights .highlight {
   padding: 16px;
   border-top: 4px solid var(--accent);
   background: rgba(42, 33, 51, 0.6);
 }
 
-.highlight h3 {
+.highlights .highlight h3 {
   margin: 0 0 8px;
   font-family: var(--pixel-font);
   font-size: 11px;
   color: var(--accent);
 }
 
-.highlight p {
+.highlights .highlight p {
   margin: 0;
   font-size: 15px;
 }
@@ -726,10 +727,46 @@ button {
 
 /* ---------------------------------------------------------------- Résumé */
 
+/*
+ * Two columns on wide screens: the header across the top, a sticky side column (contact,
+ * skills) on the left and the main column on the right. The DOM order (header, glance,
+ * sidebar, main) is the single-column order used on phones.
+ */
+.resume {
+  /* Secondary text a step lighter than --muted, for contrast on the dark background. */
+  --resume-muted: #d3c6aa;
+  /* Fixed top bar height plus a gap: where the sticky sidebar and the story anchors stop. */
+  --resume-sticky-top: 64px;
+
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  grid-template-areas:
+    'header header'
+    'sidebar glance'
+    'sidebar main';
+  grid-template-rows: auto auto 1fr;
+  column-gap: 48px;
+  max-width: 1100px;
+  line-height: 1.7;
+}
+
+.resume__header {
+  grid-area: header;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px 32px;
+  padding-bottom: 20px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid rgba(184, 169, 140, 0.4);
+}
+
 .resume__header h1 {
   margin: 0;
   font-family: var(--pixel-font);
   font-size: clamp(20px, 3.4vw, 30px);
+  line-height: 1.3;
   color: var(--accent);
 }
 
@@ -737,111 +774,373 @@ button {
   margin: 12px 0 0;
   font-size: 20px;
   font-weight: 700;
+  line-height: 1.4;
 }
 
-.resume__headline,
-.resume__contact {
-  margin: 4px 0 0;
-  color: var(--muted);
-}
-
-.resume__updated {
-  margin: 4px 0 0;
-  font-size: 0.875em;
-  color: var(--muted);
+.resume__location {
+  margin: 2px 0 0;
+  color: var(--resume-muted);
 }
 
 .resume__actions {
   display: flex;
-  gap: 16px;
-  align-items: center;
-  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.resume__pdf,
+.resume__cta {
+  display: inline-block;
+  padding: 12px 16px;
+  font-family: var(--pixel-font);
+  font-size: 10px;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid var(--panel-border);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
 }
 
 .resume__pdf {
-  padding: 8px 12px;
-  font-size: 10px;
   color: var(--ink);
   background: var(--panel);
-  border: 2px solid var(--panel-border);
-  cursor: pointer;
+}
+
+/* The main action: yellow, like the "play" card on the home page. */
+.resume__cta {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 .resume__pdf:hover,
-.resume__pdf:focus-visible {
+.resume__pdf:focus-visible,
+.resume__cta:hover,
+.resume__cta:focus-visible {
   color: var(--bg);
   background: var(--accent);
+  border-color: var(--ink);
   outline: none;
 }
 
-.resume__section {
-  margin-top: 40px;
+.resume__meta {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 14px;
+  color: var(--resume-muted);
 }
 
-.resume__section h2 {
-  margin: 0 0 12px;
+.glance {
+  grid-area: glance;
+}
+
+.resume__sidebar {
+  grid-area: sidebar;
+  align-self: start;
+  position: sticky;
+  top: var(--resume-sticky-top);
+  max-height: calc(100vh - var(--resume-sticky-top) - 16px);
+  overflow-y: auto;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
+}
+
+.resume__main {
+  grid-area: main;
+  min-width: 0;
+}
+
+/* Section titles: pixel font, yellow, underlined (sidebar sections included). */
+.glance h2,
+.resume__section h2,
+.resume__sidebar h2 {
+  margin: 0 0 16px;
   padding-bottom: 8px;
   font-family: var(--pixel-font);
   font-size: 13px;
+  line-height: 1.6;
   color: var(--accent);
   border-bottom: 2px solid rgba(184, 169, 140, 0.4);
 }
 
+.resume__section {
+  margin-top: 48px;
+}
+
 .resume__section h3 {
-  margin: 20px 0 8px;
-  font-size: 17px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
 }
 
-.resume ul {
-  padding-left: 20px;
+/* A highlighted figure inside a sentence (`**…**` in the locales). */
+.resume .highlight {
+  font-weight: 700;
+  color: var(--accent);
 }
 
-.resume li + li {
-  margin-top: 6px;
+.resume .chips li {
+  padding: 2px 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
 }
 
-.resume .chips {
-  padding-left: 0;
+/* At a glance */
+
+.glance__pitch {
+  margin: 0 0 12px;
+  font-size: 18px;
 }
 
-.resume .chips li + li {
-  margin-top: 0;
+.glance__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.job {
-  scroll-margin-top: 64px;
+.glance__stats li {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 16px;
+  background: rgba(42, 33, 51, 0.6);
+  border-top: 4px solid var(--accent);
+}
+
+.glance__value {
+  font-family: var(--pixel-font);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--accent);
+}
+
+.glance__label {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--resume-muted);
+}
+
+/* Sidebar */
+
+.resume__sidebar section + section {
+  margin-top: 32px;
+}
+
+.resume__contact ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resume__contact li + li {
+  margin-top: 4px;
+}
+
+.resume__contact a {
+  overflow-wrap: anywhere;
+}
+
+.skill-group + .skill-group {
+  margin-top: 16px;
+}
+
+.skill-group h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--resume-muted);
+}
+
+.skill-group .chips {
+  gap: 6px;
+}
+
+/* Experience */
+
+/* Story links land here (/curriculo/#<id>): stop below the fixed top bar. */
+.job,
+.early-career__item {
+  scroll-margin-top: var(--resume-sticky-top);
 }
 
 .job + .job {
-  margin-top: 28px;
+  margin-top: 36px;
 }
 
 .job__header {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 4px 16px;
+  gap: 2px 16px;
   align-items: baseline;
-}
-
-.job__header h3 {
-  margin: 0;
 }
 
 .job__role {
   font-weight: 400;
-  color: var(--muted);
+  color: var(--resume-muted);
 }
 
 .job__period {
   margin: 0;
   font-size: 15px;
-  color: var(--muted);
+  color: var(--resume-muted);
+  white-space: nowrap;
 }
 
 .job__description {
-  margin: 6px 0 0;
-  font-style: italic;
+  margin: 4px 0 0;
+  color: var(--resume-muted);
+}
+
+.job__bullets {
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.job__bullets li + li {
+  margin-top: 8px;
+}
+
+.job__bullets li::marker {
+  color: var(--accent);
+}
+
+.job__stack {
+  margin-top: 14px;
+}
+
+/* Early career */
+
+.early-career ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.early-career__item + .early-career__item {
+  margin-top: 16px;
+}
+
+.early-career__title,
+.early-career__line {
+  margin: 0;
+}
+
+.early-career__title .job__period {
+  white-space: normal;
+}
+
+/* Selected projects: the home cards' border, result on top. */
+
+.projects__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  background: var(--panel);
+  border: 4px solid var(--muted);
+  box-shadow: 4px 4px 0 var(--bg), 8px 8px 0 rgba(0, 0, 0, 0.35);
+}
+
+.project-card__result {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.project-card__did {
+  flex-grow: 1;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--resume-muted);
+}
+
+.project-card h3 {
+  font-size: 16px;
+}
+
+/* Below 900px: one column (header, glance, compact sidebar, experience, projects). */
+@media (max-width: 900px) {
+  .resume {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'header'
+      'glance'
+      'sidebar'
+      'main';
+    grid-template-rows: none;
+  }
+
+  .resume__actions {
+    flex-basis: 100%;
+    flex-direction: column;
+  }
+
+  .resume__pdf,
+  .resume__cta {
+    width: 100%;
+  }
+
+  /* The side column becomes a compact block between the glance and the experience. */
+  .resume__sidebar {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    margin-top: 40px;
+    padding: 16px;
+    background: rgba(42, 33, 51, 0.6);
+    border: 2px solid rgba(184, 169, 140, 0.4);
+  }
+
+  .resume__contact ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+  }
+
+  .resume__contact li + li {
+    margin-top: 0;
+  }
+
+  .resume__sidebar section + section {
+    margin-top: 24px;
+  }
+
+  .skill-group + .skill-group {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .glance__stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .glance__stats li {
+    grid-template-columns: 96px 1fr;
+    align-items: center;
+  }
+
+  .glance__value {
+    font-size: 20px;
+  }
 }
 
 /* ---------------------------------------------------------------- Phones */
@@ -889,6 +1188,13 @@ button {
   body {
     background: #fff !important;
     color: #111;
+  }
+
+  /* Until the print layout is designed: no sticky, clipped side column on paper. */
+  .resume__sidebar {
+    position: static;
+    max-height: none;
+    overflow: visible;
   }
 
   .resume {
