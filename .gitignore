@@ -3,6 +3,10 @@ node_modules/
 dist/
 dist-ssr/
 
+# Playwright (E2E test output and report)
+test-results/
+playwright-report/
+
 # Logs
 *.log
 

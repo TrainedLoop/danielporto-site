@@ -32,6 +32,30 @@ pnpm preview  # serve o dist/ para conferir
 A publicação é automática: cada push na `main` faz o build e publica no GitHub Pages
 (`.github/workflows/deploy.yml`).
 
+## Testes E2E
+
+Testes de ponta a ponta com o [Playwright](https://playwright.dev) (só Chromium), em
+`tests/e2e/`. Eles rodam sobre o build: o `playwright.config.ts` sobe o `pnpm preview` na porta
+4173 servindo o `dist/` que já existe (não faz o build sozinho).
+
+```bash
+pnpm exec playwright install chromium   # uma vez (no Linux, --with-deps instala as libs do sistema)
+VITE_POSTHOG_KEY=phc_ci_fake pnpm build # mesmo build do CI, com o PostHog ligado
+pnpm test:e2e                           # ~10 s; relatório HTML: pnpm exec playwright show-report
+```
+
+O que é conferido: todas as páginas dos dois idiomas (a lista sai do `dist/sitemap.xml`) abrem
+com o `<html lang>` certo, um único `h1` e sem erro no console nem aviso de hidratação; nenhuma
+tem rolagem horizontal a 360 px; o seletor PT · EN no currículo e num estudo de caso; o PDF do
+currículo (impressão em A4) com no máximo 2 páginas; os links da home e dos estudos de caso
+para o currículo param logo abaixo da barra do topo; o estudo de caso de OCR não cita empresa
+nem ano (nem no `<head>` e no JSON-LD); o link direto `/historia/?fase=3`; e, numa tela baixa
+de notebook (1366×768), a coluna lateral do currículo rola junto com a página. As requisições
+para o PostHog são bloqueadas nos testes.
+
+No CI (`.github/workflows/ci.yml`), os testes rodam depois do build em cada PR; se falharem, o
+relatório HTML fica como artefato da execução (`playwright-report`).
+
 ## Como o site é feito
 
 - React, TypeScript e Vite; animações com GSAP sobre um canvas de 320x180 ampliado sem suavizar.

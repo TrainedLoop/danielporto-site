@@ -128,6 +128,9 @@ importers:
         specifier: 17.0.16
         version: 17.0.16(i18next@26.4.4(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3)
     devDependencies:
+      '@playwright/test':
+        specifier: 1.64.0
+        version: 1.64.0
       '@types/node':
         specifier: ^24.13.3
         version: 24.19.2
@@ -280,6 +283,11 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [win32]
+
+  '@playwright/test@1.64.0':
+    resolution: {integrity: sha512-oTN9FNYuN6bqQMwiho6jJKLCG2/QOYCixGXuCjRmzOq23eODeukuY2XiAVoVpAECbuezMt1MHQjAiQxK8F+Y+g==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@posthog/browser-common@0.9.4':
     resolution: {integrity: sha512-QlG0WZFG9iTp9cmXTypB4cgnxBAD3GImrj9AwmA84uh8uy5vIVgVLjoTTdOAW29XL+kh/eLn/5ZtBQt2JQfR+w==}
@@ -562,6 +570,16 @@ packages:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
 
+  playwright-core@1.64.0:
+    resolution: {integrity: sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.64.0:
+    resolution: {integrity: sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   postcss@8.5.29:
     resolution: {integrity: sha512-49cGhUbXj8Qenv0iTMxA1cFBzxXoctpC9Ujd77t1WcbJIr6nF/eI7g/8MgxrYldFRuAXvja7xQRwavoW7kgrxQ==}
     engines: {node: ^10 || ^12 || >=14}
@@ -754,6 +772,10 @@ snapshots:
   '@oxlint/binding-win32-x64-msvc@1.87.0':
     optional: true
 
+  '@playwright/test@1.64.0':
+    dependencies:
+      playwright: 1.64.0
+
   '@posthog/browser-common@0.9.4':
     dependencies:
       '@posthog/core': 1.58.1
@@ -935,6 +957,12 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@4.0.7: {}
+
+  playwright-core@1.64.0: {}
+
+  playwright@1.64.0:
+    dependencies:
+      playwright-core: 1.64.0
 
   postcss@8.5.29:
     dependencies:
