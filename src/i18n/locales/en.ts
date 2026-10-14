@@ -188,6 +188,7 @@ const ui = {
         title: "AI chat in production",
         text: "I was responsible for the interface, the LLM integration and the prompts of an AI chat that answers questions about the product's data; it started as a **3-day** prototype at an internal team hackathon.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
+        caseStudy: "ai-chat",
       },
       {
         id: "ai-agents",

@@ -59,6 +59,8 @@ export type Achievement = {
   title: string;
   text: string;
   target: string;
+  /** Optional case study the card links to instead of the résumé. */
+  caseStudy?: CaseId;
 };
 
 export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction";
@@ -255,6 +257,7 @@ const ui = {
         title: "Chat de IA em produção",
         text: "Fui responsável pela interface, pela integração com a LLM e pelos prompts de um chat de IA que responde perguntas sobre os dados do produto; nasceu de um protótipo de **3 dias** num hackathon interno do time.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
+        caseStudy: "ai-chat",
       },
       {
         id: "ai-agents",

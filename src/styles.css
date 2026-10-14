@@ -1852,3 +1852,9 @@ button {
   gap: 4px 12px;
   word-break: break-all;
 }
+
+/* Case-study links at the end of a résumé job or project card (screen only). */
+.case-links {
+  margin: 10px 0 0;
+  font-size: 15px;
+}

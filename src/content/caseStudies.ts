@@ -16,3 +16,11 @@ export function caseIdOf(route: Route): CaseId | null {
   const entry = Object.entries(CASE_ROUTES).find(([, caseRouteId]) => caseRouteId === route);
   return entry ? (entry[0] as CaseId) : null;
 }
+
+/** Which case study each selected project card links to (cards are matched by project id). */
+const PROJECT_CASES: Record<string, CaseId> = {
+  "confidence-extraction": "ocr-extraction",
+};
+
+/** Case study of a résumé project card, if it has one. */
+export const caseOfProject = (projectId: string): CaseId | null => PROJECT_CASES[projectId] ?? null;
