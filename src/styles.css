@@ -1491,6 +1491,71 @@ button {
   content: ' \2192';
 }
 
+/* Personal project (rendermd): one wide card below the case studies, screenshot on top. */
+.personal-project {
+  margin-top: 56px;
+}
+
+.personal-project__title {
+  margin: 0 0 20px;
+  padding-bottom: 8px;
+  font-family: var(--pixel-font);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--accent);
+  border-bottom: 2px solid rgba(184, 169, 140, 0.4);
+}
+
+.personal-card {
+  gap: 14px;
+  /* Linked from the résumé (/projetos/#rendermd): stop below the fixed top bar. */
+  scroll-margin-top: 72px;
+}
+
+.personal-card__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 2px solid rgba(184, 169, 140, 0.5);
+  background: #17171b;
+}
+
+.personal-card h3 {
+  margin: 4px 0 0;
+  font-family: var(--pixel-font);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.personal-card__highlights {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--resume-muted);
+}
+
+.personal-card__highlights li + li {
+  margin-top: 6px;
+}
+
+.personal-card__highlights li::marker {
+  color: var(--accent);
+}
+
+.personal-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 6px 0 0;
+}
+
+/* Résumé: the personal project in one line, after the selected projects. */
+.personal-note__line {
+  margin: 0;
+}
+
 @media (max-width: 899px) {
   .flow {
     flex-direction: column;
@@ -1806,6 +1871,24 @@ button {
 
   .project-card h3 {
     font-size: 10pt;
+  }
+
+  /* Compact on paper (the résumé must fit 2 A4 pages): title and line share one block, no rule. */
+  .personal-note {
+    margin-top: 7pt;
+    font-size: 8.5pt;
+    line-height: 1.3;
+  }
+
+  .resume__section.personal-note h2 {
+    display: inline;
+    margin: 0 6pt 0 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .personal-note__line {
+    display: inline;
   }
 
   .resume .chips li {

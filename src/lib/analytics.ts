@@ -62,11 +62,12 @@ export function trackPageview() {
   track("$pageview", { route });
 }
 
-/** Outbound links we care about: LinkedIn, GitHub and email. */
+/** Outbound links we care about: LinkedIn, GitHub, email and the rendermd live demo. */
 function destination(link: HTMLAnchorElement): string | null {
   if (link.protocol === "mailto:") return "email";
   if (/(^|\.)linkedin\.com$/.test(link.hostname)) return "linkedin";
   if (/(^|\.)github\.com$/.test(link.hostname)) return "github";
+  if (link.hostname === "trainedloop.github.io" && link.pathname.startsWith("/rendermd")) return "rendermd";
   return null;
 }
 

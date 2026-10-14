@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AtAGlance } from "./resume/AtAGlance";
 import { EarlyCareer } from "./resume/EarlyCareer";
 import { JobEntry } from "./resume/JobEntry";
+import { PersonalProjectNote } from "./resume/PersonalProjectNote";
 import { ProjectCard } from "./resume/ProjectCard";
 import { ResumeHeader } from "./resume/ResumeHeader";
 import { ResumeSidebar } from "./resume/ResumeSidebar";
@@ -17,7 +18,8 @@ function printResume(pdfTitle: string) {
 
 /**
  * The text version: header on top, a sticky side column (contact, skills) and the main column
- * (at a glance, experience, early career, selected projects). The DOM order is the phone order.
+ * (at a glance, experience, early career, selected projects, personal project). The DOM order
+ * is the phone order.
  */
 export function Resume() {
   const { t } = useTranslation();
@@ -51,6 +53,7 @@ export function Resume() {
             ))}
           </div>
         </section>
+        <PersonalProjectNote />
       </div>
     </main>
   );

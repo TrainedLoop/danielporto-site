@@ -228,6 +228,22 @@ const ui = {
       "The characters were put together with the <lpc>Universal LPC Spritesheet Character Generator</lpc>, using art from the Liberated Pixel Cup and the OpenGameArt community. Backgrounds, objects and screens were drawn for this site. On-screen text uses the Press Start 2P font by CodeMan38; the story's dialogue and hints use VT323 by Peter Hull; and body text uses Inter by Rasmus Andersson. All three are under the SIL Open Font License.",
     downloadCsv: "Download the full list (CSV)",
   },
+  personalProject: {
+    sectionTitle: "Personal project",
+    title: "rendermd",
+    line: "Paste Markdown with Mermaid diagrams and share the rendered document as a link, no account needed.",
+    highlights: [
+      "The document travels in the link itself: the server **never sees the content**.",
+      "Larger documents are **encrypted in the browser** (AES-GCM) before being stored; the key exists only in the link.",
+      "Optional password protection (PBKDF2, **600,000 iterations**).",
+      "Editor that checks Mermaid as you type, PT/EN, export to PDF/PNG/SVG and a presentation mode.",
+    ],
+    stack: ["React", "TypeScript", "CodeMirror", "Mermaid", "Web Crypto", "Supabase (Postgres)", "Playwright"],
+    imageAlt: "rendermd in its dark theme, on the preview tab: a heading, a paragraph and a rendered Mermaid flowchart.",
+    open: "Open",
+    code: "Code",
+    resumeLink: "see the project",
+  },
   notFound: {
     title: "GAME OVER",
     text: "Page not found.",

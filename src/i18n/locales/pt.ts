@@ -299,6 +299,26 @@ const ui = {
       "Os personagens foram montados a partir do <lpc>Universal LPC Spritesheet Character Generator</lpc>, com arte do Liberated Pixel Cup e da comunidade do OpenGameArt. Cenários, objetos e telas foram desenhados para este site. Os textos nas telas usam a fonte Press Start 2P, de CodeMan38; os diálogos e as dicas da história, a VT323, de Peter Hull; e o texto corrido, a Inter, de Rasmus Andersson. As três estão sob a SIL Open Font License.",
     downloadCsv: "Baixar a lista completa (CSV)",
   },
+  // Open-source side project: a card on /projetos/ (#rendermd) and a short block on the résumé.
+  // Not one of the selected projects; facts only from its public README.
+  personalProject: {
+    sectionTitle: "Projeto pessoal",
+    title: "rendermd",
+    line: "Cole Markdown com diagramas Mermaid e compartilhe o documento renderizado por link, sem conta.",
+    /** `**…**` marks the highlighted part. */
+    highlights: [
+      "O documento vai no próprio link: o servidor **nunca vê o conteúdo**.",
+      "Documentos grandes são **criptografados no navegador** (AES-GCM) antes de serem salvos; a chave só existe no link.",
+      "Proteção opcional por senha (PBKDF2, **600 mil iterações**).",
+      "Editor com validação de Mermaid enquanto você digita, PT/EN, exportação para PDF/PNG/SVG e modo apresentação.",
+    ],
+    stack: ["React", "TypeScript", "CodeMirror", "Mermaid", "Web Crypto", "Supabase (Postgres)", "Playwright"],
+    imageAlt:
+      "O rendermd no tema escuro, na aba de visualização: um título, um parágrafo e um fluxograma Mermaid renderizado.",
+    open: "Abrir",
+    code: "Código",
+    resumeLink: "ver o projeto",
+  },
   // Unknown paths (src/pages/NotFound.tsx).
   notFound: {
     title: "GAME OVER",
