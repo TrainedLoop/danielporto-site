@@ -20,6 +20,7 @@ type Props = Record<string, string | number | boolean>;
 /** Events sent by the site (besides $pageview); see the table in the README. */
 export type EventName =
   | "home_choice"
+  | "home_achievement"
   | "phase_started"
   | "phase_completed"
   | "phase_skipped"

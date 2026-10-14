@@ -18,22 +18,6 @@ const profile = {
   ],
 };
 
-/** Short highlights for the home page. */
-const highlights = [
-  {
-    title: "AI in production",
-    text: "An AI chat in production with customers, an MCP server and AI agents, a copilot with permissions and LGPD compliance, and computer vision.",
-  },
-  {
-    title: "Front end",
-    text: "React and TypeScript in Purple's dashboard, an in-house design system and the CI/CD pipeline with over 800 deploys.",
-  },
-  {
-    title: "Back end",
-    text: "Career built on C#/.NET and SQL Server, with APIs, integrations and queues. Python in AI projects.",
-  },
-];
-
 /** Experience, from the most recent to the oldest. */
 const experience: Job[] = [
   {
@@ -191,13 +175,6 @@ const ui = {
     avatarAlt: "Daniel in pixel art",
     hello: "Hi, I'm",
     roleAt: "at",
-    choiceTitle: "How would you like to get to know my career?",
-    playLabel: "Play the story",
-    playHint: "From my grandmother's house to AI in production, in 8 pixel-art levels. About 5 minutes.",
-    resumeLabel: "Read the résumé",
-    resumeHint: "The text version, straight to the point, starting with my current role.",
-    highlightsLabel: "What I do",
-    skillsLabel: "Skills",
     viewResume: "View résumé",
     achievementsLabel: "Highlights",
     achievementLink: "see on résumé",
@@ -433,5 +410,5 @@ const llms = {
   online: "Online version",
 };
 
-const en: Messages = { ...ui, meta, share, llms, story, profile, highlights, experience, earlyCareer, projects, skillGroups, languages };
+const en: Messages = { ...ui, meta, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
 export default en;

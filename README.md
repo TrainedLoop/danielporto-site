@@ -7,7 +7,7 @@ O site inteiro existe em português e em inglês:
 
 | Página | Português | Inglês |
 | --- | --- | --- |
-| home com o resumo e a escolha entre jogar a história ou ler o currículo | `/` | `/en/` |
+| home para recrutador: quem sou, currículo e contato, 3 conquistas e o convite para a história | `/` | `/en/` |
 | 8 fases em pixel art, uma por vez, com inventário | `/historia/` | `/en/story/` |
 | o currículo em texto | `/curriculo/` | `/en/resume/` |
 | autores e licenças dos sprites e da fonte | `/creditos/` | `/en/credits/` |
@@ -105,7 +105,8 @@ Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página):
 | Evento | Quando | Propriedades |
 | --- | --- | --- |
 | `$pageview` | ao abrir o site e a cada troca de página | `route` (o caminho, ex.: `curriculo`, `en/story`) |
-| `home_choice` | clique em "Jogar a história" ou "Ler o currículo" na home | `option`: `story` \| `resume` |
+| `home_choice` | clique em "Ver currículo", "Falar comigo" ou "Jogar a história" na home | `option`: `resume` \| `contact` \| `story` |
+| `home_achievement` | clique em "ver no currículo" num card de conquista da home | `id`: `ai-chat` \| `ai-agents` \| `computer-vision` |
 | `phase_started` | uma fase da história começa (inclusive "ver de novo") | `phase` (0 a 7), `phase_id` |
 | `phase_completed` | a pessoa chega ao fim das falas de uma fase | `phase`, `phase_id` |
 | `phase_skipped` | clique em "pular" | `phase`, `phase_id` |
