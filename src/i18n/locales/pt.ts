@@ -36,7 +36,7 @@ const summary = {
 const highlights = [
   {
     title: "IA em produção",
-    text: "O chat de IA da Purple, um copiloto com permissões e LGPD, visão computacional, MCP e agentes no dia a dia do time.",
+    text: "Chat de IA em produção com clientes, servidor MCP e agentes de IA, um copiloto com permissões e LGPD e visão computacional.",
   },
   {
     title: "Front-end",
