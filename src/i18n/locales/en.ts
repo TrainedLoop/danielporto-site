@@ -180,7 +180,7 @@ const ui = {
     achievementLink: "see on résumé",
     storyTitle: "Rather get to know me by playing?",
     storyText: "From my grandmother's house to AI in production, in 8 pixel-art levels. About 5 minutes.",
-    storyCta: "▶ Play the story",
+    storyCta: "Play the story",
     achievements: [
       {
         id: "ai-chat",
@@ -203,7 +203,7 @@ const ui = {
         text: "YOLO models trained on ~50k images, served in production and retrained with the operators' corrections.",
         target: "projects",
       },
-    ] as Achievement[],
+    ] satisfies Achievement[],
   },
   resume: {
     roleAt: "at",

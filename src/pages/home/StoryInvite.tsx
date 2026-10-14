@@ -17,7 +17,7 @@ export function StoryInvite() {
       <ul className="story-invite__items" aria-hidden="true">
         {ITEMS.map((item) => (
           <li key={item}>
-            <img src={`${BASE}sprites/${item}`} alt="" width={32} height={32} />
+            <img src={`${BASE}sprites/${item}`} alt="" width={48} height={48} />
           </li>
         ))}
       </ul>
@@ -26,6 +26,9 @@ export function StoryInvite() {
         <p>{t("home.storyText")}</p>
       </div>
       <a className="button button--primary" href={href("story", lang)} onClick={() => track("home_choice", { option: "story" })}>
+        <span className="icon" aria-hidden="true">
+          ▶
+        </span>{" "}
         {t("home.storyCta")}
       </a>
     </section>

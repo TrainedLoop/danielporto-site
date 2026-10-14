@@ -226,7 +226,7 @@ const ui = {
     achievementLink: "ver no currículo",
     storyTitle: "Prefere conhecer jogando?",
     storyText: "Da casa da minha avó até a IA em produção, em 8 fases de pixel art. Uns 5 minutos.",
-    storyCta: "▶ Jogar a história",
+    storyCta: "Jogar a história",
     achievements: [
       {
         id: "ai-chat",
@@ -249,7 +249,7 @@ const ui = {
         text: "Modelos YOLO treinados com ~50 mil imagens, servidos em produção e retreinados com as correções dos operadores.",
         target: "projects",
       },
-    ] as Achievement[],
+    ] satisfies Achievement[],
   },
   resume: {
     roleAt: "na",
