@@ -110,7 +110,7 @@ const earlyCareer: EarlyJob[] = [
   {
     id: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
     company: "Hebara Distribuidora de Produtos Lotéricos",
-    role: "Junior Programmer",
+    role: "Junior Developer",
     period: "Sep 2013 – Sep 2015",
     line: "The company's intranet and portal, with my first production deploys (C#, .NET MVC, Oracle).",
   },
