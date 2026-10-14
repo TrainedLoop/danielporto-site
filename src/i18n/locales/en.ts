@@ -432,8 +432,8 @@ const caseStudies = {
     decisions: "Decisions",
     flow: "How it works",
     outcome: "Outcome",
-    previous: "← Previous project",
-    next: "Next project →",
+    previous: "Previous project",
+    next: "Next project",
     resume: "see on résumé",
   },
   items: [

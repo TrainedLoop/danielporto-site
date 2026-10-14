@@ -91,6 +91,9 @@ export function CaseStudyPage({ id }: { id: CaseId }) {
       <nav className="case__nav" aria-label={labels.breadcrumb}>
         {previous ? (
           <a className="button button--secondary case__previous" href={href(caseRoute(previous.id), lang)}>
+            <span className="icon" aria-hidden="true">
+              ◀
+            </span>{" "}
             {labels.previous}
           </a>
         ) : (
@@ -101,7 +104,10 @@ export function CaseStudyPage({ id }: { id: CaseId }) {
         </a>
         {next ? (
           <a className="button button--secondary case__next" href={href(caseRoute(next.id), lang)}>
-            {labels.next}
+            {labels.next}{" "}
+            <span className="icon" aria-hidden="true">
+              ▶
+            </span>
           </a>
         ) : (
           <span className="case__next" />

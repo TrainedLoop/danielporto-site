@@ -6,6 +6,7 @@ import { CONTENT_DATE, LANG_CODE, ogImage, pageMeta, pageUrl, SITE_URL } from '.
 import { structuredData } from './content/structuredData'
 import { i18n, setLang } from './i18n'
 import { href, LANGS, LEGACY_PATHS, PAGES, pageKey, routePath, type Page } from './lib/route'
+import type { CaseId } from './i18n/locales/pt'
 import { PHASES } from './phases'
 
 export {
@@ -89,7 +90,7 @@ export function checkHomeAchievements(): string[] {
 }
 
 /** Ids of the case studies, in navigation order. */
-const CASE_IDS = ['ai-chat', 'cicd-design-system', 'ocr-extraction']
+const CASE_IDS: CaseId[] = ['ai-chat', 'cicd-design-system', 'ocr-extraction']
 
 /** The OCR case is anonymous: no employer, client, year or "freelance" may appear in its text. */
 const OCR_FORBIDDEN = [/purple|fu2re|fulllab|hebara|freela/i, /\b(19|20)\d{2}\b/]

@@ -1346,7 +1346,6 @@ button {
   font-size: 14px;
   line-height: 1.4;
   overflow-wrap: anywhere;
-  hyphens: auto;
   background: var(--panel);
   border: 3px solid var(--muted);
   box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);

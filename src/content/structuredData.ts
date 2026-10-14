@@ -47,7 +47,8 @@ const breadcrumbSteps = (route: Route): Route[] =>
 /**
  * schema.org JSON-LD of a page, in its language: the WebSite, the page itself (ProfilePage
  * for home and résumé, WebPage for the others), Daniel as a Person and, on subpages, the
- * breadcrumb back to the home page. Written into each page's static HTML by the build.
+ * breadcrumb back to the home page. The confidential OCR case gets only a bare Person reference,
+ * so nothing on it ties it to an employer. Written into each page's static HTML by the build.
  */
 export function structuredData(page: Page) {
   const { route, lang } = page;
@@ -86,13 +87,13 @@ export function structuredData(page: Page) {
     "@id": WEBSITE_ID,
     url: SITE_URL,
     name: t("profile").name,
-    description: pageMeta({ route: "home", lang }).description,
+    ...(route === "home" && { description: pageMeta({ route: "home", lang }).description }),
     inLanguage: LANGS.map((other) => LANG_CODE[other]),
     publisher: { "@id": PERSON_ID },
   };
 
   return {
     "@context": "https://schema.org",
-    "@graph": [website, webPage, person(lang), ...(route === "home" ? [] : [breadcrumb])],
+    "@graph": [website, webPage, route === "case-ocr-extraction" ? { "@id": PERSON_ID } : person(lang), ...(route === "home" ? [] : [breadcrumb])],
   };
 }

@@ -513,8 +513,8 @@ const caseStudies = {
     decisions: "Decisões",
     flow: "Como funciona",
     outcome: "Resultado",
-    previous: "← Projeto anterior",
-    next: "Próximo projeto →",
+    previous: "Projeto anterior",
+    next: "Próximo projeto",
     resume: "ver no currículo",
   },
   items: [
