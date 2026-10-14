@@ -1,5 +1,5 @@
 import { i18n } from "../i18n";
-import { routePath, type Lang, type Page, type Route } from "../lib/route";
+import { routePath, type AppPage, type Lang, type Route } from "../lib/route";
 
 /** Public address of the site, used in each page's canonical and og:url. */
 export const SITE_URL = "https://www.danielporto.com.br/";
@@ -27,7 +27,7 @@ export function formatContentDate(lang: Lang) {
 }
 
 /** Title and description of a page, in its language (texts in src/i18n/locales). */
-export function pageMeta({ route, lang }: Page) {
+export function pageMeta({ route, lang }: AppPage) {
   const t = i18n.getFixedT(lang);
   return { title: t(`meta.${route}.title`), description: t(`meta.${route}.description`) };
 }

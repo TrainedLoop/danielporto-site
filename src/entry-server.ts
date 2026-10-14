@@ -5,7 +5,7 @@ import { llmsFullTxt, llmsTxt } from './content/llms'
 import { CONTENT_DATE, LANG_CODE, ogImage, pageMeta, pageUrl, SITE_URL } from './content/pages'
 import { structuredData } from './content/structuredData'
 import { i18n, setLang } from './i18n'
-import { href, LANGS, LEGACY_PATHS, PAGES, pageKey, routePath, type Page } from './lib/route'
+import { href, LANGS, LEGACY_PATHS, PAGES, pageKey, routePath, type AppPage, type Page } from './lib/route'
 import type { CaseId } from './i18n/locales/pt'
 import { PHASES } from './phases'
 
@@ -27,8 +27,8 @@ export {
   structuredData,
 }
 
-/** Used only by the build (scripts/prerender.js): renders each page's HTML from the components. */
-export function render(page: Page) {
+/** Used only by the build (scripts/prerender.js): renders each page's HTML (and the not-found screen) from the components. */
+export function render(page: AppPage) {
   setLang(page.lang)
   return renderToString(createElement(StrictMode, null, createElement(App, { page })))
 }

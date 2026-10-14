@@ -1,19 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { CONTENT_DATE, formatContentDate } from "../../content/pages";
-import { contactHref } from "../../content/contact";
+import { ContactButton } from "../../components/ContactButton";
 import { href, type Lang } from "../../lib/route";
 
 type Props = {
-  /** Opens the print dialog (the "download PDF" button). */
-  onDownloadPdf: () => void;
+  /** Opens the print dialog (the "print / save as PDF" button). */
+  onPrint: () => void;
 };
 
 /** Top of the résumé: who, where, the two actions and a small line with the date and the story link. */
-export function ResumeHeader({ onDownloadPdf }: Props) {
+export function ResumeHeader({ onPrint }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const profile = t("profile");
-  const contact = contactHref(profile.links, t("resume.contactSubject"));
 
   return (
     <header className="resume__header">
@@ -25,14 +24,10 @@ export function ResumeHeader({ onDownloadPdf }: Props) {
         <p className="resume__location">{profile.location}</p>
       </div>
       <div className="resume__actions no-print">
-        <button type="button" className="button button--secondary" onClick={onDownloadPdf}>
-          {t("resume.downloadPdf")}
+        <button type="button" className="button button--secondary" onClick={onPrint}>
+          {t("resume.printPdf")}
         </button>
-        {contact && (
-          <a className="button button--primary" href={contact}>
-            {t("resume.contactCta")}
-          </a>
-        )}
+        <ContactButton variant="primary" />
       </div>
       <p className="resume__meta">
         <time dateTime={CONTENT_DATE}>{t("resume.updated", { date: formatContentDate(lang) })}</time>

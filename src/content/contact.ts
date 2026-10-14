@@ -1,6 +1,10 @@
-/** The "contact me" mailto link: the address from the profile links plus a URI-encoded subject; null when there is no mailto link. */
-export function contactHref(links: { label: string; href: string }[], subject: string): string | null {
-  const mailto = links.find((link) => link.href.startsWith("mailto:"))?.href;
-  if (!mailto) return null;
-  return `${mailto}?subject=${encodeURIComponent(subject)}`;
+type Link = { label: string; href: string };
+
+/**
+ * The owner's LinkedIn profile from the profile links, the destination of every "contact me"
+ * button (LinkedIn has no public compose-message URL, so the button opens the profile).
+ * Null when the profile has no LinkedIn link.
+ */
+export function linkedInHref(links: Link[]): string | null {
+  return links.find((link) => /^https:\/\/([^/]+\.)?linkedin\.com\//.test(link.href))?.href ?? null;
 }

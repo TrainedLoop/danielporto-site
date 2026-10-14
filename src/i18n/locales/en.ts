@@ -209,7 +209,7 @@ const ui = {
   resume: {
     roleAt: "at",
     playStory: "▶ play the story",
-    downloadPdf: "download PDF",
+    printPdf: "print / save as PDF",
     pdfTitle: "Daniel Porto - Resume",
     glanceTitle: "At a glance",
     experience: "Experience",
@@ -218,8 +218,7 @@ const ui = {
     caseStudyLink: "read the case study",
     contact: "Contact",
     skills: "Skills",
-    contactCta: "Contact me",
-    contactSubject: "Contact from your website",
+    contactCta: "Message me on LinkedIn",
     glance,
     updated: "Updated {{date}}",
   },
@@ -228,6 +227,13 @@ const ui = {
     intro:
       "The characters were put together with the <lpc>Universal LPC Spritesheet Character Generator</lpc>, using art from the Liberated Pixel Cup and the OpenGameArt community. Backgrounds, objects and screens were drawn for this site. On-screen text uses the Press Start 2P font by CodeMan38; the story's dialogue and hints use VT323 by Peter Hull; and body text uses Inter by Rasmus Andersson. All three are under the SIL Open Font License.",
     downloadCsv: "Download the full list (CSV)",
+  },
+  notFound: {
+    title: "GAME OVER",
+    text: "Page not found.",
+    hint: "This address doesn't exist on the site. How about starting over?",
+    home: "back to the start",
+    resume: "see the résumé",
   },
 };
 
@@ -241,6 +247,7 @@ const storyUi = {
     skipPhase: "skip level",
     pressStart: "PRESS START",
     startHint: "click, or press Enter",
+    startHintTouch: "tap to start",
     continue: "continue",
     finish: "finish",
     skip: "skip",
@@ -416,6 +423,12 @@ const meta = {
     title: "Sprite and font credits · Daniel Porto",
     description:
       "Authors and licenses of the pixel art on Daniel Porto's site: sprites from the Liberated Pixel Cup and OpenGameArt, and the Press Start 2P font.",
+  },
+  "not-found": {
+    name: "Page not found",
+    title: "Page not found · Daniel Porto",
+    description:
+      "This address doesn't exist on Daniel Porto's site. Go back to the start for the résumé, the projects and the pixel-art story.",
   },
 };
 

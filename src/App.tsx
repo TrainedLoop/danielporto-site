@@ -1,9 +1,10 @@
 import { useEffect, type SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { equivalentHref, href, useRoute, type Lang, type Page, type Route } from './lib/route'
+import { equivalentHref, href, useRoute, type AppPage, type Lang, type Route } from './lib/route'
 import { caseIdOf } from './content/caseStudies'
 import { Credits } from './pages/Credits'
 import { Home } from './pages/Home'
+import { NotFound } from './pages/NotFound'
 import { CaseStudyPage } from './pages/projects/CaseStudyPage'
 import { ProjectsIndex } from './pages/projects/ProjectsIndex'
 import { Resume } from './pages/Resume'
@@ -35,10 +36,11 @@ function LangLink({ route, lang, current, label }: { route: Route; lang: Lang; c
 }
 
 /** `page` is the page the app starts on: from the browser path, or, in the build, each prerendered page. */
-export default function App({ page: initial }: { page: Page }) {
+export default function App({ page: initial }: { page: AppPage }) {
   const { route, lang } = useRoute(initial)
   const { t } = useTranslation()
   const caseId = caseIdOf(route)
+  const langRoute: Route = route === 'not-found' ? 'home' : route
 
   useEffect(() => {
     document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR'
@@ -65,9 +67,10 @@ export default function App({ page: initial }: { page: Page }) {
             {t('nav.projects')}
           </a>
           <span className="topbar__lang" role="group" aria-label={t('nav.language')}>
-            <LangLink route={route} lang="pt" current={lang} label="PT" />
+            {/* The not-found screen has no address in the other language: the switch goes home. */}
+            <LangLink route={langRoute} lang="pt" current={lang} label="PT" />
             {' · '}
-            <LangLink route={route} lang="en" current={lang} label="EN" />
+            <LangLink route={langRoute} lang="en" current={lang} label="EN" />
           </span>
         </nav>
       </header>
@@ -78,6 +81,7 @@ export default function App({ page: initial }: { page: Page }) {
       {route === 'projects' && <ProjectsIndex />}
       {caseId && <CaseStudyPage id={caseId} />}
       {route === 'credits' && <Credits />}
+      {route === 'not-found' && <NotFound />}
 
       {route !== 'story' && (
         <footer className="site-footer no-print">

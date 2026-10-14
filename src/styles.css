@@ -89,6 +89,8 @@
   --bg: #1b1622;
   --ink: #f4ecd8;
   --muted: #b8a98c;
+  /* Secondary text a step lighter than --muted, for small text on the dark background. */
+  --muted-light: #d3c6aa;
   --accent: #f3c03f;
   --panel: #2a2133;
   --panel-border: #f4ecd8;
@@ -156,9 +158,16 @@ a {
 /* On phones, the top bar with the language switch must fit on one line. The full layout needs about
    532px with the Portuguese labels, so switch to the compact one below 560px (tests/e2e/topbar.spec.ts). */
 @media (max-width: 560px) {
+  /* Each link is a 44px-tall tap target (the bar's whole height), so no vertical padding. */
   .topbar {
-    padding: 12px;
-    font-size: 8px;
+    padding: 0 12px;
+    font-size: 9px;
+  }
+
+  .topbar a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
 
   .topbar__nav {
@@ -174,10 +183,17 @@ a {
   }
 }
 
+/* At 9px the Portuguese labels need about 375px; narrower phones keep the 8px font. */
+@media (max-width: 389px) {
+  .topbar {
+    font-size: 8px;
+  }
+}
+
 /* The narrowest phones (320px) need a little less spacing still. */
 @media (max-width: 359px) {
   .topbar {
-    padding: 12px 8px;
+    padding: 0 8px;
   }
 
   .topbar__nav {
@@ -415,6 +431,25 @@ button {
   color: var(--ink);
 }
 
+/* Ending: contact (primary) and résumé (secondary), then the smaller links. */
+.next__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 16px;
+  margin-top: 28px;
+}
+
+/* Phones: the ending and not-found buttons stack with the same width. */
+@media (max-width: 480px) {
+  .next__actions,
+  .not-found__actions {
+    flex-direction: column;
+    align-items: stretch;
+    justify-self: stretch;
+  }
+}
+
 .next__links {
   font-family: var(--text-font);
   font-size: 24px;
@@ -535,9 +570,9 @@ button {
   cursor: pointer;
 }
 
+/* Waiting for the line to finish: plain --muted (no yellow, no underline), still readable. */
 .dialog__next:disabled {
   color: var(--muted);
-  opacity: 0.35;
   cursor: default;
 }
 
@@ -586,8 +621,7 @@ button {
 }
 
 .home {
-  /* Secondary text a step lighter than --muted (the same value as --resume-muted). */
-  --home-muted: #d3c6aa;
+  --home-muted: var(--muted-light);
 }
 
 /* Compact top: the buttons and the start of the achievement cards fit in the first screen. */
@@ -801,8 +835,7 @@ button {
  * sidebar, main) is the single-column order used on phones.
  */
 .resume {
-  /* Secondary text a step lighter than --muted, for contrast on the dark background. */
-  --resume-muted: #d3c6aa;
+  --resume-muted: var(--muted-light);
   /* Fixed top bar height plus a gap: where the sticky sidebar and the story anchors stop. */
   --resume-sticky-top: 64px;
 
@@ -1405,10 +1438,14 @@ button {
   border-block: 7px solid transparent;
 }
 
-/* Footer: previous, résumé, next. */
+/* Footer: previous on the left and next on the right (an empty slot keeps its side), the
+   résumé link centered on its own row below. */
 .case__nav {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'previous next'
+    'resume resume';
   align-items: center;
   gap: 16px;
   margin-top: 56px;
@@ -1417,11 +1454,18 @@ button {
 }
 
 .case__previous {
+  grid-area: previous;
   justify-self: start;
 }
 
 .case__next {
+  grid-area: next;
   justify-self: end;
+}
+
+.case__resume {
+  grid-area: resume;
+  justify-self: center;
 }
 
 /* Index: the résumé project cards, three in a row. */
@@ -1474,8 +1518,13 @@ button {
     gap: 4px;
   }
 
+  /* Stacked, full width: previous, next, then the résumé. */
   .case__nav {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'previous'
+      'next'
+      'resume';
   }
 
   .case__nav .button {
@@ -1483,7 +1532,7 @@ button {
   }
 
   /* An empty slot (no previous or no next) takes no room on the stacked footer. */
-  .case__nav span {
+  .case__nav > span {
     display: none;
   }
 }
@@ -1801,6 +1850,8 @@ button {
 
 .next {
   min-height: 100vh;
+  /* Clear of the top bar and of the fixed inventory at the bottom. */
+  padding: 64px 16px 112px;
 }
 
 .next__restart {
@@ -1820,6 +1871,124 @@ button {
   }
 }
 
+/* Phones: the compact top bar is 44px tall (its tap targets), so the title and the scene start below it. */
+@media (max-width: 560px) {
+  .story__progress {
+    top: 46px;
+  }
+
+  .phase__stage {
+    padding-top: 64px;
+  }
+
+  .controls {
+    top: 68px;
+  }
+}
+
+/* Keyboard hints (Enter) only where there is a keyboard; touch screens get "tap" wording. */
+.phase__hint--touch {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .phase__hint--keyboard,
+  .dialog__next kbd {
+    display: none;
+  }
+
+  .phase__hint--touch {
+    display: block;
+  }
+}
+
+/* Narrow phones: the label goes above the slots, and the 8 slots shrink to fit the width. */
+@media (max-width: 480px) {
+  .inventory {
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 8px 8px;
+  }
+
+  .inventory__label {
+    font-size: 8px;
+  }
+
+  .inventory ul {
+    gap: 4px;
+  }
+
+  /* 8 slots and 7 gaps across the width minus the bar's padding; 36px at most (a 32px item plus the border). */
+  .inventory__slot {
+    width: min(36px, (100vw - 16px - 7 * 4px) / 8);
+    height: min(36px, (100vw - 16px - 7 * 4px) / 8);
+  }
+
+  .inventory__slot img {
+    width: min(32px, 100%);
+    height: auto;
+  }
+}
+
+/* Phones in landscape (short screens): the scene and the dialog side by side, the title only
+   for screen readers (it would collide with the top bar), and a slimmer inventory. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .story__progress .story__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .story__progress {
+    top: auto;
+    bottom: 60px;
+    left: 16px;
+    transform: none;
+  }
+
+  .phase:not(.phase--static) .phase__stage {
+    --inventory: 52px;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 16px;
+    padding: 48px 16px 0;
+  }
+
+  .phase:not(.phase--static) .phase__canvas {
+    width: min(55vw, calc((100vh - 48px - 28px - var(--inventory)) * 16 / 9));
+    flex-shrink: 0;
+  }
+
+  /* Below the skip button, and never under the inventory: long lines scroll inside the box. */
+  .phase:not(.phase--static) .dialog {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+    max-width: 420px;
+    max-height: calc(100vh - 48px - 40px - var(--inventory) - 12px);
+    margin-top: 40px;
+    padding: 10px 14px;
+    overflow-y: auto;
+  }
+
+  .dialog p {
+    font-size: 22px;
+  }
+
+  .inventory {
+    padding: 4px 8px;
+  }
+
+  .inventory__slot {
+    width: 36px;
+    height: 36px;
+  }
+}
+
 /* ---------------------------------------------------------------- Footer and credits */
 
 .site-footer {
@@ -1830,7 +1999,7 @@ button {
   padding: 24px 16px 32px;
   font-family: var(--body-font);
   font-size: 14px;
-  color: var(--muted);
+  color: var(--muted-light);
   border-top: 2px solid rgba(184, 169, 140, 0.25);
 }
 
@@ -1840,7 +2009,7 @@ button {
   flex-basis: 100%;
   font-family: var(--body-font);
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted-light);
   text-align: center;
 }
 
@@ -1884,4 +2053,51 @@ button {
 .case-links {
   margin: 10px 0 0;
   font-size: 15px;
+}
+
+/* ---------------------------------------------------------------- Not found (404) */
+
+.not-found {
+  min-height: calc(100vh - 120px);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  padding: 96px 16px 48px;
+  text-align: center;
+  font-family: var(--body-font);
+}
+
+.not-found__title {
+  margin: 0;
+  font-family: var(--pixel-font);
+  font-size: clamp(28px, 8vw, 56px);
+  line-height: 1.2;
+  color: var(--accent);
+  text-shadow: 4px 4px 0 var(--panel);
+}
+
+.not-found h1 {
+  margin: 0;
+  font-family: var(--pixel-font);
+  font-size: clamp(12px, 2.4vw, 18px);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.not-found__hint {
+  max-width: 480px;
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted-light);
+}
+
+.not-found__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 16px;
+  margin-top: 12px;
 }

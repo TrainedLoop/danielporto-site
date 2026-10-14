@@ -3,7 +3,7 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import App from './App'
 import { pageMeta } from './content/pages'
 import { setLang } from './i18n'
-import { pageKey, pageOrHome, pathFromLegacyHash, pathFromLegacyPath } from './lib/route'
+import { pageKey, pageOrNotFound, pathFromLegacyHash, pathFromLegacyPath } from './lib/route'
 import { initAnalytics } from './lib/analytics'
 import './styles.css'
 
@@ -16,7 +16,7 @@ if (legacy) {
   window.location.replace(legacy)
 } else {
   const container = document.getElementById('root')!
-  const page = pageOrHome(pathname)
+  const page = pageOrNotFound(pathname)
   // Language first: analytics events carry it.
   setLang(page.lang)
   initAnalytics()
@@ -27,8 +27,9 @@ if (legacy) {
   )
 
   // In the build, each page ships with its HTML already rendered: React just takes over.
-  // If the HTML belongs to another page (404.html, or /curriculo without the trailing slash),
-  // render from scratch. The story too: it resumes the progress saved in the browser,
+  // If the HTML belongs to another page (404.html in English, or /curriculo without the trailing
+  // slash), render from scratch. 404.html holds the Portuguese not-found screen, so an unknown
+  // Portuguese path hydrates it. The story too: it resumes the progress saved in the browser,
   // which the build's HTML can't know about.
   if (container.dataset.route === pageKey(page) && page.route !== 'story') {
     hydrateRoot(container, app)

@@ -3,7 +3,8 @@
 // and dist/index.html as the template: dist/index.html, dist/historia/index.html,
 // dist/en/story/index.html, etc. Each page gets its schema.org JSON-LD, in its language.
 // Also writes:
-// - dist/404.html (the home page), so GitHub Pages opens the app on unknown paths;
+// - dist/404.html (the not-found screen, in Portuguese), which GitHub Pages serves on unknown
+//   paths; main.tsx shows it in English under /en/;
 // - a redirect page at each old path (LEGACY_PATHS, e.g. /en/curriculo/ → /en/resume/);
 // - dist/sitemap.xml, with every page, its hreflang alternates and the content date as lastmod;
 // - dist/llms.txt and dist/llms-full.txt, plain-text versions of the site for AI tools.
@@ -129,9 +130,19 @@ for (const target of PAGES) {
   console.log(`prerendered: ${file.slice(root.length + 1)}`);
 }
 
-// Unknown path: GitHub Pages serves 404.html, which opens the app without entering search indexes.
-const notFound = page({ route: "home", lang: "pt" }).replace("</title>", '</title>\n    <meta name="robots" content="noindex" />');
-await writeFile(join(dist, "404.html"), notFound);
+// Unknown path: GitHub Pages serves 404.html (with a 404 status), kept out of search indexes. It
+// has no address of its own, so no canonical, hreflang or JSON-LD; the app re-renders it in
+// English for /en/... paths (main.tsx).
+function notFoundPage(target) {
+  const { title, description } = pageMeta(target);
+  let html = template;
+  html = replace(html, /(<title>)[^<]*(<\/title>)/, title);
+  html = replace(html, metaContent("name", "description"), description);
+  html = html.replace(/\s*<link\s+rel="canonical"[^>]*>/, "");
+  html = html.replace("</title>", '</title>\n    <meta name="robots" content="noindex" />');
+  return html.replace('<div id="root"></div>', () => `<div id="root" data-route="${pageKey(target)}">${render(target)}</div>`);
+}
+await writeFile(join(dist, "404.html"), notFoundPage({ route: "not-found", lang: "pt" }));
 console.log("prerendered: dist/404.html");
 
 // Old paths: a tiny page that sends visitors (keeping ?query and #hash) and search engines to the new address.
