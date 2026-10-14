@@ -1,8 +1,12 @@
 import type { Project } from "../../i18n/locales/pt";
 import { Highlight } from "../../components/Highlight";
+import { caseOfProject } from "../../content/caseStudies";
+import { CaseLinks } from "./CaseLinks";
 
 /** A selected project: result on top, then what was done and the stack. No dates or clients. */
 export function ProjectCard({ project }: { project: Project }) {
+  const caseId = caseOfProject(project.id);
+
   return (
     <article className="project-card">
       <p className="project-card__result">
@@ -17,6 +21,7 @@ export function ProjectCard({ project }: { project: Project }) {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      {caseId && <CaseLinks ids={[caseId]} />}
     </article>
   );
 }

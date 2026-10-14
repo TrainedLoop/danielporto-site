@@ -6,6 +6,7 @@ import { CONTENT_DATE, LANG_CODE, ogImage, pageMeta, pageUrl, SITE_URL } from '.
 import { structuredData } from './content/structuredData'
 import { i18n, setLang } from './i18n'
 import { href, LANGS, LEGACY_PATHS, PAGES, pageKey, routePath, type Page } from './lib/route'
+import type { CaseId } from './i18n/locales/pt'
 import { PHASES } from './phases'
 
 export {
@@ -84,6 +85,58 @@ export function checkHomeAchievements(): string[] {
         problems.push(`home: achievement ${achievement.id} target ${achievement.target} not found on the résumé (${lang})`)
       }
     }
+  }
+  return problems
+}
+
+/** Ids of the case studies, in navigation order. */
+const CASE_IDS: CaseId[] = ['ai-chat', 'cicd-design-system', 'ocr-extraction']
+
+/** The OCR case is anonymous: no employer, client, year or "freelance" may appear in its text. */
+const OCR_FORBIDDEN = [/purple|fu2re|fulllab|hebara|freela/i, /\b(19|20)\d{2}\b/]
+
+/**
+ * Build-time sanity check of the case studies, per language: the three cases exist in order,
+ * no text is empty, resumeTarget is a résumé anchor, and the OCR case (its texts and its page meta)
+ * passes the confidentiality rules.
+ */
+export function checkCaseStudies(): string[] {
+  const problems: string[] = []
+  for (const lang of LANGS) {
+    const t = i18n.getFixedT(lang)
+    const items = t('caseStudies.items')
+    const anchors = new Set(['projects', ...[...t('experience'), ...t('earlyCareer')].map((job) => job.id)])
+    if (items.map((item) => item.id).join() !== CASE_IDS.join()) {
+      problems.push(`case studies: ids are ${items.map((item) => item.id).join(', ')}, expected ${CASE_IDS.join(', ')} (${lang})`)
+    }
+    for (const item of items) {
+      const texts = [
+        item.title, item.result, item.role, item.context, item.problem,
+        ...item.stack, ...item.flow, ...item.outcome,
+        ...item.decisions.map((decision) => decision.title),
+      ]
+      if (texts.some((text) => !text.trim())) problems.push(`case ${item.id}: has an empty text (${lang})`)
+      if (item.stack.length === 0 || item.flow.length === 0 || item.outcome.length === 0 || item.decisions.length === 0) {
+        problems.push(`case ${item.id}: has an empty list (${lang})`)
+      }
+      if (!anchors.has(item.resumeTarget)) {
+        problems.push(`case ${item.id}: resumeTarget ${item.resumeTarget} not found on the résumé (${lang})`)
+      }
+      if (item.id === 'ocr-extraction') {
+        // The page's meta (name, title, description) goes into the HTML head, llms.txt and the JSON-LD.
+        const meta = t('meta.case-ocr-extraction')
+        const full = [
+          ...texts, ...item.decisions.map((decision) => decision.text), item.resumeTarget,
+          meta.name, meta.title, meta.description,
+        ].join('\n')
+        for (const rule of OCR_FORBIDDEN) {
+          const match = full.match(rule)
+          if (match) problems.push(`case ${item.id}: confidential text "${match[0]}" (${lang})`)
+        }
+      }
+    }
+    const ui = [t('caseStudies.indexTitle'), t('caseStudies.indexIntro'), ...Object.values(t('caseStudies.labels'))]
+    if (ui.some((text) => !text.trim())) problems.push(`case studies: has an empty UI text (${lang})`)
   }
   return problems
 }

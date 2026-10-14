@@ -2,9 +2,10 @@ import { useTranslation } from "react-i18next";
 import { Highlight } from "../../components/Highlight";
 import type { Achievement } from "../../i18n/locales/pt";
 import { track } from "../../lib/analytics";
-import { jobHref, type Lang } from "../../lib/route";
+import { caseRoute } from "../../content/caseStudies";
+import { href, jobHref, type Lang } from "../../lib/route";
 
-/** A home achievement: result on top, title, a short text and a link to its part of the résumé. Never names a company. */
+/** A home achievement: result on top, title, a short text and a link to its part of the résumé (or to a case study, when it has one). Never names a company. */
 export function AchievementCard({ achievement }: { achievement: Achievement }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
@@ -20,10 +21,10 @@ export function AchievementCard({ achievement }: { achievement: Achievement }) {
       </p>
       <a
         className="achievement__link"
-        href={jobHref(achievement.target, lang)}
+        href={achievement.caseStudy ? href(caseRoute(achievement.caseStudy), lang) : jobHref(achievement.target, lang)}
         onClick={() => track("home_achievement", { id: achievement.id })}
       >
-        {t("home.achievementLink")}
+        {achievement.caseStudy ? t("resume.caseStudyLink") : t("home.achievementLink")}
       </a>
     </article>
   );

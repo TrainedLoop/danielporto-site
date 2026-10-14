@@ -59,6 +59,29 @@ export type Achievement = {
   title: string;
   text: string;
   target: string;
+  /** Optional case study the card links to instead of the résumé. */
+  caseStudy?: CaseId;
+};
+
+export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction";
+
+/**
+ * A case study page. `result`, `decisions[].text` and `outcome[]` may contain `**…**`;
+ * `resumeTarget` is the résumé anchor id (a job id or "projects"). The OCR case is anonymous:
+ * its text must not name a company, client, year or "freelance" (checked at build time).
+ */
+export type CaseStudy = {
+  id: CaseId;
+  title: string;
+  result: string;
+  role: string;
+  stack: string[];
+  context: string;
+  problem: string;
+  decisions: { title: string; text: string }[];
+  flow: string[];
+  outcome: string[];
+  resumeTarget: string;
 };
 
 export type SkillGroup = { label: string; items: string[] };
@@ -213,7 +236,7 @@ const glance = {
 
 /** Fixed UI texts (top bar, home, résumé and credits), translated along with the content. */
 const ui = {
-  nav: { label: "Navegação", story: "história", resume: "currículo", language: "Idioma" },
+  nav: { label: "Navegação", story: "história", resume: "currículo", projects: "projetos", language: "Idioma" },
   footerCredits: "créditos dos sprites e da fonte",
   // Shown in the footer and on the story's ending screen (the story page has no footer).
   privacyNotice: "Este site registra visitas e sessões anônimas, sem cookies, para melhorar o conteúdo.",
@@ -234,6 +257,7 @@ const ui = {
         title: "Chat de IA em produção",
         text: "Fui responsável pela interface, pela integração com a LLM e pelos prompts de um chat de IA que responde perguntas sobre os dados do produto; nasceu de um protótipo de **3 dias** num hackathon interno do time.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
+        caseStudy: "ai-chat",
       },
       {
         id: "ai-agents",
@@ -260,6 +284,7 @@ const ui = {
     experience: "Experiência",
     earlyCareer: "Início de carreira",
     projects: "Projetos selecionados",
+    caseStudyLink: "ler o estudo de caso",
     contact: "Contato",
     skills: "Competências",
     contactCta: "Falar comigo",
@@ -443,12 +468,180 @@ const meta = {
     description:
       "Currículo do Daniel Porto, desenvolvedor full stack sênior na Purple Metrics: IA em produção, React, TypeScript, C#/.NET e mais de 10 anos de experiência.",
   },
+  projects: {
+    name: "Projetos",
+    title: "Projetos · Daniel Porto · Desenvolvedor Full Stack Sênior",
+    description:
+      "Três projetos contados do problema ao resultado: chat de IA em produção, CI/CD e design system, e extração de dados por nível de confiança.",
+  },
+  "case-ai-chat": {
+    name: "Chat de IA em produção",
+    title: "Chat de IA em produção · Daniel Porto",
+    description:
+      "Como um chat de IA que entende a página e age no dashboard saiu de um protótipo de 3 dias e chegou à produção com clientes: problema, decisões e resultado.",
+  },
+  "case-cicd-design-system": {
+    name: "CI/CD e design system",
+    title: "CI/CD e design system · Daniel Porto",
+    description:
+      "800+ deploys em produção e um design system com 45+ versões: o problema, as decisões e o resultado da esteira de CI/CD e do pacote de componentes.",
+  },
+  "case-ocr-extraction": {
+    name: "Extração de dados por nível de confiança",
+    title: "Extração de dados por nível de confiança · Daniel Porto",
+    description:
+      "377 de 380 campos corretos, nenhuma leitura errada e serviço pago em menos de 3% dos campos: OCR e LLM em cascata para ler medições em imagens.",
+  },
   credits: {
     name: "Créditos",
     title: "Créditos dos sprites e da fonte · Daniel Porto",
     description:
       "Autores e licenças da arte em pixel art do site do Daniel Porto: sprites do Liberated Pixel Cup e do OpenGameArt e a fonte Press Start 2P.",
   },
+};
+
+/** Case studies (/projetos/), in navigation order. */
+const caseStudies = {
+  indexTitle: "Projetos",
+  indexIntro: "Três projetos contados do problema ao resultado: as decisões, como funciona e o que mudou.",
+  labels: {
+    breadcrumb: "Projetos",
+    role: "Papel",
+    stack: "Stack",
+    context: "Contexto",
+    problem: "O problema",
+    decisions: "Decisões",
+    flow: "Como funciona",
+    outcome: "Resultado",
+    previous: "Projeto anterior",
+    next: "Próximo projeto",
+    resume: "ver no currículo",
+  },
+  items: [
+    {
+      id: "ai-chat",
+      title: "Chat de IA em produção",
+      result: "Um chat de IA **em produção com clientes**, que entende a página em que está aberto e age no dashboard.",
+      role: "Interface, integração com a LLM e prompts (refinados com o time de dados); proposta da arquitetura de ações.",
+      stack: ["React", "TypeScript", "Python", "Claude"],
+      context:
+        "A Purple Metrics é uma plataforma de Marketing Mix Modeling que mostra a marcas quanto cada canal de mídia realmente gera de resultado. Os clientes tiravam dúvidas direto no dashboard, pelos gráficos, ou perguntando ao time de CS.",
+      problem:
+        "Os dados já existiam, mas os insights não eram fáceis de alcançar. Muitas perguntas só tinham resposta cruzando dados que estavam em gráficos ou páginas diferentes.",
+      decisions: [
+        {
+          title: "Começar por um protótipo.",
+          text: "O chat nasceu de um protótipo que meu time construiu em **3 dias** num hackathon interno; fui responsável pela interface, pela integração com a LLM e pelos prompts.",
+        },
+        {
+          title: "Dar ao chat o contexto do cliente.",
+          text: "A primeira versão era um chat isolado, já com todo o contexto do cliente.",
+        },
+        {
+          title: "Sair do chat isolado.",
+          text: "Propus a arquitetura que dá ao chat o **contexto da página** em que ele está aberto e permite que ele **execute ações** nessa página ou fora dela, em vez de só responder em texto.",
+        },
+        {
+          title: "Respostas com dados de verdade.",
+          text: "O chat responde gerando SQL e chamando APIs em Python, com insights e gráficos.",
+        },
+      ],
+      flow: [
+        "Pergunta + contexto da página",
+        "Backend",
+        "LLM decide: consultar dados ou executar uma ação",
+        "O dashboard aplica a ação (abrir uma página, mudar um filtro, montar um gráfico)",
+      ],
+      outcome: [
+        "Uso pelos clientes e **adoção rápida**.",
+        "Clientes satisfeitos com o resultado.",
+        "Descobrimos **perguntas que não sabíamos que os clientes faziam**.",
+        "Hoje a estrutura de ações é a base para novas funcionalidades do chat.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+    },
+    {
+      id: "cicd-design-system",
+      title: "CI/CD e design system",
+      result: "**800+ deploys** em produção e um design system com **45+ versões** publicadas.",
+      role: "Criei a esteira de CI/CD do frontend e extraí o design system; sou o principal contribuidor do pacote.",
+      stack: ["GitHub Actions", "AWS (ECR/ECS)", "Terraform", "Playwright", "React", "Radix UI", "Storybook"],
+      context: "Um monólito foi virando vários projetos parecidos, mas que não garantiam componentes iguais.",
+      problem:
+        "Produtos com componentes diferentes para a mesma coisa, e uma esteira de entrega que precisava de ambientes de QA mais dinâmicos, testes na hora certa e deploys rastreáveis.",
+      decisions: [
+        {
+          title: "Design system como pacote npm próprio.",
+          text: "Facilita a distribuição entre os produtos, inclusive para quem não é programador e quer fazer uma POC ou um projeto rápido com IA usando os componentes oficiais.",
+        },
+        {
+          title: "Testes no momento certo.",
+          text: "Testes ao abrir o PR e E2E com Playwright antes do deploy, da forma mais rápida possível.",
+        },
+        { title: "Ambientes de QA sob demanda.", text: "" },
+        {
+          title: "Smoke tests em clientes reais.",
+          text: "Para achar erros antes que o cliente encontre.",
+        },
+      ],
+      flow: [
+        "PR com testes",
+        "Ambiente de QA sob demanda",
+        "E2E antes do deploy",
+        "Deploy rastreável",
+        "Smoke tests em clientes reais",
+      ],
+      outcome: [
+        "**800+ deploys** em produção, com deploys mais frequentes e rastreáveis.",
+        "Menos bugs chegando ao cliente.",
+        "Produtos com a mesma cara: o design system igualou os componentes.",
+        "Pessoas de fora do time de desenvolvimento montando POCs com o design system.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+    },
+    {
+      id: "ocr-extraction",
+      title: "Extração de dados por nível de confiança",
+      result: "**377 de 380** campos corretos, nenhuma leitura errada, e o serviço pago acionado em **menos de 3%** dos campos.",
+      role: "Desenhei e construí a esteira e treinei os dois modelos de visão (recorte e classificação).",
+      stack: ["YOLO", "OCR", "AWS Lambda", "Amazon Bedrock"],
+      context:
+        "Pessoas preenchiam planilhas e recortavam imagens à mão para registrar leituras de balanças e outros equipamentos de medição, em volumes de **milhares de imagens por dia**.",
+      problem: "Automatizar a leitura com custo baixo e alta confiança, num volume de milhares de imagens por dia.",
+      decisions: [
+        {
+          title: "Recortar como as pessoas recortavam.",
+          text: "Um modelo YOLO faz o recorte da imagem do jeito que os usuários já faziam manualmente.",
+        },
+        {
+          title: "Saber o que é a imagem antes de ler.",
+          text: "Um segundo modelo YOLO, de **4 classes**, identifica o tipo de imagem (item, post-it, balança e medidor de dimensões).",
+        },
+        {
+          title: "Cascata por custo e confiança.",
+          text: "OCR próprio numa Lambda pequena na AWS primeiro; se o resultado não passa nas regras, OCR em nuvem mais robusto; se ainda falha, uma LLM com o contexto de tudo o que aconteceu antes. Mandar tudo direto para a LLM sairia caro nesse volume, e as camadas davam **mais confiança** do que a LLM sozinha.",
+        },
+        {
+          title: "Regras por tipo de equipamento.",
+          text: "Cada tipo de balança ou medidor tem seu conjunto de regras para decidir se a leitura é válida ou se passa para a próxima etapa.",
+        },
+      ],
+      flow: [
+        "Recorte (YOLO)",
+        "Tipo de imagem (YOLO, 4 classes)",
+        "OCR em Lambda",
+        "OCR em nuvem",
+        "LLM com contexto",
+        "Validação humana (alimenta o retreino)",
+      ],
+      outcome: [
+        "Trabalho de **dias ou semanas** virou uma avaliação de **minutos**: as pessoas deixaram de preencher planilha e recortar imagens e passaram só a validar.",
+        "A validação humana serve de **retreino** para os modelos.",
+        "**377 de 380** campos corretos na leitura de telas de medição (os 3 restantes ficaram em branco, sem nenhuma leitura errada), com o serviço pago em **menos de 3%** dos campos.",
+      ],
+      resumeTarget: "projects",
+    },
+  ] satisfies CaseStudy[],
 };
 
 /** Sharing: alt text of the Open Graph image (public/og-image.png). */
@@ -468,7 +661,7 @@ const llms = {
   online: "Versão on-line",
 };
 
-const pt = { ...ui, meta, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
+const pt = { ...ui, meta, caseStudies, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
 
 /** The shape of the messages: en.ts must have exactly the same keys. */
 export type Messages = typeof pt;

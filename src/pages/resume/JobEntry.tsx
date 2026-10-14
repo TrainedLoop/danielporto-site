@@ -1,8 +1,16 @@
 import type { Job } from "../../i18n/locales/pt";
+import { useTranslation } from "react-i18next";
 import { Highlight } from "../../components/Highlight";
+import { CaseLinks } from "./CaseLinks";
 
 /** One job: company, role, period, one line of context, short bullets and the stack as tags. */
 export function JobEntry({ job }: { job: Job }) {
+  const { t } = useTranslation();
+  // Cases whose résumé anchor is this job (data-driven: caseStudies.items[].resumeTarget).
+  const caseIds = t("caseStudies.items")
+    .filter((item) => item.resumeTarget === job.id)
+    .map((item) => item.id);
+
   return (
     // The id is the anchor the story links to (/curriculo/#<id>).
     <article id={job.id} className="job">
@@ -29,6 +37,7 @@ export function JobEntry({ job }: { job: Job }) {
           <li key={item}>{item}</li>
         ))}
       </ul>
+      <CaseLinks ids={caseIds} />
     </article>
   );
 }
