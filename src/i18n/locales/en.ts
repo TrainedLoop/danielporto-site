@@ -1,7 +1,7 @@
 // English texts: the same keys as pt.ts (the Messages type enforces it), including the
 // pixel-art story and the credits.
 
-import type { Achievement, EarlyJob, Job, Messages, Project, SkillGroup } from "./pt";
+import type { Achievement, CaseStudy, EarlyJob, Job, Messages, Project, SkillGroup } from "./pt";
 
 const profile = {
   name: "Daniel Porto",
@@ -168,7 +168,7 @@ const glance = {
 
 /** Fixed UI texts (top bar, home, résumé and credits). */
 const ui = {
-  nav: { label: "Navigation", story: "story", resume: "résumé", language: "Language" },
+  nav: { label: "Navigation", story: "story", resume: "résumé", projects: "projects", language: "Language" },
   footerCredits: "sprite and font credits",
   privacyNotice: "This site records anonymous visits and sessions, without cookies, to improve its content.",
   home: {
@@ -214,6 +214,7 @@ const ui = {
     experience: "Experience",
     earlyCareer: "Early career",
     projects: "Selected projects",
+    caseStudyLink: "read the case study",
     contact: "Contact",
     skills: "Skills",
     contactCta: "Contact me",
@@ -385,12 +386,180 @@ const meta = {
     description:
       "Daniel Porto's career told as a pixel-art game: 8 levels, from his grandmother's house to AI in production at Purple Metrics.",
   },
+  projects: {
+    name: "Projects",
+    title: "Projects · Daniel Porto · Senior Full Stack Developer",
+    description:
+      "Three projects told from problem to outcome: an AI chat in production, CI/CD and a design system, and data extraction by confidence level.",
+  },
+  "case-ai-chat": {
+    name: "AI chat in production",
+    title: "AI chat in production · Daniel Porto",
+    description:
+      "How an AI chat that understands the page and acts on the dashboard went from a 3-day prototype to production with customers: problem, decisions and outcome.",
+  },
+  "case-cicd-design-system": {
+    name: "CI/CD and design system",
+    title: "CI/CD and design system · Daniel Porto",
+    description:
+      "800+ production deploys and a design system with 45+ versions: the problem, the decisions and the outcome of the CI/CD pipeline and the component package.",
+  },
+  "case-ocr-extraction": {
+    name: "Data extraction by confidence level",
+    title: "Data extraction by confidence level · Daniel Porto",
+    description:
+      "377 of 380 fields correct, no wrong readings and the paid service on under 3% of fields: cascading OCR and LLM to read measurements from images.",
+  },
   credits: {
     name: "Credits",
     title: "Sprite and font credits · Daniel Porto",
     description:
       "Authors and licenses of the pixel art on Daniel Porto's site: sprites from the Liberated Pixel Cup and OpenGameArt, and the Press Start 2P font.",
   },
+};
+
+/** Case studies (/en/projects/), in navigation order; same shape as the Portuguese ones. */
+const caseStudies = {
+  indexTitle: "Projects",
+  indexIntro: "Three projects told from problem to outcome: the decisions, how it works and what changed.",
+  labels: {
+    breadcrumb: "Projects",
+    role: "Role",
+    stack: "Stack",
+    context: "Context",
+    problem: "The problem",
+    decisions: "Decisions",
+    flow: "How it works",
+    outcome: "Outcome",
+    previous: "← Previous project",
+    next: "Next project →",
+    resume: "see on résumé",
+  },
+  items: [
+    {
+      id: "ai-chat",
+      title: "AI chat in production",
+      result: "An AI chat **in production with customers** that understands the page it is open on and acts on the dashboard.",
+      role: "Interface, LLM integration and prompts (refined with the data team); proposed the actions architecture.",
+      stack: ["React", "TypeScript", "Python", "Claude"],
+      context:
+        "Purple Metrics is a Marketing Mix Modeling platform that shows brands how much each media channel really delivers. Customers got their questions answered right in the dashboard, through the charts, or by asking the CS team.",
+      problem:
+        "The data already existed, but the insights were not easy to reach. Many questions could only be answered by combining data spread across different charts or pages.",
+      decisions: [
+        {
+          title: "Start with a prototype.",
+          text: "The chat grew out of a prototype my team built in **3 days** at an internal hackathon; I was responsible for the interface, the LLM integration and the prompts.",
+        },
+        {
+          title: "Give the chat the customer's context.",
+          text: "The first version was a standalone chat, already holding all of the customer's context.",
+        },
+        {
+          title: "Move past the standalone chat.",
+          text: "I proposed the architecture that gives the chat the **context of the page** it is open on and lets it **perform actions** on that page or outside it, instead of only answering in text.",
+        },
+        {
+          title: "Answers backed by real data.",
+          text: "The chat answers by generating SQL and calling Python APIs, with insights and charts.",
+        },
+      ],
+      flow: [
+        "Question + page context",
+        "Backend",
+        "LLM decides: query data or perform an action",
+        "The dashboard applies the action (open a page, change a filter, build a chart)",
+      ],
+      outcome: [
+        "Customers using it and **fast adoption**.",
+        "Customers happy with the result.",
+        "We discovered **questions we didn't know customers were asking**.",
+        "Today the actions structure is the foundation for new chat features.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+    },
+    {
+      id: "cicd-design-system",
+      title: "CI/CD and design system",
+      result: "**800+ deploys** to production and a design system with **45+ published versions**.",
+      role: "I built the front end's CI/CD pipeline and extracted the design system; I'm the package's main contributor.",
+      stack: ["GitHub Actions", "AWS (ECR/ECS)", "Terraform", "Playwright", "React", "Radix UI", "Storybook"],
+      context: "A monolith kept turning into several similar projects that didn't guarantee matching components.",
+      problem:
+        "Products with different components for the same thing, and a delivery pipeline that needed more dynamic QA environments, tests at the right moment and traceable deploys.",
+      decisions: [
+        {
+          title: "Design system as its own npm package.",
+          text: "It makes distribution across products easier, including for people who aren't programmers and want to build a POC or a quick AI project with the official components.",
+        },
+        {
+          title: "Tests at the right moment.",
+          text: "Tests when the PR is opened and E2E with Playwright before the deploy, as fast as possible.",
+        },
+        { title: "On-demand QA environments.", text: "" },
+        {
+          title: "Smoke tests on real customers.",
+          text: "To find errors before the customer does.",
+        },
+      ],
+      flow: [
+        "PR with tests",
+        "On-demand QA environment",
+        "E2E before the deploy",
+        "Traceable deploy",
+        "Smoke tests on real customers",
+      ],
+      outcome: [
+        "**800+ deploys** to production, with more frequent and traceable deploys.",
+        "Fewer bugs reaching customers.",
+        "Products that look the same: the design system made the components match.",
+        "People outside the development team building POCs with the design system.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+    },
+    {
+      id: "ocr-extraction",
+      title: "Data extraction by confidence level",
+      result: "**377 of 380** fields correct, no wrong readings, and the paid service called on **under 3%** of fields.",
+      role: "I designed and built the pipeline and trained the two vision models (cropping and classification).",
+      stack: ["YOLO", "OCR", "AWS Lambda", "Amazon Bedrock"],
+      context:
+        "People filled in spreadsheets and cropped images by hand to record readings from scales and other measuring equipment, at volumes of **thousands of images per day**.",
+      problem: "Automate the reading at low cost and high confidence, at a volume of thousands of images per day.",
+      decisions: [
+        {
+          title: "Crop the way people cropped.",
+          text: "A YOLO model crops the image the way users were already doing it by hand.",
+        },
+        {
+          title: "Know what the image is before reading it.",
+          text: "A second YOLO model, with **4 classes**, identifies the image type (item, sticky note, scale and dimensioning device).",
+        },
+        {
+          title: "A cascade by cost and confidence.",
+          text: "Our own OCR on a small AWS Lambda first; if the result doesn't pass the rules, a more robust cloud OCR; if it still fails, an LLM with the context of everything that happened before. Sending everything straight to the LLM would be expensive at this volume, and the layers gave **more confidence** than the LLM alone.",
+        },
+        {
+          title: "Rules per equipment type.",
+          text: "Each type of scale or measuring device has its own set of rules to decide whether a reading is valid or moves on to the next step.",
+        },
+      ],
+      flow: [
+        "Crop (YOLO)",
+        "Image type (YOLO, 4 classes)",
+        "OCR on Lambda",
+        "Cloud OCR",
+        "LLM with context",
+        "Human validation (feeds retraining)",
+      ],
+      outcome: [
+        "Work that took **days or weeks** became a review of **minutes**: people stopped filling in spreadsheets and cropping images and now only validate.",
+        "Human validation serves as **retraining** data for the models.",
+        "**377 of 380** fields correct when reading measuring-device screens (the other 3 were left blank, with no wrong readings), with the paid service on **under 3%** of fields.",
+      ],
+      resumeTarget: "projects",
+    },
+  ] satisfies CaseStudy[],
 };
 
 /** Sharing: alt text of the English Open Graph image (public/og-image.en.png). */
@@ -410,5 +579,5 @@ const llms = {
   online: "Online version",
 };
 
-const en: Messages = { ...ui, meta, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
+const en: Messages = { ...ui, meta, caseStudies, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
 export default en;
