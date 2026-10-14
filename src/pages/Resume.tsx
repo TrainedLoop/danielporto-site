@@ -43,7 +43,7 @@ export function Resume() {
           ))}
         </section>
         <EarlyCareer />
-        <section className="resume__section projects">
+        <section id="projects" className="resume__section projects">
           <h2>{t("resume.projects")}</h2>
           <div className="projects__grid">
             {projects.map((project) => (

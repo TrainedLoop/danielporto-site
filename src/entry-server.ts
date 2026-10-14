@@ -69,3 +69,21 @@ export function checkStory(fileExists: (path: string) => boolean): string[] {
   }
   return problems
 }
+
+/**
+ * Build-time sanity check of the home achievement cards: each one links to a résumé anchor,
+ * which is either the projects section or the id of a job, in every language.
+ */
+export function checkHomeAchievements(): string[] {
+  const problems: string[] = []
+  for (const lang of LANGS) {
+    const t = i18n.getFixedT(lang)
+    const anchors = new Set(['projects', ...[...t('experience'), ...t('earlyCareer')].map((job) => job.id)])
+    for (const achievement of t('home.achievements')) {
+      if (!anchors.has(achievement.target)) {
+        problems.push(`home: achievement ${achievement.id} target ${achievement.target} not found on the résumé (${lang})`)
+      }
+    }
+  }
+  return problems
+}

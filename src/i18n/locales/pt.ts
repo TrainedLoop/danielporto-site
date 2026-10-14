@@ -1,6 +1,7 @@
 // Portuguese texts (default language): the UI, page titles, home and résumé content, the
-// pixel-art story and the credits. Content keys: profile and highlights (home), glance (résumé
-// summary), experience, earlyCareer, projects and skillGroups (full résumé, also used by llms.txt).
+// pixel-art story and the credits. Content keys: profile and home.achievements (home), glance
+// (résumé summary), experience, earlyCareer, projects and skillGroups (full résumé, also used by
+// llms.txt).
 // Source: the revised LinkedIn profile (linkdin-update/linkedin-ptbr.md) and the old résumé.
 
 const profile = {
@@ -17,22 +18,6 @@ const profile = {
     { label: "contato@danielporto.com.br", href: "mailto:contato@danielporto.com.br" },
   ],
 };
-
-/** Short highlights for the home page. */
-const highlights = [
-  {
-    title: "IA em produção",
-    text: "Chat de IA em produção com clientes, servidor MCP e agentes de IA, um copiloto com permissões e LGPD e visão computacional.",
-  },
-  {
-    title: "Front-end",
-    text: "React e TypeScript no dashboard da Purple, um design system próprio e a esteira de CI/CD com mais de 800 deploys.",
-  },
-  {
-    title: "Back-end",
-    text: "Carreira construída em C#/.NET e SQL Server, com APIs, integrações e filas. Python nos projetos de IA.",
-  },
-];
 
 export type Job = {
   /** Stable anchor on the résumé, the same in both languages (the story links to it). */
@@ -62,6 +47,18 @@ export type Project = {
   did: string;
   result: string;
   stack: string[];
+};
+
+/**
+ * A home page achievement card: never names a company. `result` and `text` may contain `**…**`;
+ * `target` is the résumé anchor id (a job id or "projects").
+ */
+export type Achievement = {
+  id: "ai-chat" | "ai-agents" | "computer-vision";
+  result: string;
+  title: string;
+  text: string;
+  target: string;
 };
 
 export type SkillGroup = { label: string; items: string[] };
@@ -224,13 +221,35 @@ const ui = {
     avatarAlt: "Daniel em pixel art",
     hello: "Olá, eu sou",
     roleAt: "na",
-    choiceTitle: "Como você quer conhecer a minha trajetória?",
-    playLabel: "Jogar a história",
-    playHint: "Da casa da minha avó até a IA em produção, em 8 fases de pixel art. Uns 5 minutos.",
-    resumeLabel: "Ler o currículo",
-    resumeHint: "A versão em texto, direta ao ponto, começando pela experiência atual.",
-    highlightsLabel: "O que eu faço",
-    skillsLabel: "Competências",
+    viewResume: "Ver currículo",
+    achievementsLabel: "Conquistas",
+    achievementLink: "ver no currículo",
+    storyTitle: "Prefere conhecer jogando?",
+    storyText: "Da casa da minha avó até a IA em produção, em 8 fases de pixel art. Uns 5 minutos.",
+    storyCta: "Jogar a história",
+    achievements: [
+      {
+        id: "ai-chat",
+        result: "**em produção** com clientes",
+        title: "Chat de IA em produção",
+        text: "Fui responsável pela interface, pela integração com a LLM e pelos prompts de um chat de IA que responde perguntas sobre os dados do produto; nasceu de um protótipo de **3 dias** num hackathon interno do time.",
+        target: "purple-metrics-desenvolvedor-full-stack-senior",
+      },
+      {
+        id: "ai-agents",
+        result: "**spec → plano → execução**",
+        title: "Agentes de IA no time",
+        text: "Liderei a adoção de agentes de IA no desenvolvimento do time, com skills e regras para Claude Code e Cursor integradas ao Linear.",
+        target: "purple-metrics-desenvolvedor-full-stack-senior",
+      },
+      {
+        id: "computer-vision",
+        result: "**~95%** de precisão e recall",
+        title: "Visão computacional em produção",
+        text: "Modelos YOLO treinados com ~50 mil imagens, servidos em produção e retreinados com as correções dos operadores.",
+        target: "projects",
+      },
+    ] satisfies Achievement[],
   },
   resume: {
     roleAt: "na",
@@ -449,7 +468,7 @@ const llms = {
   online: "Versão on-line",
 };
 
-const pt = { ...ui, meta, share, llms, story, profile, highlights, experience, earlyCareer, projects, skillGroups, languages };
+const pt = { ...ui, meta, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
 
 /** The shape of the messages: en.ts must have exactly the same keys. */
 export type Messages = typeof pt;

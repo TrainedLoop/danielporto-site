@@ -557,20 +557,30 @@ button {
   line-height: 1.6;
 }
 
-.hero {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 32px;
-  align-items: center;
+.home {
+  /* Secondary text a step lighter than --muted (the same value as --resume-muted). */
+  --home-muted: #d3c6aa;
 }
 
-/* Avatar: the character standing, facing front (LPC "idle" sheet), scaled 3x without smoothing. */
+/* Compact top: the buttons and the start of the achievement cards fit in the first screen. */
+.hero {
+  /* Avatar box; the sprite sheet is scaled to match (two 64px frames per row, 4 rows). */
+  --avatar-size: 144px;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* Avatar: the character standing, facing front (LPC "idle" sheet), scaled without smoothing. */
 .hero__avatar {
-  width: 192px;
-  height: 192px;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  margin-top: 8px;
   background-repeat: no-repeat;
-  background-size: 384px 768px;
-  background-position: 0 -384px;
+  background-size: calc(2 * var(--avatar-size)) calc(4 * var(--avatar-size));
+  background-position: 0 calc(-2 * var(--avatar-size));
   image-rendering: pixelated;
   border: 4px solid var(--panel-border);
   background-color: var(--panel);
@@ -579,10 +589,10 @@ button {
 
 @keyframes avatar-idle {
   from {
-    background-position: 0 -384px;
+    background-position: 0 calc(-2 * var(--avatar-size));
   }
   to {
-    background-position: -384px -384px;
+    background-position: calc(-2 * var(--avatar-size)) calc(-2 * var(--avatar-size));
   }
 }
 
@@ -592,121 +602,151 @@ button {
 }
 
 .hero__name {
-  margin: 4px 0 8px;
+  margin: 2px 0 6px;
   font-family: var(--pixel-font);
-  font-size: clamp(22px, 4vw, 36px);
+  font-size: clamp(22px, 4vw, 32px);
   line-height: 1.3;
   color: var(--accent);
 }
 
 .hero__role {
-  margin: 0;
-  font-size: 20px;
+  margin: 0 0 12px;
+  font-size: 19px;
   font-weight: 700;
+  line-height: 1.4;
 }
 
-.hero__headline {
-  margin: 4px 0 16px;
-  color: var(--muted);
+.hero__pitch {
+  margin: 0 0 8px;
+  color: var(--home-muted);
 }
 
-.hero__intro {
-  margin: 0 0 16px;
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 18px;
 }
 
 .hero__links {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
-  margin: 0;
+  gap: 4px 16px;
+  margin: 0 0 0 4px;
   padding: 0;
   list-style: none;
-  color: var(--muted);
+  font-size: 14px;
 }
 
-.choice {
-  margin-top: 56px;
+/* Achievements: the résumé project-card border, result on top. */
+
+.achievements {
+  margin-top: 40px;
 }
 
-.choice__title {
+.achievements h2,
+.story-invite h2 {
   margin: 0 0 16px;
   font-family: var(--pixel-font);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
+  color: var(--accent);
 }
 
-.choice__options {
+.achievements__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
 }
 
-.choice__card {
-  display: grid;
-  gap: 8px;
-  padding: 20px;
-  color: var(--ink);
-  text-decoration: none;
+.achievement {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
   background: var(--panel);
   border: 4px solid var(--muted);
   box-shadow: 4px 4px 0 var(--bg), 8px 8px 0 rgba(0, 0, 0, 0.35);
-  transition: transform 0.1s steps(2);
 }
 
-.choice__card:hover,
-.choice__card:focus-visible {
-  border-color: var(--accent);
-  transform: translate(-2px, -2px);
-  outline: none;
+.achievement__result {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-.choice__card--play {
-  border-color: var(--accent);
+.achievement h3 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
-.choice__icon {
-  font-size: 28px;
-  color: var(--accent);
-  font-family: system-ui, sans-serif;
-}
-
-.choice__label {
-  font-family: var(--pixel-font);
-  font-size: 13px;
-}
-
-.choice__hint {
-  color: var(--muted);
-  font-size: 15px;
-}
-
-.highlights {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 48px;
-}
-
-.highlights .highlight {
-  padding: 16px;
-  border-top: 4px solid var(--accent);
-  background: rgba(42, 33, 51, 0.6);
-}
-
-.highlights .highlight h3 {
-  margin: 0 0 8px;
-  font-family: var(--pixel-font);
-  font-size: 11px;
-  color: var(--accent);
-}
-
-.highlights .highlight p {
+.achievement__text {
+  flex-grow: 1;
   margin: 0;
   font-size: 15px;
+  line-height: 1.6;
+  color: var(--home-muted);
 }
 
-.home-skills {
-  margin-top: 32px;
+.achievement__link {
+  align-self: flex-start;
+  font-size: 15px;
+}
+
+.achievement__link::after {
+  content: ' \2192';
+}
+
+/* A highlighted figure inside a sentence (`**…**` in the locales). */
+.home .highlight {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* The story invitation: pixel border, a lighter panel, inventory items, play button. */
+
+.story-invite {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px 24px;
+  align-items: center;
+  margin-top: 48px;
+  padding: 20px 24px;
+  background: var(--panel);
+  border: 4px solid var(--accent);
+  box-shadow: 4px 4px 0 var(--bg), 8px 8px 0 rgba(0, 0, 0, 0.35);
+}
+
+.story-invite__items {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-invite__items li {
+  padding: 4px;
+  background: var(--bg);
+  border: 2px solid rgba(184, 169, 140, 0.5);
+}
+
+.story-invite__items img {
+  display: block;
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
+.story-invite h2 {
+  margin-bottom: 8px;
+}
+
+.story-invite p {
+  margin: 0;
+  color: var(--home-muted);
 }
 
 .chips {
@@ -788,8 +828,8 @@ button {
   gap: 12px;
 }
 
-.resume__pdf,
-.resume__cta {
+/* Shared buttons: the résumé header actions and the home hero. */
+.button {
   display: inline-block;
   padding: 12px 16px;
   font-family: var(--pixel-font);
@@ -802,22 +842,20 @@ button {
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
 }
 
-.resume__pdf {
+.button--secondary {
   color: var(--ink);
   background: var(--panel);
 }
 
-/* The main action: yellow, like the "play" card on the home page. */
-.resume__cta {
+/* The main action: yellow (résumé contact, home "view résumé" and "play the story"). */
+.button--primary {
   color: var(--bg);
   background: var(--accent);
   border-color: var(--accent);
 }
 
-.resume__pdf:hover,
-.resume__pdf:focus-visible,
-.resume__cta:hover,
-.resume__cta:focus-visible {
+.button:hover,
+.button:focus-visible {
   color: var(--bg);
   background: var(--accent);
   border-color: var(--ink);
@@ -968,7 +1006,8 @@ button {
 
 /* Story links land here (/curriculo/#<id>): stop below the fixed top bar. */
 .job,
-.early-career__item {
+.early-career__item,
+#projects {
   scroll-margin-top: var(--resume-sticky-top);
 }
 
@@ -1092,8 +1131,7 @@ button {
     flex-direction: column;
   }
 
-  .resume__pdf,
-  .resume__cta {
+  .resume__actions .button {
     width: 100%;
   }
 
@@ -1145,23 +1183,45 @@ button {
 
 /* ---------------------------------------------------------------- Phones */
 
-@media (max-width: 720px) {
-  .hero {
+@media (max-width: 900px) {
+  .story-invite {
     grid-template-columns: 1fr;
     justify-items: start;
   }
+}
 
-  .hero__avatar {
-    width: 128px;
-    height: 128px;
-    background-size: 256px 512px;
-    background-position: 0 -256px;
-    animation: none;
+@media (max-width: 720px) {
+  .hero {
+    --avatar-size: 96px;
+
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
-  .choice__options,
-  .highlights {
+  .hero__avatar {
+    margin-top: 0;
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero__links {
+    margin: 4px 0 0;
+  }
+
+  .achievements__grid {
     grid-template-columns: 1fr;
+  }
+
+  .story-invite {
+    padding: 16px;
+  }
+
+  .story-invite .button {
+    align-self: stretch;
+    justify-self: stretch;
   }
 }
 

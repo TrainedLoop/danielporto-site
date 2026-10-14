@@ -1,5 +1,5 @@
 import type { Job } from "../../i18n/locales/pt";
-import { Highlight } from "./Highlight";
+import { Highlight } from "../../components/Highlight";
 
 /** One job: company, role, period, one line of context, short bullets and the stack as tags. */
 export function JobEntry({ job }: { job: Job }) {

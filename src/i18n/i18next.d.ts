@@ -1,7 +1,7 @@
 import "i18next";
 import type pt from "./locales/pt";
 
-// Typed keys: t("home.playLabel") is checked by TypeScript against pt.ts.
+// Typed keys: t("home.storyCta") is checked by TypeScript against pt.ts.
 declare module "i18next" {
   interface CustomTypeOptions {
     defaultNS: "translation";

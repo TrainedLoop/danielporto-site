@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { CONTENT_DATE, formatContentDate } from "../../content/pages";
+import { contactHref } from "../../content/contact";
 import { href, type Lang } from "../../lib/route";
 
 type Props = {
@@ -12,7 +13,7 @@ export function ResumeHeader({ onDownloadPdf }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const profile = t("profile");
-  const email = profile.links.find((link) => link.href.startsWith("mailto:"))?.href.slice("mailto:".length);
+  const contact = contactHref(profile.links, t("resume.contactSubject"));
 
   return (
     <header className="resume__header">
@@ -24,14 +25,11 @@ export function ResumeHeader({ onDownloadPdf }: Props) {
         <p className="resume__location">{profile.location}</p>
       </div>
       <div className="resume__actions no-print">
-        <button type="button" className="resume__pdf" onClick={onDownloadPdf}>
+        <button type="button" className="button button--secondary" onClick={onDownloadPdf}>
           {t("resume.downloadPdf")}
         </button>
-        {email && (
-          <a
-            className="resume__cta"
-            href={`mailto:${email}?subject=${encodeURIComponent(t("resume.contactSubject"))}`}
-          >
+        {contact && (
+          <a className="button button--primary" href={contact}>
             {t("resume.contactCta")}
           </a>
         )}
