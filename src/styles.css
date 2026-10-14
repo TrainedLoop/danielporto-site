@@ -1176,7 +1176,7 @@ button {
 @media print {
   @page {
     size: A4;
-    margin: 16mm 15mm;
+    margin: 14mm 12mm;
   }
 
   .no-print {
@@ -1190,18 +1190,51 @@ button {
     color: #111;
   }
 
-  /* Until the print layout is designed: no sticky, clipped side column on paper. */
+  /*
+   * The printable width (~186mm) is under the 900px breakpoint, so the phone rules would apply:
+   * restore the two-column grid and a plain, un-sticky sidebar.
+   */
+  .resume {
+    --resume-muted: #444;
+
+    grid-template-columns: 55mm minmax(0, 1fr);
+    grid-template-areas:
+      'header header'
+      'sidebar glance'
+      'sidebar main';
+    grid-template-rows: auto auto 1fr;
+    column-gap: 7mm;
+    max-width: none;
+    /* 1px on the right so borders flush with the page edge aren't clipped. */
+    padding: 0 1px 0 0;
+    font-size: 9.5pt;
+    line-height: 1.3;
+  }
+
   .resume__sidebar {
     position: static;
     max-height: none;
     overflow: visible;
+    margin-top: 0;
+    padding: 0;
+    background: none;
+    border: 0;
   }
 
-  .resume {
-    max-width: none;
-    padding: 0;
-    font-size: 11pt;
-    line-height: 1.45;
+  .resume__contact ul {
+    display: block;
+  }
+
+  .resume__contact li + li {
+    margin-top: 3pt;
+  }
+
+  .resume__sidebar section + section {
+    margin-top: 12pt;
+  }
+
+  .skill-group + .skill-group {
+    margin-top: 8pt;
   }
 
   /* The id beats index.html's `#root > main a` rule, which paints links yellow. */
@@ -1217,57 +1250,162 @@ button {
     color: #444;
   }
 
+  .resume__header {
+    display: block;
+    padding-bottom: 8pt;
+    margin-bottom: 12pt;
+    border-bottom-color: #bbb;
+  }
+
   .resume__header h1 {
-    font-size: 20pt;
+    font-size: 18pt;
+    color: #3a2a6a;
   }
 
   .resume__role {
-    font-size: 12pt;
+    margin-top: 6pt;
+    font-size: 11.5pt;
   }
 
-  .resume__section {
-    margin-top: 18pt;
+  .resume__meta,
+  .resume__location,
+  .resume__contact,
+  .job__role,
+  .job__period,
+  .job__description,
+  .glance__label,
+  .skill-group h3,
+  .project-card__did {
+    color: #444;
   }
 
-  .resume__section h2 {
-    font-size: 10pt;
+  .resume__meta {
+    margin-top: 2pt;
+    font-size: 9pt;
+  }
+
+  .glance h2,
+  .resume__section h2,
+  .resume__sidebar h2 {
+    margin-bottom: 6pt;
+    padding-bottom: 4pt;
+    font-size: 8.5pt;
+    color: #3a2a6a;
     border-bottom-color: #bbb;
     break-after: avoid;
   }
 
+  .resume__section {
+    margin-top: 9pt;
+  }
+
   .resume__section h3 {
-    font-size: 11.5pt;
+    font-size: 10.5pt;
     break-after: avoid;
   }
 
-  .job + .job {
-    margin-top: 12pt;
+  /* On screen the figures are yellow; on paper they stay readable and bold. */
+  .resume .highlight {
+    color: #111;
+    font-weight: 700;
   }
 
-  .job__period {
-    font-size: 10pt;
+  .glance__pitch {
+    margin-bottom: 6pt;
+    font-size: 11pt;
   }
 
-  .resume__header h1,
-  .resume__section h2 {
+  .glance__stats {
+    gap: 6pt;
+    margin-top: 8pt;
+  }
+
+  .glance__stats li {
+    gap: 4pt;
+    padding: 6pt 8pt;
+    background: none;
+    border: 1px solid #bbb;
+    border-top: 3px solid #3a2a6a;
+  }
+
+  .glance__value {
+    font-size: 15pt;
     color: #3a2a6a;
   }
 
-  .resume__headline,
-  .resume__contact,
-  .resume__updated,
-  .job__role,
-  .job__period {
-    color: #444;
+  .glance__label {
+    font-size: 8.5pt;
+    line-height: 1.3;
   }
 
-  .chips li {
+  .job + .job {
+    margin-top: 7pt;
+  }
+
+  .job__period {
+    font-size: 9pt;
+  }
+
+  .job__bullets {
+    margin-top: 5pt;
+    padding-left: 14pt;
+  }
+
+  .job__bullets li + li {
+    margin-top: 3pt;
+  }
+
+  .job__bullets li::marker {
+    color: #111;
+  }
+
+  .job__stack {
+    margin-top: 6pt;
+  }
+
+  .early-career__item + .early-career__item {
+    margin-top: 6pt;
+  }
+
+  .projects__grid {
+    gap: 8pt;
+  }
+
+  .project-card {
+    gap: 3pt;
+    padding: 6pt 8pt;
+    background: none;
+    border: 1px solid #999;
+    box-shadow: none;
+  }
+
+  .project-card__result {
     font-size: 9.5pt;
+  }
+
+  .project-card__did {
+    font-size: 8.5pt;
+    line-height: 1.3;
+  }
+
+  .project-card h3 {
+    font-size: 10pt;
+  }
+
+  .resume .chips li {
+    padding: 0 4pt;
+    font-size: 8pt;
+    line-height: 1.5;
+    color: #111;
     background: none;
     border: 1px solid #999;
   }
 
-  .job {
+  /* Jobs may flow across pages; bullets, cards and the at-a-glance block stay whole. */
+  li,
+  .project-card,
+  .early-career__item,
+  .glance {
     break-inside: avoid;
   }
 }
