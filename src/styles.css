@@ -788,8 +788,8 @@ button {
   gap: 12px;
 }
 
-.resume__pdf,
-.resume__cta {
+/* Shared buttons: the résumé header actions and the home hero. */
+.button {
   display: inline-block;
   padding: 12px 16px;
   font-family: var(--pixel-font);
@@ -802,22 +802,20 @@ button {
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.35);
 }
 
-.resume__pdf {
+.button--secondary {
   color: var(--ink);
   background: var(--panel);
 }
 
 /* The main action: yellow, like the "play" card on the home page. */
-.resume__cta {
+.button--primary {
   color: var(--bg);
   background: var(--accent);
   border-color: var(--accent);
 }
 
-.resume__pdf:hover,
-.resume__pdf:focus-visible,
-.resume__cta:hover,
-.resume__cta:focus-visible {
+.button:hover,
+.button:focus-visible {
   color: var(--bg);
   background: var(--accent);
   border-color: var(--ink);
@@ -968,7 +966,8 @@ button {
 
 /* Story links land here (/curriculo/#<id>): stop below the fixed top bar. */
 .job,
-.early-career__item {
+.early-career__item,
+#projects {
   scroll-margin-top: var(--resume-sticky-top);
 }
 
@@ -1092,8 +1091,7 @@ button {
     flex-direction: column;
   }
 
-  .resume__pdf,
-  .resume__cta {
+  .resume__actions .button {
     width: 100%;
   }
 

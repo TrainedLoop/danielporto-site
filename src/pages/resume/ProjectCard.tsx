@@ -1,5 +1,5 @@
 import type { Project } from "../../i18n/locales/pt";
-import { Highlight } from "./Highlight";
+import { Highlight } from "../../components/Highlight";
 
 /** A selected project: result on top, then what was done and the stack. No dates or clients. */
 export function ProjectCard({ project }: { project: Project }) {
