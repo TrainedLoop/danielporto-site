@@ -1,5 +1,6 @@
 import { i18n } from "../i18n";
 import { LANGS, type Lang, type Page, type Route } from "../lib/route";
+import { flatSkills } from "./skills";
 import { CONTENT_DATE, LANG_CODE, ogImage, pageMeta, pageUrl, SITE_URL } from "./pages";
 
 /** Stable ids of the nodes shared by every page, so search engines merge them across pages and languages. */
@@ -29,7 +30,7 @@ function person(lang: Lang) {
     address: ADDRESS,
     ...(email && { email: email.href.slice("mailto:".length) }),
     sameAs: profile.links.filter((link) => link.href.startsWith("https://")).map((link) => link.href),
-    knowsAbout: t("skills"),
+    knowsAbout: flatSkills(t("skillGroups")),
     knowsLanguage: t("languages").map((language) => ({
       "@type": "Language",
       name: language.name,

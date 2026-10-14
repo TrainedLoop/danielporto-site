@@ -61,7 +61,7 @@ export function llmsTxt(): string {
 function resumeMarkdown(lang: Lang): string[] {
   const t = i18n.getFixedT(lang);
   const profile = t("profile");
-  const summary = t("summary");
+  const glance = t("resume.glance");
   const lines = [
     `## ${t("llms.languageName")}`,
     "",
@@ -74,17 +74,10 @@ function resumeMarkdown(lang: Lang): string[] {
     `- [${t("llms.online")}](${pageUrl("resume", lang)})`,
     ...contactLinks(lang),
     "",
-    `### ${t("resume.summary")}`,
+    `### ${t("resume.glanceTitle")}`,
     "",
-    profile.intro,
-    "",
-    `${summary.aiProjectsTitle}:`,
-    "",
-    ...summary.aiProjects.map((project) => `- ${project}`),
-    "",
-    summary.dailyAi,
-    "",
-    summary.stack,
+    ...glance.pitch.flatMap((sentence) => [sentence, ""]),
+    ...glance.stats.map((stat) => `- **${stat.value}** ${stat.label}`),
     "",
     `### ${t("resume.experience")}`,
     "",
@@ -92,10 +85,17 @@ function resumeMarkdown(lang: Lang): string[] {
   for (const job of t("experience")) {
     lines.push(`#### ${job.company} · ${job.role}`, "", job.period, "");
     if (job.description) lines.push(job.description, "");
-    lines.push(...job.bullets.map((bullet) => `- ${bullet}`), "");
+    lines.push(...job.bullets.map((bullet) => `- ${bullet}`), "", `Stack: ${job.stack.join(" · ")}`, "");
   }
-  lines.push(`### ${t("resume.skills")}`, "", t("skills").join(", "), "");
-  lines.push(`### ${t("resume.languages")}`, "", ...t("languages").map((l) => `- ${l.name} (${l.level})`), "");
+  lines.push(`### ${t("resume.earlyCareer")}`, "");
+  lines.push(...t("earlyCareer").map((job) => `- **${job.company}** · ${job.role} · ${job.period} — ${job.line}`), "");
+  // The projects block stays self-contained: no dates, clients or employers next to it.
+  lines.push(`### ${t("resume.projects")}`, "");
+  for (const project of t("projects")) {
+    lines.push(`#### ${project.title}`, "", project.did, "", project.result, "", `Stack: ${project.stack.join(" · ")}`, "");
+  }
+  lines.push(`### ${t("resume.skills")}`, "");
+  lines.push(...t("skillGroups").map((group) => `- **${group.label}:** ${group.items.join(" · ")}`), "");
   return lines;
 }
 
