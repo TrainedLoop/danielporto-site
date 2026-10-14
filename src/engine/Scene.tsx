@@ -267,7 +267,9 @@ export function Scene({ phase, onItem, onNext, autoStart = false, sectionRef }: 
               </span>{" "}
               {t("story.scene.pressStart")}
             </span>
-            <span className="phase__hint">{t("story.scene.startHint")}</span>
+            {/* Only one shows: "click, or press Enter" with a keyboard, "tap to start" on touch screens (CSS). */}
+            <span className="phase__hint phase__hint--keyboard">{t("story.scene.startHint")}</span>
+            <span className="phase__hint phase__hint--touch">{t("story.scene.startHintTouch")}</span>
           </button>
         )}
 

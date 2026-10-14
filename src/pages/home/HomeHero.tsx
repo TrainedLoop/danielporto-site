@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { contactHref } from "../../content/contact";
+import { ContactButton } from "../../components/ContactButton";
+import { linkedInHref } from "../../content/contact";
 import { track } from "../../lib/analytics";
 import { href, type Lang } from "../../lib/route";
 
@@ -10,9 +11,9 @@ export function HomeHero() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const profile = t("profile");
-  const contact = contactHref(profile.links, t("resume.contactSubject"));
-  // The email is behind the contact button; the remaining links (LinkedIn, GitHub) go in small text.
-  const links = profile.links.filter((link) => !link.href.startsWith("mailto:"));
+  // LinkedIn is behind the contact button; the remaining links (GitHub, email) go in small text.
+  const linkedIn = linkedInHref(profile.links);
+  const links = profile.links.filter((link) => link.href !== linkedIn);
 
   return (
     <section className="hero">
@@ -37,11 +38,7 @@ export function HomeHero() {
           <a className="button button--primary" href={href("resume", lang)} onClick={() => track("home_choice", { option: "resume" })}>
             {t("home.viewResume")}
           </a>
-          {contact && (
-            <a className="button button--secondary" href={contact} onClick={() => track("home_choice", { option: "contact" })}>
-              {t("resume.contactCta")}
-            </a>
-          )}
+          <ContactButton variant="secondary" onClick={() => track("home_choice", { option: "contact" })} />
           <ul className="hero__links">
             {links.map((link) => (
               <li key={link.href}>

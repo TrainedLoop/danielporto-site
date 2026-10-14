@@ -12,7 +12,7 @@ const CASE_ROUTES: Record<CaseId, Route> = {
 export const caseRoute = (id: CaseId): Route => CASE_ROUTES[id];
 
 /** The case study shown on a route, or null if the route isn't a case study page. */
-export function caseIdOf(route: Route): CaseId | null {
+export function caseIdOf(route: string): CaseId | null {
   const entry = Object.entries(CASE_ROUTES).find(([, caseRouteId]) => caseRouteId === route);
   return entry ? (entry[0] as CaseId) : null;
 }

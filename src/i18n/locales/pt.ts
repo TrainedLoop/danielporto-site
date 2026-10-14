@@ -278,7 +278,7 @@ const ui = {
   resume: {
     roleAt: "na",
     playStory: "▶ jogar a história",
-    downloadPdf: "baixar PDF",
+    printPdf: "imprimir / salvar PDF",
     pdfTitle: "Daniel Porto - Currículo",
     glanceTitle: "Em 30 segundos",
     experience: "Experiência",
@@ -287,8 +287,7 @@ const ui = {
     caseStudyLink: "ler o estudo de caso",
     contact: "Contato",
     skills: "Competências",
-    contactCta: "Falar comigo",
-    contactSubject: "Contato pelo site",
+    contactCta: "Falar comigo no LinkedIn",
     glance,
     // {{date}}: the date the content last changed, in the page's language (src/content/pages.ts).
     updated: "Atualizado em {{date}}",
@@ -299,6 +298,14 @@ const ui = {
     intro:
       "Os personagens foram montados a partir do <lpc>Universal LPC Spritesheet Character Generator</lpc>, com arte do Liberated Pixel Cup e da comunidade do OpenGameArt. Cenários, objetos e telas foram desenhados para este site. Os textos nas telas usam a fonte Press Start 2P, de CodeMan38; os diálogos e as dicas da história, a VT323, de Peter Hull; e o texto corrido, a Inter, de Rasmus Andersson. As três estão sob a SIL Open Font License.",
     downloadCsv: "Baixar a lista completa (CSV)",
+  },
+  // Unknown paths (src/pages/NotFound.tsx).
+  notFound: {
+    title: "GAME OVER",
+    text: "Página não encontrada.",
+    hint: "Este endereço não existe no site. Que tal começar de novo?",
+    home: "voltar ao início",
+    resume: "ver o currículo",
   },
 };
 
@@ -312,6 +319,7 @@ const storyUi = {
     skipPhase: "pular fase",
     pressStart: "PRESS START",
     startHint: "clique, ou aperte Enter",
+    startHintTouch: "toque para começar",
     continue: "continuar",
     finish: "concluir",
     skip: "pular",
@@ -497,6 +505,13 @@ const meta = {
     title: "Créditos dos sprites e da fonte · Daniel Porto",
     description:
       "Autores e licenças da arte em pixel art do site do Daniel Porto: sprites do Liberated Pixel Cup e do OpenGameArt e a fonte Press Start 2P.",
+  },
+  // The not-found screen (dist/404.html): not a page of its own, so not in the sitemap or llms.txt.
+  "not-found": {
+    name: "Página não encontrada",
+    title: "Página não encontrada · Daniel Porto",
+    description:
+      "Este endereço não existe no site do Daniel Porto. Volte ao início para ver o currículo, os projetos e a história em pixel art.",
   },
 };
 

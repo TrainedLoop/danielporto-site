@@ -49,8 +49,13 @@ com o `<html lang>` certo, um único `h1` e sem erro no console nem aviso de hid
 tem rolagem horizontal a 360 px; o seletor PT · EN no currículo e num estudo de caso; o PDF do
 currículo (impressão em A4) com no máximo 2 páginas; os links da home e dos estudos de caso
 para o currículo param logo abaixo da barra do topo; o estudo de caso de OCR não cita empresa
-nem ano (nem no `<head>` e no JSON-LD); o link direto `/historia/?fase=3`; e, numa tela baixa
-de notebook (1366×768), a coluna lateral do currículo rola junto com a página. As requisições
+nem ano (nem no `<head>` e no JSON-LD); o link direto `/historia/?fase=3`; numa tela baixa
+de notebook (1366×768), a coluna lateral do currículo rola junto com a página; os botões de
+contato abrem o LinkedIn numa aba nova; a página não encontrada nos dois idiomas (o teste serve o
+`404.html`, que o `vite preview` não serve); os links da barra do topo com 44 px de altura no
+celular; na história, o inventário cabendo a 360 e 390 px, o diálogo livre do inventário com o
+celular deitado, as dicas de teclado só fora das telas de toque e a tela final com contato e
+currículo; o rodapé dos estudos de caso; e os créditos sem link para o endereço vazio do OpenGameArt. As requisições
 para o PostHog são bloqueadas nos testes.
 
 No CI (`.github/workflows/ci.yml`), os testes rodam depois do build em cada PR; se falharem, o
@@ -76,8 +81,9 @@ relatório HTML fica como artefato da execução (`playwright-report`).
   `scripts/prerender.js` renderiza cada rota com `react-dom/server` a partir dos componentes
   (`src/entry-server.ts`) e grava `dist/<rota>/index.html`, com título, descrição, canonical e
   `og:url` de cada página, `hreflang` apontando para a versão no outro idioma e, em inglês, a
-  imagem de compartilhamento em inglês (`og-image.en.png`). Também grava o `dist/404.html`, que
-  abre o app em caminhos desconhecidos, uma página que só redireciona em cada endereço antigo
+  imagem de compartilhamento em inglês (`og-image.en.png`). Também grava o `dist/404.html` (com
+  `noindex`), que o GitHub Pages serve em caminhos desconhecidos: uma tela "GAME OVER" de página
+  não encontrada, no idioma do prefixo do caminho (`/en/...` em inglês), uma página que só redireciona em cada endereço antigo
   (`dist/en/curriculo/`) e o `dist/sitemap.xml`, com todas as páginas e as alternativas de
   idioma. O build falha se alguma fala estiver sem texto ou se faltar algum sprite. No
   navegador, o React hidrata o HTML que já veio pronto.
@@ -129,7 +135,7 @@ Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página):
 | Evento | Quando | Propriedades |
 | --- | --- | --- |
 | `$pageview` | ao abrir o site e a cada troca de página | `route` (o caminho, ex.: `curriculo`, `en/story`) |
-| `home_choice` | clique em "Ver currículo", "Falar comigo" ou "Jogar a história" na home | `option`: `resume` \| `contact` \| `story` |
+| `home_choice` | clique em "Ver currículo", "Falar comigo no LinkedIn" ou "Jogar a história" na home | `option`: `resume` \| `contact` \| `story` |
 | `home_achievement` | clique em "ver no currículo" num card de conquista da home | `id`: `ai-chat` \| `ai-agents` \| `computer-vision` |
 | `phase_started` | uma fase da história começa (inclusive "ver de novo") | `phase` (0 a 7), `phase_id` |
 | `phase_completed` | a pessoa chega ao fim das falas de uma fase | `phase`, `phase_id` |

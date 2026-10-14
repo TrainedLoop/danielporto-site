@@ -23,5 +23,17 @@ for (const path of ["/curriculo/", "/en/resume/"]) {
       expect(fit.right).toBeLessThanOrEqual(fit.clientWidth);
       expect(fit.rows).toBe(1);
     });
+
+    // Touch-size screens (the compact bar, up to 560px): every link is at least 44px tall.
+    if (width <= 560) {
+      test(`${path} top bar links are 44px tap targets at ${width}px`, async ({ page }) => {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(path);
+        const heights = await page
+          .locator(".topbar a")
+          .evaluateAll((links) => links.map((link) => link.getBoundingClientRect().height));
+        for (const height of heights) expect(height).toBeGreaterThanOrEqual(44);
+      });
+    }
   }
 }

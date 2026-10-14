@@ -55,3 +55,20 @@ test("story deep link /historia/?fase=3 opens phase 3 of 8", async ({ page, prob
   await expect(page.locator(".story__count")).toHaveText("3/8");
   expect(problems).toEqual([]);
 });
+
+test.describe("case study footer", () => {
+  for (const width of [1366, 390]) {
+    test(`previous on the left, next on the right, résumé on its own row (${width}px)`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto("/projetos/ci-cd-design-system/");
+      const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
+      const nav = await box(".case__nav");
+      const previous = await box("a.case__previous");
+      const next = await box("a.case__next");
+      const resume = await box("a.case__resume");
+      expect(Math.round(previous.x)).toBe(Math.round(nav.x));
+      expect(Math.round(next.x + next.width)).toBe(Math.round(nav.x + nav.width));
+      expect(resume.y).toBeGreaterThanOrEqual(Math.max(previous.y + previous.height, next.y + next.height));
+    });
+  }
+});

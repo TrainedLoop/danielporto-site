@@ -32,7 +32,7 @@ export function Resume() {
 
   return (
     <main className="resume">
-      <ResumeHeader onDownloadPdf={() => printResume(t("resume.pdfTitle"))} />
+      <ResumeHeader onPrint={() => printResume(t("resume.pdfTitle"))} />
       <AtAGlance />
       <ResumeSidebar />
       <div className="resume__main">

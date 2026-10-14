@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ContactButton } from "../components/ContactButton";
 import { Scene } from "../engine/Scene";
 import { track } from "../lib/analytics";
 import { href, storyHref, storyPhase, type Lang } from "../lib/route";
@@ -154,7 +155,7 @@ export function Story() {
           <>
             {/* The page's only heading: the current phase (or, at the end, the ending title). */}
             <h1 className="story__progress" aria-live="polite">
-              {texts[phase.id].title}
+              <span className="story__title">{texts[phase.id].title}</span>
               <span className="story__count">
                 {current + 1}/{PHASES.length}
               </span>
@@ -175,8 +176,14 @@ export function Story() {
           <section className="next">
             <h1 className="next__level">{t("story.ending.title")}</h1>
             <p className="next__soon">{t("story.ending.text")}</p>
+            {/* The two actions the story leads to: talk to Daniel, or read the résumé. */}
+            <div className="next__actions">
+              <ContactButton variant="primary" />
+              <a className="button button--secondary" href={href("resume", lang)}>
+                {t("story.ending.resume")}
+              </a>
+            </div>
             <p className="next__links">
-              <a href={href("resume", lang)}>{t("story.ending.resume")}</a> ·{" "}
               <a href={href("home", lang)}>{t("story.ending.home")}</a> ·{" "}
               <a href={href("credits", lang)}>{t("story.ending.credits")}</a> ·{" "}
               <button
