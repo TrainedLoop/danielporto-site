@@ -55,6 +55,13 @@ export function checkStory(fileExists: (path: string) => boolean): string[] {
         problems.push(`${phase.id}: ${lang} has ${Object.keys(beats).length} beats, the phase has ${phase.beats.length}`)
       }
     }
+    if (phase.job) {
+      for (const lang of LANGS) {
+        const t = i18n.getFixedT(lang)
+        const ids = new Set([...t('experience'), ...t('earlyCareer')].map((job) => job.id))
+        if (!ids.has(phase.job)) problems.push(`${phase.id}: job ${phase.job} not found on the résumé (${lang})`)
+      }
+    }
     const sources = Object.values(phase.sprites).flatMap((src) => (typeof src === 'string' ? [src] : Object.values(src)))
     for (const src of new Set([...sources, phase.item.src])) {
       if (!fileExists(src.slice(base.length))) problems.push(`${phase.id}: missing sprite ${src}`)

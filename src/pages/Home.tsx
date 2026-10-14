@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { flatSkills } from "../content/skills";
 import { track } from "../lib/analytics";
 import { href, type Lang } from "../lib/route";
 
@@ -10,7 +11,7 @@ export function Home() {
   const lang = i18n.language as Lang;
   const profile = t("profile");
   const highlights = t("highlights");
-  const skills = t("skills");
+  const skills = flatSkills(t("skillGroups"));
   return (
     <main className="home">
       <section className="hero">

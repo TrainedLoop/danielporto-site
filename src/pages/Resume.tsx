@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { CONTENT_DATE, formatContentDate } from "../content/pages";
+import { flatSkills } from "../content/skills";
 import { href, type Lang } from "../lib/route";
 
 /** Opens the print dialog; the title becomes the suggested PDF name and is restored afterwards. */
@@ -16,10 +17,11 @@ export function Resume() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
   const profile = t("profile");
-  const summary = t("summary");
+  const glance = t("resume.glance");
   const experience = t("experience");
-  const skills = t("skills");
-  const languages = t("languages");
+  const earlyCareer = t("earlyCareer");
+  const projects = t("projects");
+  const skills = flatSkills(t("skillGroups"));
 
   // Coming from the story (/curriculo/#job-id), scroll to that phase's job.
   useEffect(() => {
@@ -56,16 +58,17 @@ export function Resume() {
       </header>
 
       <section className="resume__section">
-        <h2>{t("resume.summary")}</h2>
-        <p>{profile.intro}</p>
-        <h3>{summary.aiProjectsTitle}</h3>
+        <h2>{t("resume.glanceTitle")}</h2>
+        {glance.pitch.map((sentence) => (
+          <p key={sentence}>{sentence}</p>
+        ))}
         <ul>
-          {summary.aiProjects.map((project) => (
-            <li key={project}>{project}</li>
+          {glance.stats.map((stat) => (
+            <li key={stat.value}>
+              <strong>{stat.value}</strong> {stat.label}
+            </li>
           ))}
         </ul>
-        <p>{summary.dailyAi}</p>
-        <p>{summary.stack}</p>
       </section>
 
       <section className="resume__section">
@@ -84,6 +87,30 @@ export function Resume() {
                 <li key={bullet}>{bullet}</li>
               ))}
             </ul>
+            <p>{job.stack.join(" · ")}</p>
+          </article>
+        ))}
+      </section>
+
+      <section className="resume__section">
+        <h2>{t("resume.earlyCareer")}</h2>
+        <ul>
+          {earlyCareer.map((job) => (
+            <li key={job.id} id={job.id}>
+              {job.company} · {job.role} · {job.period}: {job.line}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="resume__section">
+        <h2>{t("resume.projects")}</h2>
+        {projects.map((project) => (
+          <article key={project.id} className="job">
+            <h3>{project.title}</h3>
+            <p>{project.did}</p>
+            <p>{project.result}</p>
+            <p>{project.stack.join(" · ")}</p>
           </article>
         ))}
       </section>
@@ -95,11 +122,6 @@ export function Resume() {
             <li key={skill}>{skill}</li>
           ))}
         </ul>
-      </section>
-
-      <section className="resume__section">
-        <h2>{t("resume.languages")}</h2>
-        <p>{languages.map((language) => `${language.name} (${language.level})`).join(" · ")}</p>
       </section>
     </main>
   );

@@ -18,20 +18,6 @@ const profile = {
   ],
 };
 
-/** Résumé summary (the LinkedIn "About"). */
-const summary = {
-  aiProjectsTitle: "Projetos de IA que desenvolvi",
-  aiProjects: [
-    "Projetei e implementei um copiloto de IA para uma plataforma analítica corporativa (Google ADK, Gemini): o agente consulta os dados com as permissões de quem pergunta, só lê da réplica de leitura, mascara dados pessoais antes de chegarem ao modelo (LGPD) e tem limite de custo por pergunta.",
-    "Treinei e coloquei em produção modelos de visão computacional (YOLO) com quase 50 mil imagens, versionados e servidos em ONNX na AWS, com cerca de 95% de precisão e recall na validação, e retreinados com as correções que os operadores fazem em produção.",
-    "Construí a extração de dados de imagens combinando OCR local, OCR em nuvem e LLM (Amazon Bedrock) por nível de confiança: na leitura de telas de medição, 377 de 380 campos corretos (os 3 restantes ficaram em branco, sem nenhuma leitura errada), com o serviço pago acionado em menos de 3% deles.",
-  ],
-  dailyAi:
-    "Também uso IA no desenvolvimento do dia a dia, de forma estruturada: escrevo skills, regras e fluxos para Claude Code e Cursor que o time usa, com especificação antes do código, plano revisado e testes.",
-  stack:
-    "Minha carreira começou no back-end com C#/.NET e SQL Server. Hoje, na Purple Metrics, trabalho com front-end (React e TypeScript), IA no produto e a esteira de CI/CD. Uso Python principalmente nos projetos de IA (FastAPI, LiteLLM). No dia a dia também lido com Docker, GitHub Actions, Azure DevOps e AWS.",
-};
-
 /** Short highlights for the home page. */
 const highlights = [
   {
@@ -55,8 +41,30 @@ export type Job = {
   role: string;
   period: string;
   description?: string;
+  /** Short impact bullets; `**…**` marks the highlighted figure. */
   bullets: string[];
+  stack: string[];
 };
+
+/** Older jobs, shown as a single line each (the ids are still story anchors). */
+export type EarlyJob = {
+  id: string;
+  company: string;
+  role: string;
+  period: string;
+  line: string;
+};
+
+/** A selected project: no dates, clients or employers, on purpose. `result` may contain `**…**`. */
+export type Project = {
+  id: "ai-copilot" | "computer-vision" | "confidence-extraction";
+  title: string;
+  did: string;
+  result: string;
+  stack: string[];
+};
+
+export type SkillGroup = { label: string; items: string[] };
 
 /** Experience, from the most recent to the oldest. */
 const experience: Job[] = [
@@ -68,13 +76,28 @@ const experience: Job[] = [
     description:
       "Plataforma de Marketing Mix Modeling (MMM) que mostra a marcas quanto cada canal de mídia realmente gera de resultado.",
     bullets: [
-      "Chat de IA em produção com clientes: responde perguntas em linguagem natural sobre os dados do dashboard, gerando SQL, chamando APIs em Python e respondendo com insights e gráficos. Nasceu de um protótipo que meu time construiu em 3 dias num hackathon interno; fui responsável pela interface, pela integração com a LLM e pelos prompts (refinados com o time de dados) e sigo construindo a versão atual com o time.",
-      "Propus a arquitetura de comunicação entre o chat de IA e o dashboard, que permite à IA navegar e aplicar ações na interface; hoje uso essa estrutura para implementar novas funcionalidades.",
-      "Criei a prova de conceito de servidor MCP (Model Context Protocol) da Purple, conectando as APIs da plataforma a assistentes de IA.",
-      "Desenvolvo o dashboard do produto (React, TypeScript, Vite, TanStack Query, Zustand, Tailwind, Recharts), incluindo otimização e alocação de orçamento, simulação, curvas de saturação e o fluxo de data setup.",
-      "Liderei a adoção de agentes de IA no desenvolvimento do time, com as decisões tomadas em conjunto: montei a estrutura de skills e regras (Claude Code e Cursor) do repositório, com fluxo spec → plano → execução integrado ao Linear.",
-      "Extraí o design system para um pacote npm próprio, com Radix UI, Storybook e releases automatizados; sou o principal contribuidor e ele já tem mais de 45 versões publicadas.",
-      "Criei a esteira de CI/CD do frontend no GitHub Actions (build, lint, deploy em ECR/ECS, ambientes de QA, revisão de código automatizada e testes E2E com Playwright), com mais de 800 deploys em produção, e faço manutenções na infraestrutura AWS (Terraform) junto ao time.",
+      "Fui responsável pela interface, pela integração com a LLM e pelos prompts do **chat de IA** que responde perguntas sobre os dados do dashboard e está em produção com clientes; nasceu de um protótipo que meu time construiu em **3 dias** num hackathon interno.",
+      "Propus a arquitetura que permite à IA **navegar e aplicar ações** no dashboard, base das novas funcionalidades do chat.",
+      "Criei a prova de conceito do **servidor MCP** da Purple, conectando as APIs da plataforma a assistentes de IA.",
+      "Desenvolvo o dashboard do produto: alocação e otimização de orçamento, simulação, curvas de saturação e data setup.",
+      "Liderei a adoção de **agentes de IA** no desenvolvimento do time: skills e regras para Claude Code e Cursor, com fluxo spec → plano → execução integrado ao Linear.",
+      "Extraí o **design system** para um pacote npm próprio, com **45+ versões** publicadas; sou o principal contribuidor.",
+      "Criei a esteira de **CI/CD** do frontend (lint, ambientes de QA, revisão automatizada, E2E com Playwright, deploy em ECS): **800+ deploys** em produção.",
+    ],
+    stack: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "TanStack Query",
+      "Zustand",
+      "Tailwind",
+      "Recharts",
+      "Radix UI",
+      "Storybook",
+      "GitHub Actions",
+      "AWS",
+      "Terraform",
+      "Playwright",
     ],
   },
   {
@@ -84,81 +107,112 @@ const experience: Job[] = [
     period: "ago 2019 – jun 2023",
     description: "Onde tive o primeiro contato sério com IA, antes do boom.",
     bullets: [
-      "SmartVision, plataforma de treino e inferência de modelos de visão computacional: criei as APIs que dão suporte à aplicação React, integrando toda a fila de treino e inferência com Hangfire. Usei CQRS, com a entrada de dados no MySQL (facilitando a consulta da equipe de visão) e a consulta dos dados consolidados do front num MongoDB. Colaborei no front-end com React, Redux e Styled Components.",
+      "Criei as APIs do **SmartVision**, plataforma de treino e inferência de visão computacional, com a fila de treino e inferência em Hangfire e CQRS (MySQL na escrita, MongoDB na leitura).",
       "Participei do software de um carro que fotografava os postes da Light pela cidade, como os carros do Google.",
-      "Urban, aplicativo de mobilidade urbana: colaborei no app em React Native, com Styled Components, Redux e integração com o Google Maps.",
-      "SmartAssets: manutenção e novas funcionalidades na plataforma, com MySQL, WebForms e DevExpress.",
+      "Colaborei no app de mobilidade **Urban** (React Native, Google Maps) e no front-end do SmartVision (React, Redux).",
+      "Mantive e evoluí a plataforma SmartAssets (WebForms, DevExpress, MySQL).",
     ],
+    stack: ["C# / .NET", "Hangfire", "MySQL", "MongoDB", "React", "Redux", "React Native"],
   },
   {
     id: "fulllab-retail-solutions-lider-tecnico",
     company: "Fulllab | retail solutions",
     role: "Líder técnico",
     period: "mai 2017 – ago 2019",
-    description: "Líder técnico de um time de 4 pessoas.",
+    description: "Líder técnico de um time de **4 pessoas**.",
     bullets: [
-      "Mobfiq (V2): reestruturei o projeto para atender às novas demandas dos clientes e implementei uma API comum a todos eles, com injeção de dependência para novas plataformas e cenários específicos.",
-      "Mobfiq (Magento): criei um plugin em PHP para a plataforma Magento, que controlava a interface da loja e o fluxo de compra.",
-      "Portal de migração da Danone: processamento das planilhas dos gerentes com as regras de negócio para alimentar o ERP, com .NET Core 2.2, Entity Framework Core e React.",
-      "Moblite (Loja Integrada): integração de e-commerce por engenharia reversa, com web scraper e Selenium, e APIs em .NET Core com MongoDB.",
+      "Reestruturei o **Mobfiq** com uma API comum a todos os clientes e injeção de dependência para novas plataformas.",
+      "Criei um plugin em PHP para o Magento que controlava a interface da loja e o fluxo de compra.",
+      "Portal de migração da **Danone**: regras de negócio sobre as planilhas dos gerentes para alimentar o ERP.",
+      "Integrei lojas sem API por engenharia reversa (web scraping com Selenium), com APIs em .NET Core e MongoDB.",
     ],
+    stack: [".NET Core", "Entity Framework Core", "MongoDB", "React", "PHP", "Selenium"],
   },
+];
+
+/** Early career: one line per job. */
+const earlyCareer: EarlyJob[] = [
   {
     id: "fulllab-retail-solutions-desenvolvedor-net",
     company: "Fulllab | retail solutions",
     role: "Desenvolvedor .NET",
     period: "set 2015 – mai 2017",
-    bullets: [
-      "Mobfiq (V1): API de integração com a VTEX em .NET 4.5, Dapper e MySQL, estudando o comportamento da plataforma por engenharia reversa, quando ainda não havia documentação; endpoints para o aplicativo mobile.",
-      "Mobfiq (Sephora): web scraper com .NET 4.5 e Selenium para integrar a loja da Sephora, que não tinha API nem documentação.",
-    ],
+    line: "Integração com a VTEX antes de existir documentação e integração da Sephora por web scraping (.NET, Dapper, MySQL, Selenium).",
   },
   {
     id: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
     company: "Hebara Distribuidora de Produtos Lotéricos",
     role: "Programador júnior",
     period: "set 2013 – set 2015",
-    bullets: [
-      "Desenvolvimento da intranet da empresa, com os primeiros deploys em produção (C#, .NET MVC, WebForms, NHibernate, jQuery, Bootstrap e Oracle).",
-      "Suporte ao sistema interno e novas funcionalidades no portal principal da empresa.",
-      "Reestruturação dos sites da Raspadinha do Rio e do Rio de Prêmios.",
-    ],
+    line: "Intranet e portal da empresa, com meus primeiros deploys em produção (C#, .NET MVC, Oracle).",
   },
 ];
 
-/** Skills (the first five are the main ones). */
-const skills = [
-  "Inteligência artificial (IA)",
-  "React",
-  "TypeScript",
-  "C# / .NET",
-  "Visão computacional",
-  "Agentes de IA",
-  "Model Context Protocol (MCP)",
-  "Google ADK",
-  "Claude Code",
-  "Cursor",
-  "Amazon Bedrock",
-  "LGPD / privacidade em IA",
-  "OCR",
-  "YOLO",
-  "Python",
-  "FastAPI",
-  "Design Systems",
-  "Playwright",
-  "PostgreSQL",
-  "SQL Server",
-  "GitHub Actions",
-  "CI/CD",
-  "AWS",
-  "Terraform",
+/** Selected projects. Never add dates, clients, employers or the word "freelance". */
+const projects: Project[] = [
+  {
+    id: "ai-copilot",
+    title: "Copiloto de IA com permissões e LGPD",
+    did: "Agente que consulta dados de uma plataforma analítica com as permissões de quem pergunta, só na réplica de leitura, mascarando dados pessoais antes de chegarem ao modelo.",
+    result: "Custo limitado por pergunta.",
+    stack: ["Google ADK", "Gemini"],
+  },
+  {
+    id: "computer-vision",
+    title: "Visão computacional em produção",
+    did: "Modelos YOLO treinados com **~50 mil imagens**, servidos em ONNX na AWS e retreinados com as correções dos operadores.",
+    result: "**~95%** de precisão e recall na validação.",
+    stack: ["YOLO", "ONNX", "AWS"],
+  },
+  {
+    id: "confidence-extraction",
+    title: "Extração de dados por nível de confiança",
+    did: "OCR local, OCR em nuvem e LLM em cascata para ler telas de medição.",
+    result: "**377 de 380** campos corretos, nenhuma leitura errada, serviço pago em **< 3%** dos campos.",
+    stack: ["OCR", "Amazon Bedrock"],
+  },
 ];
 
-const languages = [
-  // code: BCP 47, for the structured data (knowsLanguage); not shown on the page.
-  { name: "Português", level: "nativo", code: "pt-BR" },
-  { name: "Inglês", level: "intermediário", code: "en" },
+/** Skills by group; the flat list (home, JSON-LD) is derived from these (src/content/skills.ts). */
+const skillGroups: SkillGroup[] = [
+  {
+    label: "IA",
+    items: [
+      "Agentes de IA",
+      "Model Context Protocol (MCP)",
+      "Google ADK",
+      "Amazon Bedrock",
+      "Visão computacional",
+      "YOLO",
+      "OCR",
+      "LGPD / privacidade em IA",
+      "Claude Code",
+      "Cursor",
+    ],
+  },
+  { label: "Frontend", items: ["React", "TypeScript", "Design Systems"] },
+  { label: "Backend", items: ["C# / .NET", "Python", "FastAPI", "PostgreSQL", "SQL Server"] },
+  { label: "Infra e qualidade", items: ["CI/CD", "GitHub Actions", "AWS", "Terraform", "Playwright"] },
 ];
+
+// code: BCP 47, for the structured data (knowsLanguage); not shown on the page.
+const languages = [
+  { name: "Português", code: "pt-BR" },
+  { name: "Inglês", code: "en" },
+];
+
+/** At-a-glance block of the résumé: two pitch sentences and three headline figures. */
+const glance = {
+  pitch: [
+    "Desenvolvedor full stack sênior, com mais de 10 anos construindo produto: do back-end em C#/.NET ao front-end em React e TypeScript.",
+    "Levo IA para produção com o que uma empresa exige: permissão por usuário, controle de custo, proteção de dados pessoais e qualidade medida em dados reais.",
+  ],
+  stats: [
+    { value: "10+", label: "anos construindo produto" },
+    { value: "800+", label: "deploys em produção da esteira que criei" },
+    { value: "45+", label: "versões publicadas do design system que extraí" },
+  ],
+};
 
 /** Fixed UI texts (top bar, home, résumé and credits), translated along with the content. */
 const ui = {
@@ -183,10 +237,15 @@ const ui = {
     playStory: "▶ jogar a história",
     downloadPdf: "baixar PDF",
     pdfTitle: "Daniel Porto - Currículo",
-    summary: "Resumo",
+    glanceTitle: "Em 30 segundos",
     experience: "Experiência",
+    earlyCareer: "Início de carreira",
+    projects: "Projetos selecionados",
+    contact: "Contato",
     skills: "Competências",
-    languages: "Idiomas",
+    contactCta: "Falar comigo",
+    contactSubject: "Contato pelo site",
+    glance,
     // {{date}}: the date the content last changed, in the page's language (src/content/pages.ts).
     updated: "Atualizado em {{date}}",
   },
@@ -390,7 +449,7 @@ const llms = {
   online: "Versão on-line",
 };
 
-const pt = { ...ui, meta, share, llms, story, profile, summary, highlights, experience, skills, languages };
+const pt = { ...ui, meta, share, llms, story, profile, highlights, experience, earlyCareer, projects, skillGroups, languages };
 
 /** The shape of the messages: en.ts must have exactly the same keys. */
 export type Messages = typeof pt;
