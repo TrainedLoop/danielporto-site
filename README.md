@@ -55,7 +55,8 @@ contato abrem o LinkedIn numa aba nova; a página não encontrada nos dois idiom
 `404.html`, que o `vite preview` não serve); os links da barra do topo com 44 px de altura no
 celular; na história, o inventário cabendo a 360 e 390 px, o diálogo livre do inventário com o
 celular deitado, as dicas de teclado só fora das telas de toque e a tela final com contato e
-currículo; o rodapé dos estudos de caso; e os créditos sem link para o endereço vazio do OpenGameArt. As requisições
+currículo; o rodapé dos estudos de caso; o card do projeto pessoal (rendermd) em `/projetos/`, com a imagem
+carregada e os links externos em aba nova, e o link do currículo para ele (`/projetos/#rendermd`); e os créditos sem link para o endereço vazio do OpenGameArt. As requisições
 para o PostHog são bloqueadas nos testes.
 
 No CI (`.github/workflows/ci.yml`), os testes rodam depois do build em cada PR; se falharem, o
@@ -141,7 +142,7 @@ Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página):
 | `phase_completed` | a pessoa chega ao fim das falas de uma fase | `phase`, `phase_id` |
 | `phase_skipped` | clique em "pular" | `phase`, `phase_id` |
 | `story_completed` | a tela de encerramento ("CONTINUA…") aparece | — |
-| `outbound_link` | clique em link para LinkedIn, GitHub ou email | `destination`: `linkedin` \| `github` \| `email`, `url` |
+| `outbound_link` | clique em link para LinkedIn, GitHub, email ou a demo do rendermd (projeto pessoal em `/projetos/`) | `destination`: `linkedin` \| `github` \| `email` \| `rendermd`, `url` |
 
 Até a troca do código para inglês, os eventos tinham nomes em português (`escolha_home`,
 `fase_iniciada`, `fase_concluida`, `fase_pulada`, `historia_concluida`, `link_externo`, com

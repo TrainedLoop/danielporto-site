@@ -2,8 +2,12 @@ import { useTranslation } from "react-i18next";
 import { Highlight } from "../../components/Highlight";
 import { caseRoute } from "../../content/caseStudies";
 import { href, type Lang } from "../../lib/route";
+import { PersonalProject } from "./PersonalProject";
 
-/** /projetos/: the three case studies as cards (result on top, title, the problem, link), in order. */
+/**
+ * /projetos/: the three case studies as cards (result on top, title, the problem, link), in
+ * order, then the personal project.
+ */
 export function ProjectsIndex() {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
@@ -30,6 +34,7 @@ export function ProjectsIndex() {
           </article>
         ))}
       </div>
+      <PersonalProject />
     </main>
   );
 }
