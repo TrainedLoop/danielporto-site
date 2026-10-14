@@ -36,7 +36,7 @@ const summary = {
 const highlights = [
   {
     title: "AI in production",
-    text: "Purple's AI chat, a copilot with permissions and LGPD compliance, computer vision, MCP and agents in the team's daily work.",
+    text: "An AI chat in production with customers, an MCP server and AI agents, a copilot with permissions and LGPD compliance, and computer vision.",
   },
   {
     title: "Front end",
