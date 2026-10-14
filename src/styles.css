@@ -153,8 +153,9 @@ a {
   white-space: nowrap;
 }
 
-/* On phones, the top bar with the language switch must fit on one line. */
-@media (max-width: 420px) {
+/* On phones, the top bar with the language switch must fit on one line. The full layout needs about
+   532px with the Portuguese labels, so switch to the compact one below 560px (tests/e2e/topbar.spec.ts). */
+@media (max-width: 560px) {
   .topbar {
     padding: 12px;
     font-size: 8px;
@@ -170,6 +171,17 @@ a {
 
   .topbar__short {
     display: inline;
+  }
+}
+
+/* The narrowest phones (320px) need a little less spacing still. */
+@media (max-width: 359px) {
+  .topbar {
+    padding: 12px 8px;
+  }
+
+  .topbar__nav {
+    gap: 8px;
   }
 }
 
