@@ -1,5 +1,6 @@
 import { i18n } from "../i18n";
 import { LANGS, type Lang, type Page, type Route } from "../lib/route";
+import { caseIdOf } from "./caseStudies";
 import { flatSkills } from "./skills";
 import { CONTENT_DATE, LANG_CODE, ogImage, pageMeta, pageUrl, SITE_URL } from "./pages";
 
@@ -39,6 +40,10 @@ function person(lang: Lang) {
   };
 }
 
+/** Breadcrumb trail of a page: home, then the projects index for a case study, then the page. */
+const breadcrumbSteps = (route: Route): Route[] =>
+  caseIdOf(route) ? ["home", "projects", route] : ["home", route];
+
 /**
  * schema.org JSON-LD of a page, in its language: the WebSite, the page itself (ProfilePage
  * for home and résumé, WebPage for the others), Daniel as a Person and, on subpages, the
@@ -68,7 +73,7 @@ export function structuredData(page: Page) {
   const breadcrumb = {
     "@type": "BreadcrumbList",
     "@id": breadcrumbId,
-    itemListElement: (["home", route] as const).map((step, index) => ({
+    itemListElement: breadcrumbSteps(route).map((step, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: t(`meta.${step}.name`),

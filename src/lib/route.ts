@@ -3,9 +3,26 @@ import { pageMeta } from "../content/pages";
 import { setLang } from "../i18n";
 import { trackPageview } from "./analytics";
 
-export type Route = "home" | "story" | "resume" | "credits";
+export type Route =
+  | "home"
+  | "story"
+  | "resume"
+  | "projects"
+  | "case-ai-chat"
+  | "case-cicd-design-system"
+  | "case-ocr-extraction"
+  | "credits";
 
-export const ROUTES: Route[] = ["home", "story", "resume", "credits"];
+export const ROUTES: Route[] = [
+  "home",
+  "story",
+  "resume",
+  "projects",
+  "case-ai-chat",
+  "case-cicd-design-system",
+  "case-ocr-extraction",
+  "credits",
+];
 
 /** Page language: Portuguese by default, English under the /en/ prefix. */
 export type Lang = "pt" | "en";
@@ -21,8 +38,26 @@ export type Page = { route: Route; lang: Lang };
  * are internal; the Portuguese URLs keep their Portuguese slugs.
  */
 const PATHS: Record<Lang, Record<Route, string>> = {
-  pt: { home: "", story: "historia/", resume: "curriculo/", credits: "creditos/" },
-  en: { home: "en/", story: "en/story/", resume: "en/resume/", credits: "en/credits/" },
+  pt: {
+    home: "",
+    story: "historia/",
+    resume: "curriculo/",
+    projects: "projetos/",
+    "case-ai-chat": "projetos/chat-de-ia/",
+    "case-cicd-design-system": "projetos/ci-cd-design-system/",
+    "case-ocr-extraction": "projetos/extracao-ocr-llm/",
+    credits: "creditos/",
+  },
+  en: {
+    home: "en/",
+    story: "en/story/",
+    resume: "en/resume/",
+    projects: "en/projects/",
+    "case-ai-chat": "en/projects/ai-chat/",
+    "case-cicd-design-system": "en/projects/ci-cd-design-system/",
+    "case-ocr-extraction": "en/projects/ocr-llm-extraction/",
+    credits: "en/credits/",
+  },
 };
 
 /**

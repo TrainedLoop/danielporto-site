@@ -96,7 +96,8 @@ const OCR_FORBIDDEN = [/purple|fu2re|fulllab|hebara|freela/i, /\b(19|20)\d{2}\b/
 
 /**
  * Build-time sanity check of the case studies, per language: the three cases exist in order,
- * no text is empty, resumeTarget is a résumé anchor, and the OCR case passes the confidentiality rules.
+ * no text is empty, resumeTarget is a résumé anchor, and the OCR case (its texts and its page meta)
+ * passes the confidentiality rules.
  */
 export function checkCaseStudies(): string[] {
   const problems: string[] = []
@@ -121,7 +122,12 @@ export function checkCaseStudies(): string[] {
         problems.push(`case ${item.id}: resumeTarget ${item.resumeTarget} not found on the résumé (${lang})`)
       }
       if (item.id === 'ocr-extraction') {
-        const full = [...texts, ...item.decisions.map((decision) => decision.text), item.resumeTarget].join('\n')
+        // The page's meta (name, title, description) goes into the HTML head, llms.txt and the JSON-LD.
+        const meta = t('meta.case-ocr-extraction')
+        const full = [
+          ...texts, ...item.decisions.map((decision) => decision.text), item.resumeTarget,
+          meta.name, meta.title, meta.description,
+        ].join('\n')
         for (const rule of OCR_FORBIDDEN) {
           const match = full.match(rule)
           if (match) problems.push(`case ${item.id}: confidential text "${match[0]}" (${lang})`)

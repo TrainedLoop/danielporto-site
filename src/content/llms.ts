@@ -8,8 +8,17 @@ import { formatContentDate, pageMeta, pageUrl, SITE_URL } from "./pages";
  * English comes first; every page is listed in both languages.
  */
 
-/** Order of the pages in llms.txt: the résumé right after the home page. */
-const LLMS_ROUTES: Route[] = ["home", "resume", "story", "credits"];
+/** Order of the pages in llms.txt: the résumé right after the home page, then the case studies. */
+const LLMS_ROUTES: Route[] = [
+  "home",
+  "resume",
+  "projects",
+  "case-ai-chat",
+  "case-cicd-design-system",
+  "case-ocr-extraction",
+  "story",
+  "credits",
+];
 
 /** Languages in the order they appear in both files. */
 const LLMS_LANGS: Lang[] = ["en", "pt"];

@@ -1,8 +1,11 @@
 import { useEffect, type SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { equivalentHref, href, useRoute, type Lang, type Page, type Route } from './lib/route'
+import { caseIdOf } from './content/caseStudies'
 import { Credits } from './pages/Credits'
 import { Home } from './pages/Home'
+import { CaseStudyPage } from './pages/projects/CaseStudyPage'
+import { ProjectsIndex } from './pages/projects/ProjectsIndex'
 import { Resume } from './pages/Resume'
 import { Story } from './pages/Story'
 
@@ -35,6 +38,7 @@ function LangLink({ route, lang, current, label }: { route: Route; lang: Lang; c
 export default function App({ page: initial }: { page: Page }) {
   const { route, lang } = useRoute(initial)
   const { t } = useTranslation()
+  const caseId = caseIdOf(route)
 
   useEffect(() => {
     document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR'
@@ -43,8 +47,12 @@ export default function App({ page: initial }: { page: Page }) {
   return (
     <>
       <header className={`topbar topbar--${route} no-print`}>
-        <a className="topbar__name" href={href('home', lang)}>
-          Daniel Porto
+        {/* On phones the name shrinks to its initials so the bar (three links + PT · EN) fits on one line. */}
+        <a className="topbar__name" href={href('home', lang)} aria-label="Daniel Porto">
+          <span className="topbar__full">Daniel Porto</span>
+          <span className="topbar__short" aria-hidden="true">
+            DP
+          </span>
         </a>
         <nav className="topbar__nav" aria-label={t('nav.label')}>
           <a href={href('story', lang)} aria-current={route === 'story' ? 'page' : undefined}>
@@ -52,6 +60,9 @@ export default function App({ page: initial }: { page: Page }) {
           </a>
           <a href={href('resume', lang)} aria-current={route === 'resume' ? 'page' : undefined}>
             {t('nav.resume')}
+          </a>
+          <a href={href('projects', lang)} aria-current={route === 'projects' || caseId ? 'page' : undefined}>
+            {t('nav.projects')}
           </a>
           <span className="topbar__lang" role="group" aria-label={t('nav.language')}>
             <LangLink route={route} lang="pt" current={lang} label="PT" />
@@ -64,6 +75,8 @@ export default function App({ page: initial }: { page: Page }) {
       {route === 'home' && <Home />}
       {route === 'story' && <Story />}
       {route === 'resume' && <Resume />}
+      {route === 'projects' && <ProjectsIndex />}
+      {caseId && <CaseStudyPage id={caseId} />}
       {route === 'credits' && <Credits />}
 
       {route !== 'story' && (
