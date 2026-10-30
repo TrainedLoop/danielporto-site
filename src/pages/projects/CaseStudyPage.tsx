@@ -8,7 +8,7 @@ import { FlowDiagram } from "./FlowDiagram";
 
 /**
  * One case study: breadcrumb, title, result, an optional screenshot, facts (role, stack), optional
- * links to the live app and its code, then context, problem, decisions, how it works and outcome. The footer walks the cases in order and links to the
+ * public links (the live app, the code), then context, problem, decisions, how it works and outcome. The footer walks the cases in order and links to the
  * résumé entry the case comes from.
  */
 export function CaseStudyPage({ id }: { id: CaseId }) {
@@ -53,18 +53,20 @@ export function CaseStudyPage({ id }: { id: CaseId }) {
       </dl>
       {item.links && (
         <p className="case__links">
-          <a className="button button--primary" href={item.links.demo} target="_blank" rel="noopener">
-            {labels.demo}{" "}
-            <span className="icon" aria-hidden="true">
-              ↗
-            </span>
-          </a>
-          <a className="button button--secondary" href={item.links.code} target="_blank" rel="noopener">
-            {labels.code}{" "}
-            <span className="icon" aria-hidden="true">
-              ↗
-            </span>
-          </a>
+          {item.links.map((link, i) => (
+            <a
+              key={link.href}
+              className={`button ${i === 0 ? "button--primary" : "button--secondary"}`}
+              href={link.href}
+              target="_blank"
+              rel="noopener"
+            >
+              {link.label}{" "}
+              <span className="icon" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          ))}
         </p>
       )}
 

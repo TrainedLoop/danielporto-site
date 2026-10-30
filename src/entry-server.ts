@@ -90,7 +90,7 @@ export function checkHomeAchievements(): string[] {
 }
 
 /** Ids of the case studies, in navigation order. */
-const CASE_IDS: CaseId[] = ['ai-chat', 'cicd-design-system', 'ocr-extraction', 'sealdown']
+const CASE_IDS: CaseId[] = ['ai-chat', 'cicd-design-system', 'ocr-extraction', 'sealdown', 'ai-workflow']
 
 /** The OCR case is anonymous: no employer, client, year or "freelance" may appear in its text. */
 const OCR_FORBIDDEN = [/purple|fu2re|fulllab|hebara|freela/i, /\b(19|20)\d{2}\b/]

@@ -17,6 +17,7 @@ const LLMS_ROUTES: Route[] = [
   "case-cicd-design-system",
   "case-ocr-extraction",
   "case-sealdown",
+  "case-ai-workflow",
   "story",
   "credits",
 ];

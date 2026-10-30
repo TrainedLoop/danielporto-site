@@ -63,7 +63,7 @@ export type Achievement = {
   caseStudy?: CaseId;
 };
 
-export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction" | "sealdown";
+export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction" | "sealdown" | "ai-workflow";
 
 /**
  * A case study page. `result`, `decisions[].text` and `outcome[]` may contain `**…**`;
@@ -85,8 +85,8 @@ export type CaseStudy = {
   resumeTarget: string;
   /** A screenshot shown at the top of the page; `src` and `srcSmall` (800px wide) are paths from the site root (public/). */
   image?: { src: string; srcSmall?: string; width: number; height: number; alt: string };
-  /** The live app and its source code, opened in a new tab. */
-  links?: { demo: string; code: string };
+  /** Public links (the live app, the code...), opened in a new tab; the first one is the primary button. */
+  links?: { label: string; href: string }[];
 };
 
 export type SkillGroup = { label: string; items: string[] };
@@ -270,6 +270,7 @@ const ui = {
         title: "Agentes de IA no time",
         text: "Liderei a adoção de agentes de IA no desenvolvimento do time, com skills e regras para Claude Code e Cursor integradas ao Linear.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
+        caseStudy: "ai-workflow",
       },
       {
         id: "computer-vision",
@@ -490,7 +491,7 @@ const meta = {
     name: "Projetos",
     title: "Projetos · Daniel Porto · Desenvolvedor Full Stack Sênior",
     description:
-      "Quatro projetos do problema ao resultado: chat de IA em produção, CI/CD e design system, extração de dados por confiança e o Sealdown.",
+      "Cinco projetos do problema ao resultado: chat de IA, CI/CD e design system, extração de dados por confiança, o Sealdown e agentes de IA.",
   },
   "case-ai-chat": {
     name: "Chat de IA em produção",
@@ -516,6 +517,12 @@ const meta = {
     description:
       "Markdown e JSON compartilhados por link e editados em tempo real, criptografados no navegador: o servidor nunca lê o conteúdo. Problema, decisões e resultado.",
   },
+  "case-ai-workflow": {
+    name: "Desenvolvimento com agentes de IA",
+    title: "Desenvolvimento com agentes de IA · Daniel Porto",
+    description:
+      "Como uso agentes de IA para escrever código com processo: spec, plano, um agente por tarefa, revisão e testes que barram o erro antes do merge.",
+  },
   credits: {
     name: "Créditos",
     title: "Créditos dos sprites e da fonte · Daniel Porto",
@@ -534,7 +541,7 @@ const meta = {
 /** Case studies (/projetos/), in navigation order. */
 const caseStudies = {
   indexTitle: "Projetos",
-  indexIntro: "Quatro projetos contados do problema ao resultado: as decisões, como funciona e o que mudou.",
+  indexIntro: "Cinco projetos contados do problema ao resultado: as decisões, como funciona e o que mudou.",
   labels: {
     breadcrumb: "Projetos",
     role: "Papel",
@@ -547,8 +554,6 @@ const caseStudies = {
     previous: "Projeto anterior",
     next: "Próximo projeto",
     resume: "ver no currículo",
-    demo: "Abrir",
-    code: "Código",
   },
   items: [
     {
@@ -727,7 +732,62 @@ const caseStudies = {
         height: 1200,
         alt: "O Sealdown no modo dividido: à esquerda o Markdown de exemplo, à direita o texto renderizado com um diagrama Mermaid (Write → Seal → Share).",
       },
-      links: { demo: "https://trainedloop.github.io/sealdown/", code: "https://github.com/TrainedLoop/sealdown" },
+      links: [
+        { label: "Abrir", href: "https://trainedloop.github.io/sealdown/" },
+        { label: "Código", href: "https://github.com/TrainedLoop/sealdown" },
+      ],
+    },
+    {
+      id: "ai-workflow",
+      title: "Desenvolvimento com agentes de IA",
+      result:
+        "Agentes de IA escrevem o código; eu decido o quê e por quê. Um fluxo **spec → plano → execução**, com revisão a cada etapa e testes que barram o erro antes do merge.",
+      role: "Liderei a adoção no time da Purple Metrics e uso o mesmo fluxo nos meus projetos, onde o processo inteiro é público.",
+      stack: ["Claude Code", "Cursor", "Linear", "GitHub Actions", "Playwright"],
+      context:
+        "Na Purple Metrics, liderei a adoção de agentes de IA no desenvolvimento do time, com skills e regras para Claude Code e Cursor integradas ao Linear. Nos projetos pessoais uso o mesmo fluxo, e ali dá para ver tudo: as specs, os planos, os commits e os testes.",
+      problem:
+        "Um agente escreve código rápido, mas sem processo a velocidade vira retrabalho: decisões que se perdem entre uma conversa e outra, código que ninguém revisou de verdade e regras que o agente esquece.",
+      decisions: [
+        {
+          title: "Spec antes de código.",
+          text: "Toda mudança começa numa spec construída em conversa: o que muda, por quê e o que fica de fora. Eu reviso e corrijo os fatos antes de qualquer linha de código.",
+        },
+        {
+          title: "Plano em tarefas pequenas.",
+          text: "A spec vira um plano com tarefas pequenas, cada uma com os arquivos que mexe, as interfaces e como verificar que deu certo.",
+        },
+        {
+          title: "Um agente por tarefa, com revisão.",
+          text: "Cada tarefa vai para um subagente com contexto limpo, e o resultado é revisado antes da próxima.",
+        },
+        {
+          title: "Regras viram testes.",
+          text: "O que o agente pode esquecer vira teste ou checagem de build. Neste site, o build falha se um texto confidencial aparecer ou se um título sair do tamanho, e **100+ testes E2E** rodam em cada PR.",
+        },
+        {
+          title: "O merge é meu.",
+          text: "O agente abre o PR; eu testo localmente, reviso e faço o merge.",
+        },
+      ],
+      flow: [
+        "Spec (revisada por mim)",
+        "Plano em tarefas pequenas",
+        "Subagente por tarefa + revisão",
+        "CI: lint, build e testes E2E",
+        "Teste local e merge (eu)",
+      ],
+      outcome: [
+        "**Sealdown**: **7 specs e 7 planos** públicos no repositório, **116 commits** em 6 dias de trabalho e cerca de **430 testes**.",
+        "**Este site**: **25+ PRs**, cada um passando por lint, build com checagens de conteúdo e **100+ testes E2E**.",
+        "No time da Purple Metrics: skills e regras compartilhadas para Claude Code e Cursor, com o fluxo spec → plano → execução integrado ao Linear.",
+        "O código dos dois projetos pessoais é aberto: dá para conferir as specs, os commits e os testes.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+      links: [
+        { label: "Specs do Sealdown", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
+        { label: "Código do site", href: "https://github.com/TrainedLoop/danielporto-site" },
+      ],
     },
   ] satisfies CaseStudy[],
 };

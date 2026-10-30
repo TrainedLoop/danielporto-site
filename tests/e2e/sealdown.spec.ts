@@ -11,6 +11,7 @@ const CASES = [
     open: "Abrir",
     code: "Código",
     previous: "/projetos/extracao-ocr-llm/",
+    next: "/projetos/desenvolvimento-com-agentes/",
     resume: "/curriculo/#personal-project",
   },
   {
@@ -19,6 +20,7 @@ const CASES = [
     open: "Open",
     code: "Code",
     previous: "/en/projects/ocr-llm-extraction/",
+    next: "/en/projects/ai-agent-development/",
     resume: "/en/resume/#personal-project",
   },
 ];
@@ -42,7 +44,7 @@ async function expectPersonalProjectOnScreen(page: Page) {
   await expect(page.locator("#personal-project")).toBeInViewport({ ratio: 1 });
 }
 
-for (const { path, title, open, code, previous, resume } of CASES) {
+for (const { path, title, open, code, previous, next, resume } of CASES) {
   test.describe(path, () => {
     test("renders the case with its screenshot", async ({ page, problems }) => {
       await page.goto(path);
@@ -70,10 +72,10 @@ for (const { path, title, open, code, previous, resume } of CASES) {
       }
     });
 
-    test("is the last case: previous is the OCR case, no next", async ({ page }) => {
+    test("previous is the OCR case, next is the AI agents case", async ({ page }) => {
       await page.goto(path);
       await expect(page.locator("a.case__previous")).toHaveAttribute("href", previous);
-      await expect(page.locator("a.case__next")).toHaveCount(0);
+      await expect(page.locator("a.case__next")).toHaveAttribute("href", next);
       await expect(page.locator("a.case__resume")).toHaveAttribute("href", resume);
     });
   });

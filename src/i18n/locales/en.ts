@@ -196,6 +196,7 @@ const ui = {
         title: "AI agents on the team",
         text: "I led the adoption of AI agents in the team's development, with skills and rules for Claude Code and Cursor integrated with Linear.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
+        caseStudy: "ai-workflow",
       },
       {
         id: "computer-vision",
@@ -402,7 +403,7 @@ const meta = {
     name: "Projects",
     title: "Projects · Daniel Porto · Senior Full Stack Developer",
     description:
-      "Four projects from problem to outcome: an AI chat in production, CI/CD and a design system, data extraction by confidence level, and Sealdown.",
+      "Five projects from problem to outcome: an AI chat, CI/CD and a design system, data extraction by confidence level, Sealdown and AI agents.",
   },
   "case-ai-chat": {
     name: "AI chat in production",
@@ -428,6 +429,12 @@ const meta = {
     description:
       "Markdown and JSON shared by link and edited in real time, encrypted in the browser: the server never reads the content. Problem, decisions and outcome.",
   },
+  "case-ai-workflow": {
+    name: "Development with AI agents",
+    title: "Development with AI agents · Daniel Porto",
+    description:
+      "How I use AI agents to write code with a process: spec, plan, one agent per task, review and tests that stop mistakes before the merge.",
+  },
   credits: {
     name: "Credits",
     title: "Sprite and font credits · Daniel Porto",
@@ -445,7 +452,7 @@ const meta = {
 /** Case studies (/en/projects/), in navigation order; same shape as the Portuguese ones. */
 const caseStudies = {
   indexTitle: "Projects",
-  indexIntro: "Four projects told from problem to outcome: the decisions, how it works and what changed.",
+  indexIntro: "Five projects told from problem to outcome: the decisions, how it works and what changed.",
   labels: {
     breadcrumb: "Projects",
     role: "Role",
@@ -458,8 +465,6 @@ const caseStudies = {
     previous: "Previous project",
     next: "Next project",
     resume: "see on résumé",
-    demo: "Open",
-    code: "Code",
   },
   items: [
     {
@@ -638,7 +643,62 @@ const caseStudies = {
         height: 1200,
         alt: "Sealdown in split mode: the sample Markdown on the left, and on the right the rendered text with a Mermaid diagram (Write → Seal → Share).",
       },
-      links: { demo: "https://trainedloop.github.io/sealdown/", code: "https://github.com/TrainedLoop/sealdown" },
+      links: [
+        { label: "Open", href: "https://trainedloop.github.io/sealdown/" },
+        { label: "Code", href: "https://github.com/TrainedLoop/sealdown" },
+      ],
+    },
+    {
+      id: "ai-workflow",
+      title: "Development with AI agents",
+      result:
+        "AI agents write the code; I decide what and why. A **spec → plan → execution** flow, with review at every step and tests that stop mistakes before the merge.",
+      role: "I led the adoption on the Purple Metrics team and use the same flow in my own projects, where the whole process is public.",
+      stack: ["Claude Code", "Cursor", "Linear", "GitHub Actions", "Playwright"],
+      context:
+        "At Purple Metrics, I led the adoption of AI agents in the team's development, with skills and rules for Claude Code and Cursor integrated with Linear. In my personal projects I use the same flow, and there everything is visible: the specs, the plans, the commits and the tests.",
+      problem:
+        "An agent writes code fast, but without a process that speed turns into rework: decisions lost between one conversation and the next, code nobody really reviewed, and rules the agent forgets.",
+      decisions: [
+        {
+          title: "Spec before code.",
+          text: "Every change starts with a spec built in conversation: what changes, why and what stays out. I review it and correct the facts before any line of code.",
+        },
+        {
+          title: "A plan of small tasks.",
+          text: "The spec becomes a plan of small tasks, each with the files it touches, the interfaces and how to check it worked.",
+        },
+        {
+          title: "One agent per task, with review.",
+          text: "Each task goes to a subagent with a clean context, and its result is reviewed before the next one.",
+        },
+        {
+          title: "Rules become tests.",
+          text: "Whatever the agent might forget becomes a test or a build check. On this site, the build fails if confidential text shows up or a title goes out of bounds, and **100+ E2E tests** run on every PR.",
+        },
+        {
+          title: "The merge is mine.",
+          text: "The agent opens the PR; I test it locally, review it and merge it.",
+        },
+      ],
+      flow: [
+        "Spec (reviewed by me)",
+        "Plan of small tasks",
+        "Subagent per task + review",
+        "CI: lint, build and E2E tests",
+        "Local test and merge (me)",
+      ],
+      outcome: [
+        "**Sealdown**: **7 specs and 7 plans** public in the repository, **116 commits** over 6 days of work and about **430 tests**.",
+        "**This site**: **25+ PRs**, each going through lint, a build with content checks and **100+ E2E tests**.",
+        "On the Purple Metrics team: shared skills and rules for Claude Code and Cursor, with the spec → plan → execution flow integrated with Linear.",
+        "The code of both personal projects is open: the specs, the commits and the tests can be checked.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+      links: [
+        { label: "Sealdown specs", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
+        { label: "Site code", href: "https://github.com/TrainedLoop/danielporto-site" },
+      ],
     },
   ] satisfies CaseStudy[],
 };
