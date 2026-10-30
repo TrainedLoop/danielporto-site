@@ -130,7 +130,8 @@ Privacidade:
   surveys, feature flags ou scripts extras do PostHog;
 - com Do Not Track ou Global Privacy Control ligado no navegador, o PostHog nem é carregado.
 
-Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página):
+Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página, e `app: danielporto-site`, que separa o site
+de outros apps no mesmo projeto do PostHog, como o Sealdown):
 
 | Evento | Quando | Propriedades |
 | --- | --- | --- |

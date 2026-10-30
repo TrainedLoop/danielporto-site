@@ -117,6 +117,10 @@ async function load() {
     // No batching: the event goes out right away, before an outbound link takes the visitor away.
     request_batching: false,
   });
+  // The PostHog project is shared with other apps (e.g. Sealdown sends app: "sealdown"):
+  // every event from this site, $pageview included, carries app: "danielporto-site".
+  // Registered before the queued events go out, so none of them miss it.
+  posthog.register({ app: "danielporto-site" });
   client = posthog;
   for (const [event, props] of queue.splice(0)) client.capture(event, props);
 }
