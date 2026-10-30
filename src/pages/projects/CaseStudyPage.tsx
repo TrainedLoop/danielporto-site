@@ -3,11 +3,12 @@ import { Highlight } from "../../components/Highlight";
 import { caseRoute } from "../../content/caseStudies";
 import type { CaseId } from "../../i18n/locales/pt";
 import { href, jobHref, type Lang } from "../../lib/route";
+import { CaseImage } from "./CaseImage";
 import { FlowDiagram } from "./FlowDiagram";
 
 /**
- * One case study: breadcrumb, title, result, facts (role, stack), then context, problem,
- * decisions, how it works and outcome. The footer walks the cases in order and links to the
+ * One case study: breadcrumb, title, result, an optional screenshot, facts (role, stack), optional
+ * links to the live app and its code, then context, problem, decisions, how it works and outcome. The footer walks the cases in order and links to the
  * résumé entry the case comes from.
  */
 export function CaseStudyPage({ id }: { id: CaseId }) {
@@ -31,6 +32,9 @@ export function CaseStudyPage({ id }: { id: CaseId }) {
       <p className="case__result">
         <Highlight text={item.result} />
       </p>
+      {item.image && (
+        <CaseImage image={item.image} className="case__image" sizes="(max-width: 920px) calc(100vw - 32px), 888px" />
+      )}
       <dl className="case__facts">
         <div>
           <dt>{labels.role}</dt>
@@ -47,6 +51,22 @@ export function CaseStudyPage({ id }: { id: CaseId }) {
           </dd>
         </div>
       </dl>
+      {item.links && (
+        <p className="case__links">
+          <a className="button button--primary" href={item.links.demo} target="_blank" rel="noopener">
+            {labels.demo}{" "}
+            <span className="icon" aria-hidden="true">
+              ↗
+            </span>
+          </a>
+          <a className="button button--secondary" href={item.links.code} target="_blank" rel="noopener">
+            {labels.code}{" "}
+            <span className="icon" aria-hidden="true">
+              ↗
+            </span>
+          </a>
+        </p>
+      )}
 
       <section className="case__section">
         <h2>{labels.context}</h2>

@@ -11,6 +11,7 @@ export type Route =
   | "case-ai-chat"
   | "case-cicd-design-system"
   | "case-ocr-extraction"
+  | "case-sealdown"
   | "credits";
 
 export const ROUTES: Route[] = [
@@ -21,6 +22,7 @@ export const ROUTES: Route[] = [
   "case-ai-chat",
   "case-cicd-design-system",
   "case-ocr-extraction",
+  "case-sealdown",
   "credits",
 ];
 
@@ -56,6 +58,7 @@ const PATHS: Record<Lang, Record<Route, string>> = {
     "case-ai-chat": "projetos/chat-de-ia/",
     "case-cicd-design-system": "projetos/ci-cd-design-system/",
     "case-ocr-extraction": "projetos/extracao-ocr-llm/",
+    "case-sealdown": "projetos/sealdown/",
     credits: "creditos/",
   },
   en: {
@@ -66,6 +69,7 @@ const PATHS: Record<Lang, Record<Route, string>> = {
     "case-ai-chat": "en/projects/ai-chat/",
     "case-cicd-design-system": "en/projects/ci-cd-design-system/",
     "case-ocr-extraction": "en/projects/ocr-llm-extraction/",
+    "case-sealdown": "en/projects/sealdown/",
     credits: "en/credits/",
   },
 };

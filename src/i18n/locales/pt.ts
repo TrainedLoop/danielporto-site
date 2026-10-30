@@ -63,12 +63,13 @@ export type Achievement = {
   caseStudy?: CaseId;
 };
 
-export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction";
+export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction" | "sealdown";
 
 /**
  * A case study page. `result`, `decisions[].text` and `outcome[]` may contain `**…**`;
- * `resumeTarget` is the résumé anchor id (a job id or "projects"). The OCR case is anonymous:
- * its text must not name a company, client, year or "freelance" (checked at build time).
+ * `resumeTarget` is the résumé anchor id (a job id, "projects" or "personal-project"). The OCR
+ * case is anonymous: its text must not name a company, client, year or "freelance" (checked at
+ * build time). `image` and `links` are optional (only the personal project has them).
  */
 export type CaseStudy = {
   id: CaseId;
@@ -82,6 +83,10 @@ export type CaseStudy = {
   flow: string[];
   outcome: string[];
   resumeTarget: string;
+  /** A screenshot shown at the top of the page; `src` and `srcSmall` (800px wide) are paths from the site root (public/). */
+  image?: { src: string; srcSmall?: string; width: number; height: number; alt: string };
+  /** The live app and its source code, opened in a new tab. */
+  links?: { demo: string; code: string };
 };
 
 export type SkillGroup = { label: string; items: string[] };
@@ -284,6 +289,11 @@ const ui = {
     experience: "Experiência",
     earlyCareer: "Início de carreira",
     projects: "Projetos selecionados",
+    // Kept apart from the selected projects (never inside them); links to its case study.
+    personalProject: {
+      title: "Projeto pessoal",
+      text: "Sealdown — Markdown e JSON compartilhados por link, criptografados no navegador e editados em tempo real.",
+    },
     caseStudyLink: "ler o estudo de caso",
     contact: "Contato",
     skills: "Competências",
@@ -480,7 +490,7 @@ const meta = {
     name: "Projetos",
     title: "Projetos · Daniel Porto · Desenvolvedor Full Stack Sênior",
     description:
-      "Três projetos contados do problema ao resultado: chat de IA em produção, CI/CD e design system, e extração de dados por nível de confiança.",
+      "Quatro projetos do problema ao resultado: chat de IA em produção, CI/CD e design system, extração de dados por confiança e o Sealdown.",
   },
   "case-ai-chat": {
     name: "Chat de IA em produção",
@@ -500,6 +510,12 @@ const meta = {
     description:
       "377 de 380 campos corretos, nenhuma leitura errada e serviço pago em menos de 3% dos campos: OCR e LLM em cascata para ler medições em imagens.",
   },
+  "case-sealdown": {
+    name: "Sealdown",
+    title: "Sealdown: documentos criptografados no navegador · Daniel Porto",
+    description:
+      "Markdown e JSON compartilhados por link e editados em tempo real, criptografados no navegador: o servidor nunca lê o conteúdo. Problema, decisões e resultado.",
+  },
   credits: {
     name: "Créditos",
     title: "Créditos dos sprites e da fonte · Daniel Porto",
@@ -518,7 +534,7 @@ const meta = {
 /** Case studies (/projetos/), in navigation order. */
 const caseStudies = {
   indexTitle: "Projetos",
-  indexIntro: "Três projetos contados do problema ao resultado: as decisões, como funciona e o que mudou.",
+  indexIntro: "Quatro projetos contados do problema ao resultado: as decisões, como funciona e o que mudou.",
   labels: {
     breadcrumb: "Projetos",
     role: "Papel",
@@ -531,6 +547,8 @@ const caseStudies = {
     previous: "Projeto anterior",
     next: "Próximo projeto",
     resume: "ver no currículo",
+    demo: "Abrir",
+    code: "Código",
   },
   items: [
     {
@@ -655,6 +673,61 @@ const caseStudies = {
         "**377 de 380** campos corretos na leitura de telas de medição (os 3 restantes ficaram em branco, sem nenhuma leitura errada), com o serviço pago em **menos de 3%** dos campos.",
       ],
       resumeTarget: "projects",
+    },
+    {
+      id: "sealdown",
+      title: "Sealdown: documentos que só quem tem o link lê",
+      result:
+        "Markdown e JSON compartilhados por link e editados em tempo real, **criptografados no navegador**: o servidor **nunca lê** o conteúdo.",
+      role: "Projeto pessoal: concebi e construí sozinho, com o Claude Code.",
+      stack: ["React", "TypeScript", "CodeMirror", "Yjs", "Web Crypto", "Supabase (Postgres, Realtime)", "Playwright", "Claude Code"],
+      context: "Eu queria compartilhar Markdown renderizado, com diagramas Mermaid, por um link privado, de graça e sem conta.",
+      problem:
+        "Por princípio, ninguém deveria conseguir ler um documento sem permissão, nem o servidor que o guarda. E, nos documentos ao vivo, quem tem só o link de leitura não pode conseguir escrever.",
+      decisions: [
+        {
+          title: "Criptografar no navegador.",
+          text: "Todo documento é criptografado com AES-GCM antes de sair do navegador. A chave vai no fragmento do link (depois do #), que nunca é enviado a um servidor. O Supabase só guarda texto cifrado.",
+        },
+        {
+          title: "Senha sem chave no link.",
+          text: "Com senha, a chave é derivada no próprio navegador (PBKDF2, **600 mil iterações**). Nem a senha nem a chave vão no link.",
+        },
+        {
+          title: "Leitura que não escreve.",
+          text: "Cada edição de um documento ao vivo é assinada com uma chave **Ed25519** derivada do token de edição, que só existe no link de edição. O link de leitura tem só a chave pública: confere as edições, mas não consegue criar uma válida. O servidor guarda apenas o hash do token.",
+        },
+        {
+          title: "Tempo real sem servidor próprio.",
+          text: "No Markdown, várias pessoas editam ao mesmo tempo com Yjs, e as edições trafegam cifradas e assinadas pelo Supabase Realtime. No JSON, o documento salva depois de uma pausa e faz merge por caminho, só pedindo escolha quando duas pessoas mudaram o mesmo valor.",
+        },
+        {
+          title: "IA com processo.",
+          text: "Construí com o Claude Code no fluxo spec → plano → execução: **7 specs e 7 planos**, um por fase do projeto.",
+        },
+      ],
+      flow: [
+        "Documento no navegador",
+        "Criptografa (AES-GCM)",
+        "Link com a chave depois do #",
+        "Supabase guarda só o cifrado",
+        "Quem tem o link decifra no navegador",
+      ],
+      outcome: [
+        "No ar, com o código aberto no GitHub.",
+        "**116 commits** em 6 dias de trabalho, todos com o Claude Code.",
+        "**Cerca de 430 testes**: ~220 unitários, ~209 E2E, mais testes visuais e de banco.",
+        "Edição em tempo real, histórico com versões nomeadas e modo JSON, sem contas e sem o servidor ler nada.",
+      ],
+      resumeTarget: "personal-project",
+      image: {
+        src: "projects/sealdown.webp",
+        srcSmall: "projects/sealdown-800.webp",
+        width: 1920,
+        height: 1200,
+        alt: "O Sealdown no modo dividido: à esquerda o Markdown de exemplo, à direita o texto renderizado com um diagrama Mermaid (Write → Seal → Share).",
+      },
+      links: { demo: "https://trainedloop.github.io/sealdown/", code: "https://github.com/TrainedLoop/sealdown" },
     },
   ] satisfies CaseStudy[],
 };

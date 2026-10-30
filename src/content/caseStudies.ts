@@ -6,6 +6,7 @@ const CASE_ROUTES: Record<CaseId, Route> = {
   "ai-chat": "case-ai-chat",
   "cicd-design-system": "case-cicd-design-system",
   "ocr-extraction": "case-ocr-extraction",
+  sealdown: "case-sealdown",
 };
 
 /** Route of a case study: "ai-chat" → "case-ai-chat". */
