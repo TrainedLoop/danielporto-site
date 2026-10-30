@@ -215,6 +215,10 @@ const ui = {
     experience: "Experience",
     earlyCareer: "Early career",
     projects: "Selected projects",
+    personalProject: {
+      title: "Personal project",
+      text: "Sealdown — Markdown and JSON shared by link, encrypted in the browser and edited in real time.",
+    },
     caseStudyLink: "read the case study",
     contact: "Contact",
     skills: "Skills",
@@ -398,7 +402,7 @@ const meta = {
     name: "Projects",
     title: "Projects · Daniel Porto · Senior Full Stack Developer",
     description:
-      "Three projects told from problem to outcome: an AI chat in production, CI/CD and a design system, and data extraction by confidence level.",
+      "Four projects from problem to outcome: an AI chat in production, CI/CD and a design system, data extraction by confidence level, and Sealdown.",
   },
   "case-ai-chat": {
     name: "AI chat in production",
@@ -418,6 +422,12 @@ const meta = {
     description:
       "377 of 380 fields correct, no wrong readings and the paid service on under 3% of fields: cascading OCR and LLM to read measurements from images.",
   },
+  "case-sealdown": {
+    name: "Sealdown",
+    title: "Sealdown: documents encrypted in the browser · Daniel Porto",
+    description:
+      "Markdown and JSON shared by link and edited in real time, encrypted in the browser: the server never reads the content. Problem, decisions and outcome.",
+  },
   credits: {
     name: "Credits",
     title: "Sprite and font credits · Daniel Porto",
@@ -435,7 +445,7 @@ const meta = {
 /** Case studies (/en/projects/), in navigation order; same shape as the Portuguese ones. */
 const caseStudies = {
   indexTitle: "Projects",
-  indexIntro: "Three projects told from problem to outcome: the decisions, how it works and what changed.",
+  indexIntro: "Four projects told from problem to outcome: the decisions, how it works and what changed.",
   labels: {
     breadcrumb: "Projects",
     role: "Role",
@@ -448,6 +458,8 @@ const caseStudies = {
     previous: "Previous project",
     next: "Next project",
     resume: "see on résumé",
+    demo: "Open",
+    code: "Code",
   },
   items: [
     {
@@ -572,6 +584,61 @@ const caseStudies = {
         "**377 of 380** fields correct when reading measuring-device screens (the other 3 were left blank, with no wrong readings), with the paid service on **under 3%** of fields.",
       ],
       resumeTarget: "projects",
+    },
+    {
+      id: "sealdown",
+      title: "Sealdown: documents only people with the link can read",
+      result:
+        "Markdown and JSON shared by link and edited in real time, **encrypted in the browser**: the server **never reads** the content.",
+      role: "Personal project: I conceived and built it on my own, with Claude Code.",
+      stack: ["React", "TypeScript", "CodeMirror", "Yjs", "Web Crypto", "Supabase (Postgres, Realtime)", "Playwright", "Claude Code"],
+      context: "I wanted to share rendered Markdown, with Mermaid diagrams, through a private link, for free and without an account.",
+      problem:
+        "As a matter of principle, no one should be able to read a document without permission, not even the server that stores it. And in live documents, someone with only the read link must not be able to write.",
+      decisions: [
+        {
+          title: "Encrypt in the browser.",
+          text: "Every document is encrypted with AES-GCM before it leaves the browser. The key goes in the link's fragment (after the #), which is never sent to a server. Supabase only stores ciphertext.",
+        },
+        {
+          title: "A password with no key in the link.",
+          text: "With a password, the key is derived in the browser itself (PBKDF2, **600,000 iterations**). Neither the password nor the key goes in the link.",
+        },
+        {
+          title: "Reading that can't write.",
+          text: "Every edit to a live document is signed with an **Ed25519** key derived from the edit token, which exists only in the edit link. The read link has only the public key: it verifies edits but can't create a valid one. The server stores only the token's hash.",
+        },
+        {
+          title: "Real time without a server of my own.",
+          text: "In Markdown, several people edit at the same time with Yjs, and the edits travel encrypted and signed through Supabase Realtime. In JSON, the document saves after a pause and merges by path, asking for a choice only when two people changed the same value.",
+        },
+        {
+          title: "AI with a process.",
+          text: "I built it with Claude Code in a spec → plan → execution flow: **7 specs and 7 plans**, one per phase of the project.",
+        },
+      ],
+      flow: [
+        "Document in the browser",
+        "Encrypt (AES-GCM)",
+        "Link with the key after the #",
+        "Supabase stores only ciphertext",
+        "Whoever has the link decrypts in the browser",
+      ],
+      outcome: [
+        "Live, with the code open on GitHub.",
+        "**116 commits** over 6 days of work, all with Claude Code.",
+        "**About 430 tests**: ~220 unit, ~209 E2E, plus visual and database tests.",
+        "Real-time editing, history with named versions and a JSON mode, with no accounts and no server reading anything.",
+      ],
+      resumeTarget: "personal-project",
+      image: {
+        src: "projects/sealdown.webp",
+        srcSmall: "projects/sealdown-800.webp",
+        width: 1920,
+        height: 1200,
+        alt: "Sealdown in split mode: the sample Markdown on the left, and on the right the rendered text with a Mermaid diagram (Write → Seal → Share).",
+      },
+      links: { demo: "https://trainedloop.github.io/sealdown/", code: "https://github.com/TrainedLoop/sealdown" },
     },
   ] satisfies CaseStudy[],
 };

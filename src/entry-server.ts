@@ -90,22 +90,25 @@ export function checkHomeAchievements(): string[] {
 }
 
 /** Ids of the case studies, in navigation order. */
-const CASE_IDS: CaseId[] = ['ai-chat', 'cicd-design-system', 'ocr-extraction']
+const CASE_IDS: CaseId[] = ['ai-chat', 'cicd-design-system', 'ocr-extraction', 'sealdown']
 
 /** The OCR case is anonymous: no employer, client, year or "freelance" may appear in its text. */
 const OCR_FORBIDDEN = [/purple|fu2re|fulllab|hebara|freela/i, /\b(19|20)\d{2}\b/]
 
+/** Résumé anchors a case can point to besides the jobs: the selected projects and the personal project. */
+const SECTION_ANCHORS = ['projects', 'personal-project']
+
 /**
- * Build-time sanity check of the case studies, per language: the three cases exist in order,
- * no text is empty, resumeTarget is a résumé anchor, and the OCR case (its texts and its page meta)
- * passes the confidentiality rules.
+ * Build-time sanity check of the case studies, per language: the cases exist in order,
+ * no text is empty, resumeTarget is a résumé anchor, an image has its alt text and size, and the
+ * OCR case (its texts and its page meta) passes the confidentiality rules.
  */
-export function checkCaseStudies(): string[] {
+export function checkCaseStudies(fileExists: (path: string) => boolean = () => true): string[] {
   const problems: string[] = []
   for (const lang of LANGS) {
     const t = i18n.getFixedT(lang)
     const items = t('caseStudies.items')
-    const anchors = new Set(['projects', ...[...t('experience'), ...t('earlyCareer')].map((job) => job.id)])
+    const anchors = new Set([...SECTION_ANCHORS, ...[...t('experience'), ...t('earlyCareer')].map((job) => job.id)])
     if (items.map((item) => item.id).join() !== CASE_IDS.join()) {
       problems.push(`case studies: ids are ${items.map((item) => item.id).join(', ')}, expected ${CASE_IDS.join(', ')} (${lang})`)
     }
@@ -121,6 +124,13 @@ export function checkCaseStudies(): string[] {
       }
       if (!anchors.has(item.resumeTarget)) {
         problems.push(`case ${item.id}: resumeTarget ${item.resumeTarget} not found on the résumé (${lang})`)
+      }
+      if (item.image) {
+        const { src, srcSmall, width, height, alt } = item.image
+        if (!alt.trim() || !(width > 0) || !(height > 0)) problems.push(`case ${item.id}: image needs alt, width and height (${lang})`)
+        for (const file of [src, srcSmall].filter((path): path is string => Boolean(path))) {
+          if (!fileExists(file)) problems.push(`case ${item.id}: missing image ${file}`)
+        }
       }
       if (item.id === 'ocr-extraction') {
         // The page's meta (name, title, description) goes into the HTML head, llms.txt and the JSON-LD.

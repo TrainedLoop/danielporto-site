@@ -141,7 +141,7 @@ Eventos (todos levam também `lang`: `pt` \| `en`, o idioma da página):
 | `phase_completed` | a pessoa chega ao fim das falas de uma fase | `phase`, `phase_id` |
 | `phase_skipped` | clique em "pular" | `phase`, `phase_id` |
 | `story_completed` | a tela de encerramento ("CONTINUA…") aparece | — |
-| `outbound_link` | clique em link para LinkedIn, GitHub ou email | `destination`: `linkedin` \| `github` \| `email`, `url` |
+| `outbound_link` | clique em link para LinkedIn, GitHub, email ou a demo do Sealdown | `destination`: `linkedin` \| `github` \| `email` \| `sealdown`, `url` |
 
 Até a troca do código para inglês, os eventos tinham nomes em português (`escolha_home`,
 `fase_iniciada`, `fase_concluida`, `fase_pulada`, `historia_concluida`, `link_externo`, com

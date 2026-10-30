@@ -16,6 +16,7 @@ const LLMS_ROUTES: Route[] = [
   "case-ai-chat",
   "case-cicd-design-system",
   "case-ocr-extraction",
+  "case-sealdown",
   "story",
   "credits",
 ];
@@ -103,6 +104,9 @@ function resumeMarkdown(lang: Lang): string[] {
   for (const project of t("projects")) {
     lines.push(`#### ${project.title}`, "", project.did, "", project.result, "", `Stack: ${project.stack.join(" · ")}`, "");
   }
+  // The personal project is listed apart from the selected projects, as on the page.
+  const personal = t("resume.personalProject");
+  lines.push(`### ${personal.title}`, "", `${personal.text} [${t("resume.caseStudyLink")}](${pageUrl("case-sealdown", lang)})`, "");
   lines.push(`### ${t("resume.skills")}`, "");
   lines.push(...t("skillGroups").map((group) => `- **${group.label}:** ${group.items.join(" · ")}`), "");
   return lines;
