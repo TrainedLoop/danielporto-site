@@ -705,7 +705,7 @@ const caseStudies = {
       ],
       outcome: [
         "I use it **every day on 5 mailboxes**.",
-        "Built in **about a day and a half**, with **156 commits**, all with Claude Code.",
+        "**156 commits**, all with Claude Code.",
         "**1,151 tests**, including the one that forbids the send and delete calls.",
         "**18 tools** (11 read-only), open source (MIT), in beta, with a published multi-architecture Docker image and a site with step-by-step install.",
       ],
@@ -764,7 +764,7 @@ const caseStudies = {
       ],
       outcome: [
         "**Sealdown**: **7 specs and 7 plans** public in the repository, **116 commits** over 6 days of work and about **430 tests**.",
-        "**mailhub-mcp**: built in **about a day and a half**, with **156 commits**, **1,151 tests** and the design docs public in the repository.",
+        "**mailhub-mcp**: **156 commits**, **1,151 tests** and the design docs public in the repository.",
         "**This site**: **25+ PRs**, each going through lint, a build with content checks and **100+ E2E tests**.",
         "On the Purple Metrics team: shared skills and rules for Claude Code and Cursor, with the spec → plan → execution flow integrated with Linear.",
         "The code of all three projects is open: the specs, the commits and the tests can be checked.",
