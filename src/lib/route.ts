@@ -12,6 +12,7 @@ export type Route =
   | "case-cicd-design-system"
   | "case-ocr-extraction"
   | "case-sealdown"
+  | "case-mailhub-mcp"
   | "case-ai-workflow"
   | "credits";
 
@@ -24,6 +25,7 @@ export const ROUTES: Route[] = [
   "case-cicd-design-system",
   "case-ocr-extraction",
   "case-sealdown",
+  "case-mailhub-mcp",
   "case-ai-workflow",
   "credits",
 ];
@@ -61,6 +63,7 @@ const PATHS: Record<Lang, Record<Route, string>> = {
     "case-cicd-design-system": "projetos/ci-cd-design-system/",
     "case-ocr-extraction": "projetos/extracao-ocr-llm/",
     "case-sealdown": "projetos/sealdown/",
+    "case-mailhub-mcp": "projetos/mailhub-mcp/",
     "case-ai-workflow": "projetos/desenvolvimento-com-agentes/",
     credits: "creditos/",
   },
@@ -73,6 +76,7 @@ const PATHS: Record<Lang, Record<Route, string>> = {
     "case-cicd-design-system": "en/projects/ci-cd-design-system/",
     "case-ocr-extraction": "en/projects/ocr-llm-extraction/",
     "case-sealdown": "en/projects/sealdown/",
+    "case-mailhub-mcp": "en/projects/mailhub-mcp/",
     "case-ai-workflow": "en/projects/ai-agent-development/",
     credits: "en/credits/",
   },

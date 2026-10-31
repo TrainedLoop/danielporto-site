@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AtAGlance } from "./resume/AtAGlance";
 import { EarlyCareer } from "./resume/EarlyCareer";
 import { JobEntry } from "./resume/JobEntry";
-import { PersonalProject } from "./resume/PersonalProject";
+import { PersonalProjects } from "./resume/PersonalProjects";
 import { ProjectCard } from "./resume/ProjectCard";
 import { ResumeHeader } from "./resume/ResumeHeader";
 import { ResumeSidebar } from "./resume/ResumeSidebar";
@@ -52,7 +52,7 @@ export function Resume() {
             ))}
           </div>
         </section>
-        <PersonalProject />
+        <PersonalProjects />
       </div>
     </main>
   );

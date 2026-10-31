@@ -1,8 +1,8 @@
 import { SITE_PATHS, expect, langOf, test } from "./helpers.ts";
 
-test("the sitemap lists all 20 pages (10 routes × 2 languages)", () => {
-  expect(SITE_PATHS).toHaveLength(20);
-  expect(SITE_PATHS.filter((path) => path.startsWith("/en/"))).toHaveLength(10);
+test("the sitemap lists all 22 pages (11 routes × 2 languages)", () => {
+  expect(SITE_PATHS).toHaveLength(22);
+  expect(SITE_PATHS.filter((path) => path.startsWith("/en/"))).toHaveLength(11);
 });
 
 for (const path of SITE_PATHS) {

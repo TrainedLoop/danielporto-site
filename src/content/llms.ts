@@ -1,4 +1,5 @@
 import { i18n } from "../i18n";
+import { caseRoute } from "./caseStudies";
 import type { Lang, Route } from "../lib/route";
 import { formatContentDate, pageMeta, pageUrl, SITE_URL } from "./pages";
 
@@ -17,6 +18,7 @@ const LLMS_ROUTES: Route[] = [
   "case-cicd-design-system",
   "case-ocr-extraction",
   "case-sealdown",
+  "case-mailhub-mcp",
   "case-ai-workflow",
   "story",
   "credits",
@@ -105,9 +107,13 @@ function resumeMarkdown(lang: Lang): string[] {
   for (const project of t("projects")) {
     lines.push(`#### ${project.title}`, "", project.did, "", project.result, "", `Stack: ${project.stack.join(" · ")}`, "");
   }
-  // The personal project is listed apart from the selected projects, as on the page.
-  const personal = t("resume.personalProject");
-  lines.push(`### ${personal.title}`, "", `${personal.text} [${t("resume.caseStudyLink")}](${pageUrl("case-sealdown", lang)})`, "");
+  // The personal projects are listed apart from the selected projects, as on the page.
+  const personal = t("resume.personalProjects");
+  lines.push(`### ${personal.title}`, "");
+  for (const item of personal.items) {
+    lines.push(`- ${item.text} [${t("resume.caseStudyLink")}](${pageUrl(caseRoute(item.case), lang)})`);
+  }
+  lines.push("");
   lines.push(`### ${t("resume.skills")}`, "");
   lines.push(...t("skillGroups").map((group) => `- **${group.label}:** ${group.items.join(" · ")}`), "");
   return lines;

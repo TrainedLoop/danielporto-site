@@ -11,7 +11,7 @@ const CASES = [
     open: "Abrir",
     code: "Código",
     previous: "/projetos/extracao-ocr-llm/",
-    next: "/projetos/desenvolvimento-com-agentes/",
+    next: "/projetos/mailhub-mcp/",
     resume: "/curriculo/#personal-project",
   },
   {
@@ -20,7 +20,7 @@ const CASES = [
     open: "Open",
     code: "Code",
     previous: "/en/projects/ocr-llm-extraction/",
-    next: "/en/projects/ai-agent-development/",
+    next: "/en/projects/mailhub-mcp/",
     resume: "/en/resume/#personal-project",
   },
 ];
@@ -72,7 +72,7 @@ for (const { path, title, open, code, previous, next, resume } of CASES) {
       }
     });
 
-    test("previous is the OCR case, next is the AI agents case", async ({ page }) => {
+    test("previous is the OCR case, next is mailhub-mcp", async ({ page }) => {
       await page.goto(path);
       await expect(page.locator("a.case__previous")).toHaveAttribute("href", previous);
       await expect(page.locator("a.case__next")).toHaveAttribute("href", next);

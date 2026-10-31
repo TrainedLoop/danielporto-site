@@ -8,14 +8,14 @@ const CASES = [
     home: "/",
     path: "/projetos/desenvolvimento-com-agentes/",
     title: "Desenvolvimento com agentes de IA",
-    previous: "/projetos/sealdown/",
+    previous: "/projetos/mailhub-mcp/",
     resume: "/curriculo/#purple-metrics-desenvolvedor-full-stack-senior",
   },
   {
     home: "/en/",
     path: "/en/projects/ai-agent-development/",
     title: "Development with AI agents",
-    previous: "/en/projects/sealdown/",
+    previous: "/en/projects/mailhub-mcp/",
     resume: "/en/resume/#purple-metrics-desenvolvedor-full-stack-senior",
   },
 ];
@@ -37,7 +37,7 @@ for (const { home, path, title, previous, resume } of CASES) {
       expect(problems).toEqual([]);
     });
 
-    test("is the last case: previous is Sealdown, no next", async ({ page }) => {
+    test("is the last case: previous is mailhub-mcp, no next", async ({ page }) => {
       await page.goto(path);
       await expect(page.locator("a.case__previous")).toHaveAttribute("href", previous);
       await expect(page.locator("a.case__next")).toHaveCount(0);

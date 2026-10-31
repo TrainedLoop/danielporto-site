@@ -7,6 +7,7 @@ const CASE_ROUTES: Record<CaseId, Route> = {
   "cicd-design-system": "case-cicd-design-system",
   "ocr-extraction": "case-ocr-extraction",
   sealdown: "case-sealdown",
+  "mailhub-mcp": "case-mailhub-mcp",
   "ai-workflow": "case-ai-workflow",
 };
 
