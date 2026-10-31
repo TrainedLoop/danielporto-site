@@ -62,11 +62,12 @@ export function trackPageview() {
   track("$pageview", { route });
 }
 
-/** Outbound links we care about: LinkedIn, GitHub, email and the Sealdown demo. */
+/** Outbound links we care about: LinkedIn, GitHub, email and the personal projects' sites. */
 function destination(link: HTMLAnchorElement): string | null {
   if (link.protocol === "mailto:") return "email";
-  // The demo of the Sealdown case lives on GitHub Pages (trainedloop.github.io/sealdown/).
+  // The personal projects live on GitHub Pages (trainedloop.github.io/sealdown/, /mailhub-mcp/).
   if (link.hostname === "trainedloop.github.io" && /^\/sealdown(\/|$)/.test(link.pathname)) return "sealdown";
+  if (link.hostname === "trainedloop.github.io" && /^\/mailhub-mcp(\/|$)/.test(link.pathname)) return "mailhub-mcp";
   if (/(^|\.)linkedin\.com$/.test(link.hostname)) return "linkedin";
   if (/(^|\.)github\.com$/.test(link.hostname)) return "github";
   return null;

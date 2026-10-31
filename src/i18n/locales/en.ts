@@ -1,7 +1,7 @@
 // English texts: the same keys as pt.ts (the Messages type enforces it), including the
 // pixel-art story and the credits.
 
-import type { Achievement, CaseStudy, EarlyJob, Job, Messages, Project, SkillGroup } from "./pt";
+import type { Achievement, CaseId, CaseStudy, EarlyJob, Job, Messages, Project, SkillGroup } from "./pt";
 
 const profile = {
   name: "Daniel Porto",
@@ -196,6 +196,7 @@ const ui = {
         title: "AI agents on the team",
         text: "I led the adoption of AI agents in the team's development, with skills and rules for Claude Code and Cursor integrated with Linear.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
+        caseStudy: "ai-workflow",
       },
       {
         id: "computer-vision",
@@ -215,9 +216,18 @@ const ui = {
     experience: "Experience",
     earlyCareer: "Early career",
     projects: "Selected projects",
-    personalProject: {
-      title: "Personal project",
-      text: "Sealdown — Markdown and JSON shared by link, encrypted in the browser and edited in real time.",
+    personalProjects: {
+      title: "Personal projects",
+      items: [
+        {
+          case: "sealdown",
+          text: "Sealdown — Markdown and JSON by link, encrypted in the browser.",
+        },
+        {
+          case: "mailhub-mcp",
+          text: "mailhub-mcp — email for Claude that can't send or delete, all undoable.",
+        },
+      ] satisfies { case: CaseId; text: string }[],
     },
     caseStudyLink: "read the case study",
     contact: "Contact",
@@ -402,7 +412,7 @@ const meta = {
     name: "Projects",
     title: "Projects · Daniel Porto · Senior Full Stack Developer",
     description:
-      "Four projects from problem to outcome: an AI chat in production, CI/CD and a design system, data extraction by confidence level, and Sealdown.",
+      "Six projects from problem to outcome: an AI chat, CI/CD and a design system, extraction by confidence, Sealdown, mailhub-mcp and AI agents.",
   },
   "case-ai-chat": {
     name: "AI chat in production",
@@ -428,6 +438,18 @@ const meta = {
     description:
       "Markdown and JSON shared by link and edited in real time, encrypted in the browser: the server never reads the content. Problem, decisions and outcome.",
   },
+  "case-mailhub-mcp": {
+    name: "mailhub-mcp",
+    title: "mailhub-mcp: safe email for AI agents · Daniel Porto",
+    description:
+      "An MCP server that gives Claude several mailboxes through one connector, with no sending or deleting, undoable changes and prompt-injection defenses.",
+  },
+  "case-ai-workflow": {
+    name: "Development with AI agents",
+    title: "Development with AI agents · Daniel Porto",
+    description:
+      "How I use AI agents to write code with a process: spec, plan, one agent per task, review and tests that stop mistakes before the merge.",
+  },
   credits: {
     name: "Credits",
     title: "Sprite and font credits · Daniel Porto",
@@ -445,7 +467,7 @@ const meta = {
 /** Case studies (/en/projects/), in navigation order; same shape as the Portuguese ones. */
 const caseStudies = {
   indexTitle: "Projects",
-  indexIntro: "Four projects told from problem to outcome: the decisions, how it works and what changed.",
+  indexIntro: "Six projects told from problem to outcome: the decisions, how it works and what changed.",
   labels: {
     breadcrumb: "Projects",
     role: "Role",
@@ -458,8 +480,6 @@ const caseStudies = {
     previous: "Previous project",
     next: "Next project",
     resume: "see on résumé",
-    demo: "Open",
-    code: "Code",
   },
   items: [
     {
@@ -638,7 +658,122 @@ const caseStudies = {
         height: 1200,
         alt: "Sealdown in split mode: the sample Markdown on the left, and on the right the rendered text with a Mermaid diagram (Write → Seal → Share).",
       },
-      links: { demo: "https://trainedloop.github.io/sealdown/", code: "https://github.com/TrainedLoop/sealdown" },
+      links: [
+        { label: "Open", href: "https://trainedloop.github.io/sealdown/" },
+        { label: "Code", href: "https://github.com/TrainedLoop/sealdown" },
+      ],
+    },
+    {
+      id: "mailhub-mcp",
+      title: "mailhub-mcp: safe email for AI agents",
+      result:
+        "An MCP server that gives Claude **several mailboxes through one connector**, with no way to **send or delete** anything, and every change undoable.",
+      role: "Personal, open source project: I conceived and built it on my own, with Claude Code.",
+      stack: ["Python", "FastMCP", "Gmail API", "OAuth", "Docker", "Tailscale Funnel", "GitHub Actions"],
+      context:
+        "I wanted Claude to tell me every morning what needs my attention across all my mailboxes. The native Gmail connector takes one account at a time, and I didn't want to hand my email tokens to a third-party service. So I built my own, running on my own server.",
+      problem:
+        "An agent that reads email reads text written by anyone, and any message can carry hidden instructions (prompt injection). The server has to stay safe even when the model is fooled.",
+      decisions: [
+        {
+          title: "No sending, no deleting.",
+          text: "The code never calls the send, trash or delete APIs, and **a test scans the code** to enforce it. Drafts only as replies to people already in the thread.",
+        },
+        {
+          title: "Every change can be undone.",
+          text: "Labels, archiving and read state go into a journal with each message's previous state: one batch, or everything since a given time, can be undone. Bulk changes show a preview first and have a daily cap.",
+        },
+        {
+          title: "Email is untrusted input.",
+          text: "Hidden HTML text and invisible characters are removed, the content is wrapped in markers with a random nonce, and likely injection attempts are flagged instead of acted on.",
+        },
+        {
+          title: "Approval outside the chat.",
+          text: "Preferences that raise attention apply right away; those that lower it, like ignoring a sender, become a proposal only I can approve, out of the assistant's reach. Mailboxes are linked on a separate admin page.",
+        },
+        {
+          title: "Each layer within its limits.",
+          text: "The server side is mitigated and keeps improving. The remaining risk sits in the client agent: if another tool in the same session can reach the machine or the internet, a malicious email can try to use it. That's why scheduled routines use a **read-only instance**.",
+        },
+      ],
+      flow: [
+        "Claude's request",
+        "Google login with an allowlist",
+        "Tool: read or organize",
+        "Content cleaned and marked as untrusted",
+        "Change recorded in the journal, undoable",
+      ],
+      outcome: [
+        "I use it **every day on 5 mailboxes**.",
+        "Built in **about a day and a half**, with **156 commits**, all with Claude Code.",
+        "**1,151 tests**, including the one that forbids the send and delete calls.",
+        "**18 tools** (11 read-only), open source (MIT), in beta, with a published multi-architecture Docker image and a site with step-by-step install.",
+      ],
+      resumeTarget: "personal-project",
+      image: {
+        src: "projects/mailhub-mcp.webp",
+        srcSmall: "projects/mailhub-mcp-800.webp",
+        width: 1280,
+        height: 900,
+        alt: "The mailhub-mcp admin page with sample data: four linked mailboxes, each with its state and buttons to re-link and remove.",
+      },
+      links: [
+        { label: "Open", href: "https://trainedloop.github.io/mailhub-mcp/" },
+        { label: "Code", href: "https://github.com/TrainedLoop/mailhub-mcp" },
+      ],
+    },
+    {
+      id: "ai-workflow",
+      title: "Development with AI agents",
+      result:
+        "AI agents write the code; I decide what and why. A **spec → plan → execution** flow, with review at every step and tests that stop mistakes before the merge.",
+      role: "I led the adoption on the Purple Metrics team and use the same flow in my own projects, where the whole process is public.",
+      stack: ["Claude Code", "Cursor", "Linear", "GitHub Actions", "Playwright"],
+      context:
+        "At Purple Metrics, I led the adoption of AI agents in the team's development, with skills and rules for Claude Code and Cursor integrated with Linear. In personal projects like Sealdown and mailhub-mcp I use the same flow, and there everything is visible: the specs, the commits and the tests.",
+      problem:
+        "An agent writes code fast, but without a process that speed turns into rework: decisions lost between one conversation and the next, code nobody really reviewed, and rules the agent forgets.",
+      decisions: [
+        {
+          title: "Spec before code.",
+          text: "Every change starts with a spec built in conversation: what changes, why and what stays out. I review it and correct the facts before any line of code.",
+        },
+        {
+          title: "A plan of small tasks.",
+          text: "The spec becomes a plan of small tasks, each with the files it touches, the interfaces and how to check it worked.",
+        },
+        {
+          title: "One agent per task, with review.",
+          text: "Each task goes to a subagent with a clean context, and its result is reviewed before the next one.",
+        },
+        {
+          title: "Rules become tests.",
+          text: "Whatever the agent might forget becomes a test or a build check. On this site, the build fails if confidential text shows up or a title goes out of bounds, and **100+ E2E tests** run on every PR.",
+        },
+        {
+          title: "The merge is mine.",
+          text: "The agent opens the PR; I test it locally, review it and merge it.",
+        },
+      ],
+      flow: [
+        "Spec (reviewed by me)",
+        "Plan of small tasks",
+        "Subagent per task + review",
+        "CI: lint, build and E2E tests",
+        "Local test and merge (me)",
+      ],
+      outcome: [
+        "**Sealdown**: **7 specs and 7 plans** public in the repository, **116 commits** over 6 days of work and about **430 tests**.",
+        "**mailhub-mcp**: built in **about a day and a half**, with **156 commits**, **1,151 tests** and the design docs public in the repository.",
+        "**This site**: **25+ PRs**, each going through lint, a build with content checks and **100+ E2E tests**.",
+        "On the Purple Metrics team: shared skills and rules for Claude Code and Cursor, with the spec → plan → execution flow integrated with Linear.",
+        "The code of all three projects is open: the specs, the commits and the tests can be checked.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+      links: [
+        { label: "Sealdown specs", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
+        { label: "Site code", href: "https://github.com/TrainedLoop/danielporto-site" },
+      ],
     },
   ] satisfies CaseStudy[],
 };

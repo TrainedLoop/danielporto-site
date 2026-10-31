@@ -63,7 +63,7 @@ export type Achievement = {
   caseStudy?: CaseId;
 };
 
-export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction" | "sealdown";
+export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction" | "sealdown" | "mailhub-mcp" | "ai-workflow";
 
 /**
  * A case study page. `result`, `decisions[].text` and `outcome[]` may contain `**…**`;
@@ -85,8 +85,8 @@ export type CaseStudy = {
   resumeTarget: string;
   /** A screenshot shown at the top of the page; `src` and `srcSmall` (800px wide) are paths from the site root (public/). */
   image?: { src: string; srcSmall?: string; width: number; height: number; alt: string };
-  /** The live app and its source code, opened in a new tab. */
-  links?: { demo: string; code: string };
+  /** Public links (the live app, the code...), opened in a new tab; the first one is the primary button. */
+  links?: { label: string; href: string }[];
 };
 
 export type SkillGroup = { label: string; items: string[] };
@@ -270,6 +270,7 @@ const ui = {
         title: "Agentes de IA no time",
         text: "Liderei a adoção de agentes de IA no desenvolvimento do time, com skills e regras para Claude Code e Cursor integradas ao Linear.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
+        caseStudy: "ai-workflow",
       },
       {
         id: "computer-vision",
@@ -289,10 +290,19 @@ const ui = {
     experience: "Experiência",
     earlyCareer: "Início de carreira",
     projects: "Projetos selecionados",
-    // Kept apart from the selected projects (never inside them); links to its case study.
-    personalProject: {
-      title: "Projeto pessoal",
-      text: "Sealdown — Markdown e JSON compartilhados por link, criptografados no navegador e editados em tempo real.",
+    // Kept apart from the selected projects (never inside them); each links to its case study.
+    personalProjects: {
+      title: "Projetos pessoais",
+      items: [
+        {
+          case: "sealdown",
+          text: "Sealdown — Markdown e JSON por link, criptografados no navegador.",
+        },
+        {
+          case: "mailhub-mcp",
+          text: "mailhub-mcp — e-mail para o Claude, sem enviar nem apagar e reversível.",
+        },
+      ] satisfies { case: CaseId; text: string }[],
     },
     caseStudyLink: "ler o estudo de caso",
     contact: "Contato",
@@ -490,7 +500,7 @@ const meta = {
     name: "Projetos",
     title: "Projetos · Daniel Porto · Desenvolvedor Full Stack Sênior",
     description:
-      "Quatro projetos do problema ao resultado: chat de IA em produção, CI/CD e design system, extração de dados por confiança e o Sealdown.",
+      "Seis projetos do problema ao resultado: chat de IA, CI/CD e design system, extração por confiança, Sealdown, mailhub-mcp e agentes de IA.",
   },
   "case-ai-chat": {
     name: "Chat de IA em produção",
@@ -516,6 +526,18 @@ const meta = {
     description:
       "Markdown e JSON compartilhados por link e editados em tempo real, criptografados no navegador: o servidor nunca lê o conteúdo. Problema, decisões e resultado.",
   },
+  "case-mailhub-mcp": {
+    name: "mailhub-mcp",
+    title: "mailhub-mcp: e-mail seguro para agentes de IA · Daniel Porto",
+    description:
+      "Servidor MCP que dá ao Claude várias caixas de e-mail num só conector, sem enviar nem apagar, com mudanças reversíveis e defesas contra prompt injection.",
+  },
+  "case-ai-workflow": {
+    name: "Desenvolvimento com agentes de IA",
+    title: "Desenvolvimento com agentes de IA · Daniel Porto",
+    description:
+      "Como uso agentes de IA para escrever código com processo: spec, plano, um agente por tarefa, revisão e testes que barram o erro antes do merge.",
+  },
   credits: {
     name: "Créditos",
     title: "Créditos dos sprites e da fonte · Daniel Porto",
@@ -534,7 +556,7 @@ const meta = {
 /** Case studies (/projetos/), in navigation order. */
 const caseStudies = {
   indexTitle: "Projetos",
-  indexIntro: "Quatro projetos contados do problema ao resultado: as decisões, como funciona e o que mudou.",
+  indexIntro: "Seis projetos contados do problema ao resultado: as decisões, como funciona e o que mudou.",
   labels: {
     breadcrumb: "Projetos",
     role: "Papel",
@@ -547,8 +569,6 @@ const caseStudies = {
     previous: "Projeto anterior",
     next: "Próximo projeto",
     resume: "ver no currículo",
-    demo: "Abrir",
-    code: "Código",
   },
   items: [
     {
@@ -727,7 +747,122 @@ const caseStudies = {
         height: 1200,
         alt: "O Sealdown no modo dividido: à esquerda o Markdown de exemplo, à direita o texto renderizado com um diagrama Mermaid (Write → Seal → Share).",
       },
-      links: { demo: "https://trainedloop.github.io/sealdown/", code: "https://github.com/TrainedLoop/sealdown" },
+      links: [
+        { label: "Abrir", href: "https://trainedloop.github.io/sealdown/" },
+        { label: "Código", href: "https://github.com/TrainedLoop/sealdown" },
+      ],
+    },
+    {
+      id: "mailhub-mcp",
+      title: "mailhub-mcp: e-mail seguro para agentes de IA",
+      result:
+        "Um servidor MCP que dá ao Claude **várias caixas de e-mail num só conector**, sem poder **enviar nem apagar** nada, e com toda mudança reversível.",
+      role: "Projeto pessoal e open source: concebi e construí sozinho, com o Claude Code.",
+      stack: ["Python", "FastMCP", "Gmail API", "OAuth", "Docker", "Tailscale Funnel", "GitHub Actions"],
+      context:
+        "Eu queria que o Claude me dissesse toda manhã o que precisa da minha atenção em todas as minhas caixas de e-mail. O conector nativo de Gmail aceita uma conta por vez, e eu não queria entregar meus tokens de e-mail a um serviço de terceiros. Então construí o meu, rodando no meu próprio servidor.",
+      problem:
+        "Um agente que lê e-mail lê texto escrito por qualquer pessoa, e qualquer mensagem pode trazer instruções escondidas (prompt injection). O servidor precisa continuar seguro mesmo quando o modelo for enganado.",
+      decisions: [
+        {
+          title: "Sem enviar, sem apagar.",
+          text: "O código nunca chama as APIs de envio, lixeira ou exclusão, e **um teste varre o código** para garantir isso. Rascunhos só como resposta a quem já está na conversa.",
+        },
+        {
+          title: "Toda mudança pode ser desfeita.",
+          text: "Labels, arquivamento e leitura ficam num journal com o estado anterior de cada mensagem: dá para desfazer um lote ou tudo desde um horário. Mudanças em massa mostram uma prévia antes e têm limite diário.",
+        },
+        {
+          title: "E-mail é entrada não confiável.",
+          text: "Texto escondido no HTML e caracteres invisíveis são removidos, o conteúdo vai entre marcadores com um nonce aleatório, e prováveis tentativas de injection são sinalizadas em vez de executadas.",
+        },
+        {
+          title: "Aprovação fora do chat.",
+          text: "Preferências que aumentam a atenção valem na hora; as que diminuem, como ignorar um remetente, viram uma proposta que só eu aprovo, fora do alcance do assistente. As caixas são vinculadas numa página de admin separada.",
+        },
+        {
+          title: "Cada camada no seu limite.",
+          text: "O lado do servidor está mitigado e segue evoluindo. O risco que sobra está no agente cliente: se outra ferramenta da mesma sessão acessa a máquina ou a internet, um e-mail malicioso pode tentar usá-la. Por isso as rotinas automáticas usam uma **instância só de leitura**.",
+        },
+      ],
+      flow: [
+        "Pedido do Claude",
+        "Login Google com lista de permitidos",
+        "Ferramenta: ler ou organizar",
+        "Conteúdo limpo e marcado como não confiável",
+        "Mudança registrada no journal, reversível",
+      ],
+      outcome: [
+        "Uso **todo dia em 5 caixas de e-mail**.",
+        "Feito em **cerca de 1 dia e meio**, com **156 commits**, todos com o Claude Code.",
+        "**1151 testes**, incluindo o que proíbe as chamadas de envio e exclusão.",
+        "**18 ferramentas** (11 só de leitura), open source (MIT), em beta, com imagem Docker multi-arquitetura publicada e um site com instalação passo a passo.",
+      ],
+      resumeTarget: "personal-project",
+      image: {
+        src: "projects/mailhub-mcp.webp",
+        srcSmall: "projects/mailhub-mcp-800.webp",
+        width: 1280,
+        height: 900,
+        alt: "A página de admin do mailhub-mcp com dados de exemplo: quatro caixas de e-mail vinculadas, com o estado de cada uma e os botões de vincular de novo e remover.",
+      },
+      links: [
+        { label: "Abrir", href: "https://trainedloop.github.io/mailhub-mcp/" },
+        { label: "Código", href: "https://github.com/TrainedLoop/mailhub-mcp" },
+      ],
+    },
+    {
+      id: "ai-workflow",
+      title: "Desenvolvimento com agentes de IA",
+      result:
+        "Agentes de IA escrevem o código; eu decido o quê e por quê. Um fluxo **spec → plano → execução**, com revisão a cada etapa e testes que barram o erro antes do merge.",
+      role: "Liderei a adoção no time da Purple Metrics e uso o mesmo fluxo nos meus projetos, onde o processo inteiro é público.",
+      stack: ["Claude Code", "Cursor", "Linear", "GitHub Actions", "Playwright"],
+      context:
+        "Na Purple Metrics, liderei a adoção de agentes de IA no desenvolvimento do time, com skills e regras para Claude Code e Cursor integradas ao Linear. Nos projetos pessoais, como o Sealdown e o mailhub-mcp, uso o mesmo fluxo, e ali dá para ver tudo: as specs, os commits e os testes.",
+      problem:
+        "Um agente escreve código rápido, mas sem processo a velocidade vira retrabalho: decisões que se perdem entre uma conversa e outra, código que ninguém revisou de verdade e regras que o agente esquece.",
+      decisions: [
+        {
+          title: "Spec antes de código.",
+          text: "Toda mudança começa numa spec construída em conversa: o que muda, por quê e o que fica de fora. Eu reviso e corrijo os fatos antes de qualquer linha de código.",
+        },
+        {
+          title: "Plano em tarefas pequenas.",
+          text: "A spec vira um plano com tarefas pequenas, cada uma com os arquivos que mexe, as interfaces e como verificar que deu certo.",
+        },
+        {
+          title: "Um agente por tarefa, com revisão.",
+          text: "Cada tarefa vai para um subagente com contexto limpo, e o resultado é revisado antes da próxima.",
+        },
+        {
+          title: "Regras viram testes.",
+          text: "O que o agente pode esquecer vira teste ou checagem de build. Neste site, o build falha se um texto confidencial aparecer ou se um título sair do tamanho, e **100+ testes E2E** rodam em cada PR.",
+        },
+        {
+          title: "O merge é meu.",
+          text: "O agente abre o PR; eu testo localmente, reviso e faço o merge.",
+        },
+      ],
+      flow: [
+        "Spec (revisada por mim)",
+        "Plano em tarefas pequenas",
+        "Subagente por tarefa + revisão",
+        "CI: lint, build e testes E2E",
+        "Teste local e merge (eu)",
+      ],
+      outcome: [
+        "**Sealdown**: **7 specs e 7 planos** públicos no repositório, **116 commits** em 6 dias de trabalho e cerca de **430 testes**.",
+        "**mailhub-mcp**: feito em **cerca de 1 dia e meio**, com **156 commits**, **1151 testes** e os docs de design públicos no repositório.",
+        "**Este site**: **25+ PRs**, cada um passando por lint, build com checagens de conteúdo e **100+ testes E2E**.",
+        "No time da Purple Metrics: skills e regras compartilhadas para Claude Code e Cursor, com o fluxo spec → plano → execução integrado ao Linear.",
+        "O código dos três projetos é aberto: dá para conferir as specs, os commits e os testes.",
+      ],
+      resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
+      links: [
+        { label: "Specs do Sealdown", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
+        { label: "Código do site", href: "https://github.com/TrainedLoop/danielporto-site" },
+      ],
     },
   ] satisfies CaseStudy[],
 };

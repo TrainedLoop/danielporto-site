@@ -1188,9 +1188,13 @@ button {
   font-size: 16px;
 }
 
-/* Personal project: one line, apart from the selected projects. */
+/* Personal projects: one line each, apart from the selected projects. */
 .personal-project__line {
   margin: 0;
+}
+
+.personal-project__line + .personal-project__line {
+  margin-top: 8px;
 }
 
 /* Below 900px: one column (header, glance, compact sidebar, experience, projects). */
@@ -1878,7 +1882,7 @@ button {
     border: 1px solid #999;
   }
 
-  /* The personal project is a single line on paper: keep it tight so the résumé stays on 2 pages. */
+  /* The personal projects are one line each on paper: keep them tight so the résumé stays on 2 pages. */
   .personal-project {
     margin-top: 6pt;
   }
@@ -1892,11 +1896,15 @@ button {
     font-size: 9pt;
   }
 
+  .personal-project__line + .personal-project__line {
+    margin-top: 2pt;
+  }
+
   /* Jobs may flow across pages; bullets, cards and the at-a-glance block stay whole. */
   li,
   .project-card,
   .early-career__item,
-  .personal-project,
+  .personal-project__line,
   .glance {
     break-inside: avoid;
   }

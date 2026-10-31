@@ -1,6 +1,6 @@
 import { expect, expectLandedBelowTopBar, test } from "./helpers.ts";
 
-/** Job the "AI agents" home card and the AI chat case point to (same id in both languages). */
+/** Job the AI chat case points to on the résumé (same id in both languages). */
 const AI_JOB = "purple-metrics-desenvolvedor-full-stack-senior";
 
 test.describe("PT · EN switch", () => {
@@ -23,13 +23,6 @@ test.describe("PT · EN switch", () => {
 });
 
 test.describe("anchors land below the top bar", () => {
-  test("home: AI agents card → résumé job", async ({ page }) => {
-    await page.goto("/");
-    await page.locator(`a.achievement__link[href="/curriculo/#${AI_JOB}"]`).click();
-    await expect(page).toHaveURL(`/curriculo/#${AI_JOB}`);
-    await expectLandedBelowTopBar(page, AI_JOB);
-  });
-
   test("home: computer vision card → résumé projects", async ({ page }) => {
     await page.goto("/");
     await page.locator('a.achievement__link[href="/curriculo/#projects"]').click();
