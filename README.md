@@ -148,6 +148,7 @@ de outros apps no mesmo projeto do PostHog, como o Sealdown):
 | `phase_completed` | a pessoa chega ao fim das falas de uma fase | `phase`, `phase_id` |
 | `phase_skipped` | clique em "pular" | `phase`, `phase_id` |
 | `story_completed` | a tela de encerramento ("CONTINUA…") aparece | — |
+| `lang_suggestion` | clique na faixa que oferece a página no idioma do navegador | `action`: `switch` \| `dismiss`, `suggested`: `pt` \| `en` |
 | `outbound_link` | clique em link para LinkedIn, GitHub, email ou o site do Sealdown ou do mailhub-mcp | `destination`: `linkedin` \| `github` \| `email` \| `sealdown` \| `mailhub-mcp`, `url` |
 
 Até a troca do código para inglês, os eventos tinham nomes em português (`escolha_home`,

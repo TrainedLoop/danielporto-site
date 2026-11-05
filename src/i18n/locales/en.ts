@@ -159,6 +159,12 @@ const glance = {
 
 /** Fixed UI texts (top bar, home, résumé and credits). */
 const ui = {
+  langSuggestion: {
+    label: "Language",
+    text: "This page is also available in English.",
+    link: "Read in English",
+    close: "Close",
+  },
   nav: { label: "Navigation", story: "story", resume: "résumé", projects: "projects", language: "Language" },
   footerCredits: "sprite and font credits",
   privacyNotice: "This site records anonymous visits and sessions, without cookies, to improve its content.",

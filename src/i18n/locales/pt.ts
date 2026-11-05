@@ -223,6 +223,14 @@ const glance = {
 
 /** Fixed UI texts (top bar, home, résumé and credits), translated along with the content. */
 const ui = {
+  // The bar offering this language on a page in the other one (src/components/LanguageSuggestion.tsx):
+  // shown in the suggested language, so these texts are read on English pages.
+  langSuggestion: {
+    label: "Idioma",
+    text: "Esta página também está disponível em português.",
+    link: "Ler em português",
+    close: "Fechar",
+  },
   nav: { label: "Navegação", story: "história", resume: "currículo", projects: "projetos", language: "Idioma" },
   footerCredits: "créditos dos sprites e da fonte",
   // Shown in the footer and on the story's ending screen (the story page has no footer).

@@ -2,6 +2,8 @@ import { useEffect, type SyntheticEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { equivalentHref, href, useRoute, type AppPage, type Lang, type Route } from './lib/route'
 import { caseIdOf } from './content/caseStudies'
+import { LanguageSuggestion } from './components/LanguageSuggestion'
+import { rememberLanguageChoice } from './lib/languageChoice'
 import { Credits } from './pages/Credits'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
@@ -28,7 +30,11 @@ function LangLink({ route, lang, current, label }: { route: Route; lang: Lang; c
       aria-current={lang === current ? 'true' : undefined}
       onMouseEnter={update}
       onFocus={update}
-      onClick={update}
+      onClick={(event) => {
+        update(event)
+        // Picking a language here also answers the language suggestion bar.
+        rememberLanguageChoice()
+      }}
     >
       {label}
     </a>
@@ -82,6 +88,9 @@ export default function App({ page: initial }: { page: AppPage }) {
       {caseId && <CaseStudyPage id={caseId} />}
       {route === 'credits' && <Credits />}
       {route === 'not-found' && <NotFound />}
+
+      {/* Not on the story (its dialog sits at the bottom of the screen) or the not-found screen. */}
+      {route !== 'story' && route !== 'not-found' && <LanguageSuggestion route={route} lang={lang} />}
 
       {route !== 'story' && (
         <footer className="site-footer no-print">
