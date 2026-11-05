@@ -734,13 +734,14 @@ button {
 
 .achievement__result {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.5;
 }
 
+/* The title opens the card and is its largest text. */
 .achievement h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.4;
 }
 
