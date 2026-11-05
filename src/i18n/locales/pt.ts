@@ -1,7 +1,6 @@
 // Portuguese texts (default language): the UI, page titles, home and résumé content, the
 // pixel-art story and the credits. Content keys: profile and home.achievements (home), glance
-// (résumé summary), experience, earlyCareer, projects and skillGroups (full résumé, also used by
-// llms.txt).
+// (résumé summary), experience, projects and skillGroups (full résumé, also used by llms.txt).
 // Source: the revised LinkedIn profile (linkdin-update/linkedin-ptbr.md) and the old résumé.
 
 const profile = {
@@ -11,7 +10,7 @@ const profile = {
   location: "Rio de Janeiro, Brasil",
   headline: "React, TypeScript e C#/.NET · IA aplicada: LLMs, agentes e visão computacional",
   intro:
-    "Desenvolvedor full stack sênior, com mais de 10 anos construindo produto. Levo IA para produção com o que uma empresa exige: permissão por usuário, controle de custo, proteção de dados pessoais e qualidade medida em dados reais.",
+    "Desenvolvedor full stack sênior com mais de 10 anos de experiência criando produtos digitais, do back-end em C#/.NET ao front-end em React e TypeScript. Hoje me especializo em levar inteligência artificial para produtos usados por clientes, com os cuidados que uma empresa exige: cada usuário só acessa os dados que tem permissão para ver, o custo de cada resposta é controlado, dados pessoais são protegidos e a qualidade é medida com dados reais.",
   links: [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/daniel-porto/" },
     { label: "GitHub", href: "https://github.com/TrainedLoop" },
@@ -31,18 +30,9 @@ export type Job = {
   stack: string[];
 };
 
-/** Older jobs, shown as a single line each (the ids are still story anchors). */
-export type EarlyJob = {
-  id: string;
-  company: string;
-  role: string;
-  period: string;
-  line: string;
-};
-
-/** A selected project: no dates, clients or employers, on purpose. `result` may contain `**…**`. */
+/** A résumé project: no dates, clients or employers, on purpose. `did` and `result` may contain `**…**`. */
 export type Project = {
-  id: "ai-copilot" | "computer-vision" | "confidence-extraction";
+  id: "data-agent" | "computer-vision" | "confidence-extraction";
   title: string;
   did: string;
   result: string;
@@ -74,6 +64,8 @@ export type CaseId = "ai-chat" | "cicd-design-system" | "ocr-extraction" | "seal
 export type CaseStudy = {
   id: CaseId;
   title: string;
+  /** One plain sentence saying what it is, shown on the /projetos/ cards. */
+  summary: string;
   result: string;
   role: string;
   stack: string[];
@@ -97,17 +89,17 @@ const experience: Job[] = [
     id: "purple-metrics-desenvolvedor-full-stack-senior",
     company: "Purple Metrics",
     role: "Desenvolvedor Full Stack Sênior",
-    period: "set 2022 – o momento",
+    period: "09/2022 – atualmente",
     description:
-      "Plataforma de Marketing Mix Modeling (MMM) que mostra a marcas quanto cada canal de mídia realmente gera de resultado.",
+      "Plataforma de Marketing Mix Modeling (MMM): mostra às marcas quanto cada canal de mídia gera em vendas, para orientar onde investir.",
     bullets: [
-      "Fui responsável pela interface, pela integração com a LLM e pelos prompts do **chat de IA** que responde perguntas sobre os dados do dashboard e está em produção com clientes; nasceu de um protótipo que meu time construiu em **3 dias** num hackathon interno.",
-      "Propus a arquitetura que permite à IA **navegar e aplicar ações** no dashboard, base das novas funcionalidades do chat.",
-      "Criei a prova de conceito do **servidor MCP** da Purple, conectando as APIs da plataforma a assistentes de IA.",
-      "Desenvolvo o dashboard do produto: alocação e otimização de orçamento, simulação, curvas de saturação e data setup.",
-      "Liderei a adoção de **agentes de IA** no desenvolvimento do time: skills e regras para Claude Code e Cursor, com fluxo spec → plano → execução integrado ao Linear.",
-      "Extraí o **design system** para um pacote npm próprio, com **45+ versões** publicadas; sou o principal contribuidor.",
-      "Criei a esteira de **CI/CD** do frontend (lint, ambientes de QA, revisão automatizada, E2E com Playwright, deploy em ECS): **800+ deploys** em produção.",
+      "Desenvolvi a interface, a integração com a LLM (o modelo de IA) e os prompts do **copiloto de IA** do dashboard, que responde, em linguagem natural, perguntas dos clientes sobre os próprios dados. Ele nasceu de um protótipo construído pelo meu time em **3 dias** num hackathon interno e hoje está **em produção**.",
+      "Propus a arquitetura que permite ao copiloto **navegar e executar ações** no dashboard (abrir páginas, mudar filtros, montar gráficos), em vez de só responder em texto. A implementação inicial foi de outra pessoa do time; hoje eu evoluo e mantenho essa parte.",
+      "Criei a prova de conceito do **servidor MCP** da Purple. O MCP é um padrão aberto para conectar assistentes de IA, como o Claude, a outros sistemas; com ele, esses assistentes consultam a plataforma diretamente.",
+      "Desenvolvo as telas do dashboard, como planejamento e otimização de orçamento, simulação de cenários e configuração dos dados do cliente.",
+      "Liderei a adoção de **agentes de IA** (assistentes que escrevem código, como Claude Code e Cursor) pelo time de desenvolvimento, com regras compartilhadas e um fluxo de trabalho em etapas (especificação, plano e execução) integrado ao Linear, a ferramenta de gestão de tarefas do time.",
+      "Transformei os componentes visuais do produto num **design system**, uma biblioteca própria reutilizada pelos produtos da empresa, que passaram a ter a mesma aparência; sou o principal contribuidor.",
+      "Criei a **esteira de CI/CD** do front-end, o processo automático que testa, revisa e publica cada mudança (testes de ponta a ponta com Playwright, ambientes de teste sob demanda, publicação na AWS). Resultado: **muito menos erros chegando à produção**.",
     ],
     stack: [
       "React",
@@ -129,71 +121,66 @@ const experience: Job[] = [
     id: "fu2re-smart-solutions-desenvolvedor-full-stack-senior",
     company: "Fu2re Smart Solutions",
     role: "Desenvolvedor Full Stack Sênior",
-    period: "ago 2019 – jun 2023",
-    description: "Onde tive o primeiro contato sério com IA, antes do boom.",
+    period: "08/2019 – 06/2023",
+    description: "Empresa de visão computacional aplicada: soluções que usam IA para analisar imagens.",
     bullets: [
-      "Criei as APIs do **SmartVision**, plataforma de treino e inferência de visão computacional, com a fila de treino e inferência em Hangfire e CQRS (MySQL na escrita, MongoDB na leitura).",
-      "Participei do software de um carro que fotografava os postes da Light pela cidade, como os carros do Google.",
-      "Colaborei no app de mobilidade **Urban** (React Native, Google Maps) e no front-end do SmartVision (React, Redux).",
-      "Mantive e evoluí a plataforma SmartAssets (WebForms, DevExpress, MySQL).",
+      "Criei as APIs do **SmartVision**, a plataforma da empresa para treinar modelos de visão computacional e aplicá-los em novas imagens, com uma fila de processamento (Hangfire, CQRS, MySQL e MongoDB).",
+      "Desenvolvi o software que gerenciava as imagens e a navegação de um carro que percorria a cidade fotografando os postes da **Light**, a companhia de energia do Rio, para fazer o inventário desses postes. As fotos alimentavam o SmartAssets.",
+      "Mantive e evoluí o **SmartAssets** (WebForms, DevExpress, MySQL), a plataforma em que o cliente via os resultados das análises de imagens vindas de várias fontes, entre elas o carro.",
+      "Desenvolvi o app de mobilidade **Urban** (React Native, Google Maps) e telas do front-end do SmartVision (React, Redux).",
     ],
     stack: ["C# / .NET", "Hangfire", "MySQL", "MongoDB", "React", "Redux", "React Native"],
   },
   {
     id: "fulllab-retail-solutions-lider-tecnico",
     company: "Fulllab | retail solutions",
-    role: "Líder técnico",
-    period: "mai 2017 – ago 2019",
-    description: "Líder técnico de um time de **4 pessoas**.",
+    role: "Desenvolvedor .NET e Líder técnico",
+    period: "09/2015 – 08/2019",
+    description:
+      "Fábrica de software parceira da VTEX, plataforma de e-commerce, que criava apps e integrações para lojas virtuais. Entrei como desenvolvedor .NET e passei a líder técnico em 2017.",
     bullets: [
-      "Reestruturei o **Mobfiq** com uma API comum a todos os clientes e injeção de dependência para novas plataformas.",
-      "Criei um plugin em PHP para o Magento que controlava a interface da loja e o fluxo de compra.",
-      "Portal de migração da **Danone**: regras de negócio sobre as planilhas dos gerentes para alimentar o ERP.",
-      "Integrei lojas sem API por engenharia reversa (web scraping com Selenium), com APIs em .NET Core e MongoDB.",
+      "Liderei um time de **4 pessoas** que desenvolvia, de ponta a ponta, os apps das lojas VTEX.",
+      "Integrei a VTEX antes de existir documentação pública.",
+      "Reestruturei o **Mobfiq**, a plataforma de apps para lojas, com uma API única para todos os clientes, o que facilitou conectar novas plataformas de e-commerce.",
+      "Criei um plugin em PHP para o Magento que controlava a interface e o fluxo de compra da loja no app.",
+      "Integrei ao app lojas que não tinham API, como a Sephora, com robôs que liam os dados direto do site (web scraping com Selenium) e APIs em .NET Core e MongoDB.",
+      "Migrei a planilha de distribuição internacional da **Danone** para um sistema: os gerentes passaram a preencher um painel mais fácil e mais rápido, que alimenta o ERP da empresa.",
     ],
-    stack: [".NET Core", "Entity Framework Core", "MongoDB", "React", "PHP", "Selenium"],
-  },
-];
-
-/** Early career: one line per job. */
-const earlyCareer: EarlyJob[] = [
-  {
-    id: "fulllab-retail-solutions-desenvolvedor-net",
-    company: "Fulllab | retail solutions",
-    role: "Desenvolvedor .NET",
-    period: "set 2015 – mai 2017",
-    line: "Integração com a VTEX antes de existir documentação e integração da Sephora por web scraping (.NET, Dapper, MySQL, Selenium).",
+    stack: [".NET", ".NET Core", "Entity Framework Core", "Dapper", "MySQL", "MongoDB", "React", "PHP", "Selenium"],
   },
   {
     id: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
     company: "Hebara Distribuidora de Produtos Lotéricos",
     role: "Programador júnior",
-    period: "set 2013 – set 2015",
-    line: "Intranet e portal da empresa, com meus primeiros deploys em produção (C#, .NET MVC, Oracle).",
+    period: "09/2013 – 09/2015",
+    bullets: [
+      "Desenvolvi e mantive a intranet da empresa e criei novos sites e aplicações, como os sites da Raspadinha do Rio e do Rio de Prêmios (C#, .NET MVC, Oracle).",
+    ],
+    stack: ["C#", ".NET MVC", "Oracle"],
   },
 ];
 
-/** Selected projects. Never add dates, clients, employers or the word "freelance". */
+/** Résumé projects. Never add dates, clients, employers or the word "freelance". */
 const projects: Project[] = [
   {
-    id: "ai-copilot",
-    title: "Copiloto de IA com permissões e LGPD",
-    did: "Agente que consulta dados de uma plataforma analítica com as permissões de quem pergunta, só na réplica de leitura, mascarando dados pessoais antes de chegarem ao modelo.",
-    result: "Custo limitado por pergunta.",
+    id: "data-agent",
+    title: "Agente de dados com permissões e LGPD",
+    did: "Agente de IA que responde perguntas sobre os dados de uma plataforma de análise. Ele só acessa o que a pessoa que pergunta pode ver, não tem permissão para alterar dados e esconde dados pessoais antes de enviá-los ao modelo.",
+    result: "custo de cada pergunta limitado e dados pessoais fora do alcance do modelo.",
     stack: ["Google ADK", "Gemini"],
   },
   {
     id: "computer-vision",
     title: "Visão computacional em produção",
-    did: "Modelos YOLO treinados com **~50 mil imagens**, servidos em ONNX na AWS e retreinados com as correções dos operadores.",
-    result: "**~95%** de precisão e recall na validação.",
+    did: "Modelos de IA que reconhecem objetos em imagens (YOLO), treinados com cerca de **50 mil imagens**, rodando na AWS e retreinados com as correções dos operadores.",
+    result: "**~95%** de acerto (precisão e recall) na validação.",
     stack: ["YOLO", "ONNX", "AWS"],
   },
   {
     id: "confidence-extraction",
     title: "Extração de dados por nível de confiança",
-    did: "OCR local, OCR em nuvem e LLM em cascata para ler telas de medição.",
-    result: "**377 de 380** campos corretos, nenhuma leitura errada, serviço pago em **< 3%** dos campos.",
+    did: "Sistema que lê automaticamente os valores de telas de medição em fotos. Usa primeiro a leitura de texto mais barata (OCR) e só recorre a um modelo de IA (LLM) quando necessário.",
+    result: "**377 de 380** campos lidos corretamente, nenhuma leitura errada, e o serviço pago usado em menos de **3%** dos campos.",
     stack: ["OCR", "Amazon Bedrock"],
   },
 ];
@@ -226,16 +213,11 @@ const languages = [
   { name: "Inglês", code: "en" },
 ];
 
-/** At-a-glance block of the résumé: two pitch sentences and three headline figures. */
+/** Professional summary of the résumé (also the home pitch): two sentences. */
 const glance = {
   pitch: [
-    "Desenvolvedor full stack sênior, com mais de 10 anos construindo produto: do back-end em C#/.NET ao front-end em React e TypeScript.",
-    "Levo IA para produção com o que uma empresa exige: permissão por usuário, controle de custo, proteção de dados pessoais e qualidade medida em dados reais.",
-  ],
-  stats: [
-    { value: "10+", label: "anos construindo produto" },
-    { value: "800+", label: "deploys em produção da esteira que criei" },
-    { value: "45+", label: "versões publicadas do design system que extraí" },
+    "Desenvolvedor full stack sênior com mais de 10 anos de experiência criando produtos digitais, do back-end em C#/.NET ao front-end em React e TypeScript.",
+    "Hoje me especializo em levar inteligência artificial para produtos usados por clientes, com os cuidados que uma empresa exige: cada usuário só acessa os dados que tem permissão para ver, o custo de cada resposta é controlado, dados pessoais são protegidos e a qualidade é medida com dados reais.",
   ],
 };
 
@@ -258,25 +240,25 @@ const ui = {
     achievements: [
       {
         id: "ai-chat",
-        result: "**em produção** com clientes",
-        title: "Chat de IA em produção",
-        text: "Fui responsável pela interface, pela integração com a LLM e pelos prompts de um chat de IA que responde perguntas sobre os dados do produto; nasceu de um protótipo de **3 dias** num hackathon interno do time.",
+        result: "**em produção**, usado pelos clientes",
+        title: "Copiloto de IA no dashboard",
+        text: "Desenvolvi a interface, a integração com a LLM (o modelo de IA) e os prompts de um copiloto de IA que responde perguntas dos clientes sobre os próprios dados. Ele nasceu de um protótipo de **3 dias** num hackathon interno do time.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
         caseStudy: "ai-chat",
       },
       {
         id: "ai-agents",
-        result: "**spec → plano → execução**",
+        result: "**especificação → plano → execução**",
         title: "Agentes de IA no time",
-        text: "Liderei a adoção de agentes de IA no desenvolvimento do time, com skills e regras para Claude Code e Cursor integradas ao Linear.",
+        text: "Liderei a adoção de agentes de IA (assistentes que escrevem código, como Claude Code e Cursor) pelo time de desenvolvimento, com regras compartilhadas e um fluxo integrado ao Linear.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
         caseStudy: "ai-workflow",
       },
       {
         id: "computer-vision",
-        result: "**~95%** de precisão e recall",
+        result: "**~95%** de acerto (precisão e recall)",
         title: "Visão computacional em produção",
-        text: "Modelos YOLO treinados com ~50 mil imagens, servidos em produção e retreinados com as correções dos operadores.",
+        text: "Modelos de IA que reconhecem objetos em imagens (YOLO), treinados com cerca de 50 mil imagens, em produção e retreinados com as correções dos operadores.",
         target: "projects",
       },
     ] satisfies Achievement[],
@@ -286,21 +268,22 @@ const ui = {
     playStory: "▶ jogar a história",
     printPdf: "imprimir / salvar PDF",
     pdfTitle: "Daniel Porto - Currículo",
-    glanceTitle: "Em 30 segundos",
+    glanceTitle: "Resumo profissional",
     experience: "Experiência",
-    earlyCareer: "Início de carreira",
-    projects: "Projetos selecionados",
-    // Kept apart from the selected projects (never inside them); each links to its case study.
+    projects: "Projetos",
+    // Label before each project card's result.
+    projectResult: "Resultado",
+    // Kept apart from the résumé projects (never inside them); each links to its case study.
     personalProjects: {
       title: "Projetos pessoais",
       items: [
         {
           case: "sealdown",
-          text: "Sealdown — Markdown e JSON por link, criptografados no navegador.",
+          text: "Sealdown — compartilhamento de documentos por link, criptografados no navegador.",
         },
         {
           case: "mailhub-mcp",
-          text: "mailhub-mcp — e-mail para o Claude, sem enviar nem apagar e reversível.",
+          text: "mailhub-mcp — conecta o Claude a várias caixas de e-mail, sem poder enviar nem apagar.",
         },
       ] satisfies { case: CaseId; text: string }[],
     },
@@ -500,19 +483,19 @@ const meta = {
     name: "Projetos",
     title: "Projetos · Daniel Porto · Desenvolvedor Full Stack Sênior",
     description:
-      "Seis projetos do problema ao resultado: chat de IA, CI/CD e design system, extração por confiança, Sealdown, mailhub-mcp e agentes de IA.",
+      "Seis projetos do problema ao resultado: copiloto de IA, CI/CD e design system, extração por confiança, Sealdown, mailhub-mcp e agentes de IA.",
   },
   "case-ai-chat": {
-    name: "Chat de IA em produção",
-    title: "Chat de IA em produção · Daniel Porto",
+    name: "Copiloto de IA no dashboard",
+    title: "Copiloto de IA no dashboard · Daniel Porto",
     description:
-      "Como um chat de IA que entende a página e age no dashboard saiu de um protótipo de 3 dias e chegou à produção com clientes: problema, decisões e resultado.",
+      "Como um copiloto de IA que responde perguntas dos clientes e age no dashboard passou de um protótipo de 3 dias à produção: problema, decisões e resultado.",
   },
   "case-cicd-design-system": {
     name: "CI/CD e design system",
     title: "CI/CD e design system · Daniel Porto",
     description:
-      "800+ deploys em produção e um design system com 45+ versões: o problema, as decisões e o resultado da esteira de CI/CD e do pacote de componentes.",
+      "O processo automático que testa e publica cada mudança do front-end e a biblioteca de componentes compartilhada pelos produtos: problema, decisões e resultado.",
   },
   "case-ocr-extraction": {
     name: "Extração de dados por nível de confiança",
@@ -533,10 +516,10 @@ const meta = {
       "Servidor MCP que dá ao Claude várias caixas de e-mail num só conector, sem enviar nem apagar, com mudanças reversíveis e defesas contra prompt injection.",
   },
   "case-ai-workflow": {
-    name: "Desenvolvimento com agentes de IA",
-    title: "Desenvolvimento com agentes de IA · Daniel Porto",
+    name: "Desenvolvimento de software com agentes de IA",
+    title: "Desenvolvimento de software com agentes de IA · Daniel Porto",
     description:
-      "Como uso agentes de IA para escrever código com processo: spec, plano, um agente por tarefa, revisão e testes que barram o erro antes do merge.",
+      "Como uso agentes de IA para escrever código com método: especificação, plano, um agente por tarefa, revisão e testes automáticos antes de cada mudança entrar.",
   },
   credits: {
     name: "Créditos",
@@ -573,90 +556,100 @@ const caseStudies = {
   items: [
     {
       id: "ai-chat",
-      title: "Chat de IA em produção",
-      result: "Um chat de IA **em produção com clientes**, que entende a página em que está aberto e age no dashboard.",
-      role: "Interface, integração com a LLM e prompts (refinados com o time de dados); proposta da arquitetura de ações.",
+      title: "Copiloto de IA no dashboard",
+      summary:
+        "Copiloto que responde perguntas dos clientes da Purple Metrics sobre os próprios dados e executa ações no dashboard.",
+      result:
+        "Um copiloto de IA **usado pelos clientes** da Purple Metrics, que responde perguntas sobre os dados deles e **executa ações** no dashboard.",
+      role: "Desenvolvi a interface, a integração com a LLM e os prompts (refinados com o time de dados) e propus a arquitetura de ações, que hoje evoluo e mantenho.",
       stack: ["React", "TypeScript", "Python", "Claude"],
       context:
-        "A Purple Metrics é uma plataforma de Marketing Mix Modeling que mostra a marcas quanto cada canal de mídia realmente gera de resultado. Os clientes tiravam dúvidas direto no dashboard, pelos gráficos, ou perguntando ao time de CS.",
+        "A Purple Metrics é uma plataforma de Marketing Mix Modeling: mostra às marcas quanto cada canal de mídia gera em vendas, para orientar onde investir. Antes do copiloto, para tirar uma dúvida, o cliente consultava os gráficos do dashboard ou pedia ajuda ao time de atendimento (CS).",
       problem:
-        "Os dados já existiam, mas os insights não eram fáceis de alcançar. Muitas perguntas só tinham resposta cruzando dados que estavam em gráficos ou páginas diferentes.",
+        "Os dados estavam no dashboard, mas a resposta para muitas perguntas ficava espalhada em gráficos e páginas diferentes. Para chegar a ela, o cliente precisava cruzar as informações sozinho ou esperar o time de CS, o que tornava as análises mais lentas e aumentava a dependência do atendimento.",
       decisions: [
         {
           title: "Começar por um protótipo.",
-          text: "O chat nasceu de um protótipo que meu time construiu em **3 dias** num hackathon interno; fui responsável pela interface, pela integração com a LLM e pelos prompts.",
+          text: "O copiloto nasceu de um protótipo que meu time construiu em **3 dias** num hackathon interno, já pensado para esse problema. Testar a ideia rapidamente mostrou que ela funcionava antes de investir no produto completo.",
         },
         {
-          title: "Dar ao chat o contexto do cliente.",
-          text: "A primeira versão era um chat isolado, já com todo o contexto do cliente.",
+          title: "Dar ao copiloto o contexto de cada cliente.",
+          text: "Desde a primeira versão, o copiloto conhece os dados de cada cliente, para responder sobre a conta dele, e não de forma genérica.",
         },
         {
-          title: "Sair do chat isolado.",
-          text: "Propus a arquitetura que dá ao chat o **contexto da página** em que ele está aberto e permite que ele **execute ações** nessa página ou fora dela, em vez de só responder em texto.",
+          title: "Fazer o copiloto agir, não só responder.",
+          text: "Propus uma arquitetura em que o copiloto sabe em qual página do dashboard está aberto e pode **executar ações**, como abrir uma página, mudar um filtro ou montar um gráfico. Assim o cliente chega direto à informação, em vez de receber só um texto. A primeira versão foi implementada por outra pessoa do time; hoje eu evoluo e mantenho essa parte.",
         },
         {
-          title: "Respostas com dados de verdade.",
-          text: "O chat responde gerando SQL e chamando APIs em Python, com insights e gráficos.",
+          title: "Responder com os dados reais.",
+          text: "Para responder, o copiloto consulta o banco de dados do cliente (gerando consultas SQL) e as APIs da plataforma, e devolve análises e gráficos.",
         },
       ],
       flow: [
-        "Pergunta + contexto da página",
-        "Backend",
-        "LLM decide: consultar dados ou executar uma ação",
+        "Pergunta do cliente + página aberta",
+        "Servidor",
+        "A LLM decide: consultar os dados ou executar uma ação",
         "O dashboard aplica a ação (abrir uma página, mudar um filtro, montar um gráfico)",
       ],
       outcome: [
-        "Uso pelos clientes e **adoção rápida**.",
-        "Clientes satisfeitos com o resultado.",
-        "Descobrimos **perguntas que não sabíamos que os clientes faziam**.",
-        "Hoje a estrutura de ações é a base para novas funcionalidades do chat.",
+        "Os clientes adotaram o copiloto **rapidamente** e passaram a chegar às respostas com menos dependência do time de CS.",
+        "Os clientes ficaram satisfeitos com as respostas do copiloto.",
+        "As perguntas feitas ao copiloto revelaram **dúvidas que o time não sabia que os clientes tinham**, o que ajuda a decidir o que melhorar no produto.",
+        "A estrutura de ações virou a base das novas funcionalidades do copiloto, que são criadas sem refazer a arquitetura.",
       ],
       resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
     },
     {
       id: "cicd-design-system",
       title: "CI/CD e design system",
-      result: "**800+ deploys** em produção e um design system com **45+ versões** publicadas.",
-      role: "Criei a esteira de CI/CD do frontend e extraí o design system; sou o principal contribuidor do pacote.",
+      summary:
+        "O processo automático que testa e publica cada mudança do front-end, e a biblioteca de componentes compartilhada pelos produtos.",
+      result: "**Muito menos erros** chegando à produção, e produtos com **a mesma aparência**.",
+      role: "Criei a esteira de CI/CD do front-end e transformei os componentes do produto num design system, do qual sou o principal contribuidor.",
       stack: ["GitHub Actions", "AWS (ECR/ECS)", "Terraform", "Playwright", "React", "Radix UI", "Storybook"],
-      context: "Um monólito foi virando vários projetos parecidos, mas que não garantiam componentes iguais.",
+      context:
+        "CI/CD é o processo automático que testa, revisa e publica cada mudança no código; um design system é uma biblioteca de componentes visuais compartilhada pelos produtos. Um sistema único (um monólito) foi se dividindo em vários projetos parecidos, que não garantiam componentes iguais.",
       problem:
-        "Produtos com componentes diferentes para a mesma coisa, e uma esteira de entrega que precisava de ambientes de QA mais dinâmicos, testes na hora certa e deploys rastreáveis.",
+        "Produtos com componentes diferentes para a mesma coisa, e um processo de entrega que precisava de ambientes de teste mais flexíveis, testes no momento certo e publicações rastreáveis.",
       decisions: [
         {
-          title: "Design system como pacote npm próprio.",
-          text: "Facilita a distribuição entre os produtos, inclusive para quem não é programador e quer fazer uma POC ou um projeto rápido com IA usando os componentes oficiais.",
+          title: "Publicar o design system como pacote próprio.",
+          text: "Um pacote npm próprio facilita a distribuição entre os produtos, inclusive para pessoas que não programam e querem criar um protótipo ou um projeto rápido com IA usando os componentes oficiais.",
         },
         {
-          title: "Testes no momento certo.",
-          text: "Testes ao abrir o PR e E2E com Playwright antes do deploy, da forma mais rápida possível.",
+          title: "Testar no momento certo.",
+          text: "Os testes rodam quando a mudança é proposta (no pull request), e os testes de ponta a ponta com Playwright, que simulam o uso real do produto, rodam antes da publicação, da forma mais rápida possível.",
         },
-        { title: "Ambientes de QA sob demanda.", text: "" },
         {
-          title: "Smoke tests em clientes reais.",
-          text: "Para achar erros antes que o cliente encontre.",
+          title: "Criar ambientes de teste sob demanda.",
+          text: "Cada mudança tem um ambiente de teste próprio antes de ir para produção.",
+        },
+        {
+          title: "Rodar testes rápidos em clientes reais.",
+          text: "Testes rápidos de verificação (smoke tests) rodam em clientes reais, para achar erros antes que o cliente os encontre.",
         },
       ],
       flow: [
-        "PR com testes",
-        "Ambiente de QA sob demanda",
-        "E2E antes do deploy",
-        "Deploy rastreável",
+        "Mudança proposta, com testes",
+        "Ambiente de teste sob demanda",
+        "Testes de ponta a ponta antes da publicação",
+        "Publicação rastreável",
         "Smoke tests em clientes reais",
       ],
       outcome: [
-        "**800+ deploys** em produção, com deploys mais frequentes e rastreáveis.",
+        "Publicações mais frequentes e rastreáveis.",
         "Menos bugs chegando ao cliente.",
-        "Produtos com a mesma cara: o design system igualou os componentes.",
-        "Pessoas de fora do time de desenvolvimento montando POCs com o design system.",
+        "Produtos com a mesma aparência: o design system igualou os componentes.",
+        "Pessoas de outras áreas criando protótipos com os componentes oficiais, sem depender do time de desenvolvimento.",
       ],
       resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
     },
     {
       id: "ocr-extraction",
       title: "Extração de dados por nível de confiança",
+      summary: "Sistema que lê valores de telas de medição em fotos, combinando OCR e IA com custo baixo.",
       result: "**377 de 380** campos corretos, nenhuma leitura errada, e o serviço pago acionado em **menos de 3%** dos campos.",
-      role: "Desenhei e construí a esteira e treinei os dois modelos de visão (recorte e classificação).",
+      role: "Projetei e construí o sistema e treinei os dois modelos de visão computacional (recorte e classificação).",
       stack: ["YOLO", "OCR", "AWS Lambda", "Amazon Bedrock"],
       context:
         "Pessoas preenchiam planilhas e recortavam imagens à mão para registrar leituras de balanças e outros equipamentos de medição, em volumes de **milhares de imagens por dia**.",
@@ -664,18 +657,18 @@ const caseStudies = {
       decisions: [
         {
           title: "Recortar como as pessoas recortavam.",
-          text: "Um modelo YOLO faz o recorte da imagem do jeito que os usuários já faziam manualmente.",
+          text: "Um modelo de visão computacional (YOLO) recorta a imagem do jeito que os usuários já faziam à mão.",
         },
         {
           title: "Saber o que é a imagem antes de ler.",
-          text: "Um segundo modelo YOLO, de **4 classes**, identifica o tipo de imagem (item, post-it, balança e medidor de dimensões).",
+          text: "Um segundo modelo, de **4 classes**, identifica o tipo de imagem (item, post-it, balança e medidor de dimensões).",
         },
         {
-          title: "Cascata por custo e confiança.",
-          text: "OCR próprio numa Lambda pequena na AWS primeiro; se o resultado não passa nas regras, OCR em nuvem mais robusto; se ainda falha, uma LLM com o contexto de tudo o que aconteceu antes. Mandar tudo direto para a LLM sairia caro nesse volume, e as camadas davam **mais confiança** do que a LLM sozinha.",
+          title: "Ler em cascata, por custo e confiança.",
+          text: "A leitura passa por etapas, da mais barata à mais cara, e só avança quando a anterior não basta. Primeiro, um OCR (leitura automática de texto) próprio numa Lambda pequena na AWS; se o resultado não passa nas regras, OCR em nuvem mais robusto; se ainda falha, uma LLM com o contexto de tudo o que aconteceu antes. Mandar tudo direto para a LLM sairia caro nesse volume, e as camadas davam **mais confiança** do que a LLM sozinha.",
         },
         {
-          title: "Regras por tipo de equipamento.",
+          title: "Definir regras por tipo de equipamento.",
           text: "Cada tipo de balança ou medidor tem seu conjunto de regras para decidir se a leitura é válida ou se passa para a próxima etapa.",
         },
       ],
@@ -697,33 +690,35 @@ const caseStudies = {
     {
       id: "sealdown",
       title: "Sealdown: documentos que só quem tem o link lê",
+      summary: "App para compartilhar documentos por link, criptografados no navegador: nem o servidor consegue ler.",
       result:
         "Markdown e JSON compartilhados por link e editados em tempo real, **criptografados no navegador**: o servidor **nunca lê** o conteúdo.",
       role: "Projeto pessoal: concebi e construí sozinho, com o Claude Code.",
       stack: ["React", "TypeScript", "CodeMirror", "Yjs", "Web Crypto", "Supabase (Postgres, Realtime)", "Playwright", "Claude Code"],
-      context: "Eu queria compartilhar Markdown renderizado, com diagramas Mermaid, por um link privado, de graça e sem conta.",
+      context:
+        "Eu precisava compartilhar documentos em Markdown (texto com formatação), com diagramas Mermaid, por um link privado, de graça e sem criar conta.",
       problem:
         "Por princípio, ninguém deveria conseguir ler um documento sem permissão, nem o servidor que o guarda. E, nos documentos ao vivo, quem tem só o link de leitura não pode conseguir escrever.",
       decisions: [
         {
           title: "Criptografar no navegador.",
-          text: "Todo documento é criptografado com AES-GCM antes de sair do navegador. A chave vai no fragmento do link (depois do #), que nunca é enviado a um servidor. O Supabase só guarda texto cifrado.",
+          text: "Todo documento é embaralhado (criptografado) no navegador antes de ser enviado; a chave fica só no link. Tecnicamente: AES-GCM, com a chave no fragmento do link (depois do #), que nunca é enviado a um servidor. O Supabase só guarda texto cifrado.",
         },
         {
-          title: "Senha sem chave no link.",
-          text: "Com senha, a chave é derivada no próprio navegador (PBKDF2, **600 mil iterações**). Nem a senha nem a chave vão no link.",
+          title: "Proteger com senha, sem a chave no link.",
+          text: "Com senha, nem a senha nem a chave vão no link: a chave é gerada a partir da senha no próprio navegador (PBKDF2, **600 mil iterações**).",
         },
         {
-          title: "Leitura que não escreve.",
-          text: "Cada edição de um documento ao vivo é assinada com uma chave **Ed25519** derivada do token de edição, que só existe no link de edição. O link de leitura tem só a chave pública: confere as edições, mas não consegue criar uma válida. O servidor guarda apenas o hash do token.",
+          title: "Impedir que o link de leitura edite.",
+          text: "Só quem tem o link de edição consegue alterar um documento ao vivo. Cada edição de um documento ao vivo é assinada com uma chave **Ed25519** derivada do token de edição, que só existe no link de edição. O link de leitura tem só a chave pública: confere as edições, mas não consegue criar uma válida. O servidor guarda apenas o hash do token.",
         },
         {
-          title: "Tempo real sem servidor próprio.",
-          text: "No Markdown, várias pessoas editam ao mesmo tempo com Yjs, e as edições trafegam cifradas e assinadas pelo Supabase Realtime. No JSON, o documento salva depois de uma pausa e faz merge por caminho, só pedindo escolha quando duas pessoas mudaram o mesmo valor.",
+          title: "Editar em tempo real sem servidor próprio.",
+          text: "Várias pessoas podem editar o mesmo documento ao mesmo tempo. No Markdown, isso usa Yjs, e as edições trafegam cifradas e assinadas pelo Supabase Realtime. No JSON, o documento salva depois de uma pausa e combina as mudanças campo a campo, só pedindo uma escolha quando duas pessoas mudaram o mesmo valor.",
         },
         {
-          title: "IA com processo.",
-          text: "Construí com o Claude Code no fluxo spec → plano → execução: **7 specs e 7 planos**, um por fase do projeto.",
+          title: "Desenvolver com IA e com método.",
+          text: "Construí com o Claude Code no fluxo especificação → plano → execução: **7 especificações e 7 planos**, um por fase do projeto.",
         },
       ],
       flow: [
@@ -735,8 +730,8 @@ const caseStudies = {
       ],
       outcome: [
         "No ar, com o código aberto no GitHub.",
-        "**116 commits** em 6 dias de trabalho, todos com o Claude Code.",
-        "**Cerca de 430 testes**: ~220 unitários, ~209 E2E, mais testes visuais e de banco.",
+        "**116 commits** (registros de alteração no código) em 6 dias de trabalho, todos com o Claude Code.",
+        "**Cerca de 430 testes automáticos**: ~220 unitários, ~209 de ponta a ponta (E2E), mais testes visuais e de banco de dados.",
         "Edição em tempo real, histórico com versões nomeadas e modo JSON, sem contas e sem o servidor ler nada.",
       ],
       resumeTarget: "personal-project",
@@ -755,33 +750,34 @@ const caseStudies = {
     {
       id: "mailhub-mcp",
       title: "mailhub-mcp: e-mail seguro para agentes de IA",
+      summary: "Conecta o Claude a várias caixas de e-mail com segurança: não envia, não apaga e toda mudança pode ser desfeita.",
       result:
-        "Um servidor MCP que dá ao Claude **várias caixas de e-mail num só conector**, sem poder **enviar nem apagar** nada, e com toda mudança reversível.",
+        "Um servidor MCP (padrão aberto que conecta assistentes de IA a outros sistemas) que dá ao Claude **várias caixas de e-mail num só conector**, sem poder **enviar nem apagar** nada, e com toda mudança reversível.",
       role: "Projeto pessoal e open source: concebi e construí sozinho, com o Claude Code.",
       stack: ["Python", "FastMCP", "Gmail API", "OAuth", "Docker", "Tailscale Funnel", "GitHub Actions"],
       context:
-        "Eu queria que o Claude me dissesse toda manhã o que precisa da minha atenção em todas as minhas caixas de e-mail. O conector nativo de Gmail aceita uma conta por vez, e eu não queria entregar meus tokens de e-mail a um serviço de terceiros. Então construí o meu, rodando no meu próprio servidor.",
+        "Eu precisava de um resumo diário do que exige atenção em todas as minhas caixas de e-mail. O conector nativo do Gmail aceita uma conta por vez, e eu não queria entregar meus acessos a um serviço de terceiros. Por isso, criei um servidor próprio.",
       problem:
         "Um agente que lê e-mail lê texto escrito por qualquer pessoa, e qualquer mensagem pode trazer instruções escondidas (prompt injection). O servidor precisa continuar seguro mesmo quando o modelo for enganado.",
       decisions: [
         {
-          title: "Sem enviar, sem apagar.",
+          title: "Impedir o envio e a exclusão de e-mails.",
           text: "O código nunca chama as APIs de envio, lixeira ou exclusão, e **um teste varre o código** para garantir isso. Rascunhos só como resposta a quem já está na conversa.",
         },
         {
-          title: "Toda mudança pode ser desfeita.",
-          text: "Labels, arquivamento e leitura ficam num journal com o estado anterior de cada mensagem: dá para desfazer um lote ou tudo desde um horário. Mudanças em massa mostram uma prévia antes e têm limite diário.",
+          title: "Tornar toda mudança reversível.",
+          text: "Toda mudança pode ser desfeita. Marcadores (labels), arquivamento e status de leitura ficam registrados num histórico (journal) com o estado anterior de cada mensagem, o que permite desfazer um lote ou tudo desde um horário. Mudanças em massa mostram uma prévia antes e têm limite diário.",
         },
         {
-          title: "E-mail é entrada não confiável.",
-          text: "Texto escondido no HTML e caracteres invisíveis são removidos, o conteúdo vai entre marcadores com um nonce aleatório, e prováveis tentativas de injection são sinalizadas em vez de executadas.",
+          title: "Tratar o e-mail como entrada não confiável.",
+          text: "O conteúdo de cada e-mail é limpo e isolado antes de chegar ao modelo. Texto escondido no HTML e caracteres invisíveis são removidos, o conteúdo vai entre marcadores com um código aleatório (nonce), e prováveis tentativas de injection são sinalizadas em vez de executadas.",
         },
         {
-          title: "Aprovação fora do chat.",
+          title: "Exigir aprovação fora do chat.",
           text: "Preferências que aumentam a atenção valem na hora; as que diminuem, como ignorar um remetente, viram uma proposta que só eu aprovo, fora do alcance do assistente. As caixas são vinculadas numa página de admin separada.",
         },
         {
-          title: "Cada camada no seu limite.",
+          title: "Reconhecer o limite de cada camada.",
           text: "O lado do servidor está mitigado e segue evoluindo. O risco que sobra está no agente cliente: se outra ferramenta da mesma sessão acessa a máquina ou a internet, um e-mail malicioso pode tentar usá-la. Por isso as rotinas automáticas usam uma **instância só de leitura**.",
         },
       ],
@@ -795,7 +791,7 @@ const caseStudies = {
       outcome: [
         "Uso **todo dia em 5 caixas de e-mail**.",
         "**156 commits**, todos com o Claude Code.",
-        "**1151 testes**, incluindo o que proíbe as chamadas de envio e exclusão.",
+        "**1151 testes automáticos**, incluindo o que proíbe as chamadas de envio e exclusão.",
         "**18 ferramentas** (11 só de leitura), open source (MIT), em beta, com imagem Docker multi-arquitetura publicada e um site com instalação passo a passo.",
       ],
       resumeTarget: "personal-project",
@@ -813,54 +809,55 @@ const caseStudies = {
     },
     {
       id: "ai-workflow",
-      title: "Desenvolvimento com agentes de IA",
+      title: "Desenvolvimento de software com agentes de IA",
+      summary:
+        "O método que uso para que agentes de IA escrevam código com qualidade: especificação, plano, revisão e testes automáticos.",
       result:
-        "Agentes de IA escrevem o código; eu decido o quê e por quê. Um fluxo **spec → plano → execução**, com revisão a cada etapa e testes que barram o erro antes do merge.",
-      role: "Liderei a adoção no time da Purple Metrics e uso o mesmo fluxo nos meus projetos, onde o processo inteiro é público.",
+        "Um método de trabalho em que agentes de IA escrevem o código e eu defino o que fazer, **reviso cada etapa** e garanto a qualidade com **testes automáticos**.",
+      role: "Liderei a adoção no time da Purple Metrics e uso o mesmo método nos meus projetos pessoais, cujo código é público.",
       stack: ["Claude Code", "Cursor", "Linear", "GitHub Actions", "Playwright"],
       context:
-        "Na Purple Metrics, liderei a adoção de agentes de IA no desenvolvimento do time, com skills e regras para Claude Code e Cursor integradas ao Linear. Nos projetos pessoais, como o Sealdown e o mailhub-mcp, uso o mesmo fluxo, e ali dá para ver tudo: as specs, os commits e os testes.",
+        "Agentes de IA, como o Claude Code e o Cursor, são assistentes que escrevem código a partir de instruções. Na Purple Metrics, liderei a adoção dessas ferramentas pelo time de desenvolvimento, com regras compartilhadas e um fluxo integrado ao Linear, a ferramenta de gestão de tarefas do time. Nos projetos pessoais uso o mesmo método, e todo o processo pode ser conferido no código.",
       problem:
-        "Um agente escreve código rápido, mas sem processo a velocidade vira retrabalho: decisões que se perdem entre uma conversa e outra, código que ninguém revisou de verdade e regras que o agente esquece.",
+        "Um agente escreve código rapidamente, mas sem método essa velocidade vira retrabalho: decisões se perdem de uma conversa para outra, o código não é revisado com cuidado e o agente esquece regras combinadas.",
       decisions: [
         {
-          title: "Spec antes de código.",
-          text: "Toda mudança começa numa spec construída em conversa: o que muda, por quê e o que fica de fora. Eu reviso e corrijo os fatos antes de qualquer linha de código.",
+          title: "Especificar antes de programar.",
+          text: "Cada mudança começa por uma especificação escrita com o agente: o que muda, por que e o que fica de fora. Eu reviso e corrijo essa especificação antes de qualquer código ser escrito.",
         },
         {
-          title: "Plano em tarefas pequenas.",
-          text: "A spec vira um plano com tarefas pequenas, cada uma com os arquivos que mexe, as interfaces e como verificar que deu certo.",
+          title: "Dividir o trabalho em tarefas pequenas.",
+          text: "A especificação vira um plano com tarefas pequenas, cada uma com os arquivos envolvidos e a forma de verificar se ficou correta.",
         },
         {
-          title: "Um agente por tarefa, com revisão.",
-          text: "Cada tarefa vai para um subagente com contexto limpo, e o resultado é revisado antes da próxima.",
+          title: "Usar um agente por tarefa, com revisão.",
+          text: "Cada tarefa é executada por um agente separado, que começa sem o histórico das anteriores, e o resultado é revisado antes da próxima.",
         },
         {
-          title: "Regras viram testes.",
-          text: "O que o agente pode esquecer vira teste ou checagem de build. Neste site, o build falha se um texto confidencial aparecer ou se um título sair do tamanho, e **100+ testes E2E** rodam em cada PR.",
+          title: "Transformar regras em testes automáticos.",
+          text: "O que o agente pode esquecer vira um teste automático. Neste site, a publicação é bloqueada se aparecer um texto confidencial, e **mais de 100 testes** simulam o uso real das páginas a cada mudança.",
         },
         {
-          title: "O merge é meu.",
-          text: "O agente abre o PR; eu testo localmente, reviso e faço o merge.",
+          title: "Manter a decisão final comigo.",
+          text: "O agente prepara a mudança para revisão; eu testo, reviso e decido se ela entra.",
         },
       ],
       flow: [
-        "Spec (revisada por mim)",
+        "Especificação revisada por mim",
         "Plano em tarefas pequenas",
-        "Subagente por tarefa + revisão",
-        "CI: lint, build e testes E2E",
-        "Teste local e merge (eu)",
+        "Um agente por tarefa, com revisão",
+        "Testes automáticos",
+        "Teste final e aprovação (eu)",
       ],
       outcome: [
-        "**Sealdown**: **7 specs e 7 planos** públicos no repositório, **116 commits** em 6 dias de trabalho e cerca de **430 testes**.",
-        "**mailhub-mcp**: **156 commits**, **1151 testes** e os docs de design públicos no repositório.",
-        "**Este site**: **25+ PRs**, cada um passando por lint, build com checagens de conteúdo e **100+ testes E2E**.",
-        "No time da Purple Metrics: skills e regras compartilhadas para Claude Code e Cursor, com o fluxo spec → plano → execução integrado ao Linear.",
-        "O código dos três projetos é aberto: dá para conferir as specs, os commits e os testes.",
+        "**Sealdown:** **7 especificações e 7 planos** públicos, **116 commits** (registros de alteração no código) e cerca de **430 testes automáticos**.",
+        "**mailhub-mcp:** **156 commits** e **1151 testes automáticos**, com os documentos de projeto públicos.",
+        "**Este site:** mais de **25 mudanças revisadas**, cada uma verificada por mais de **100 testes automáticos**.",
+        "**Na Purple Metrics:** regras compartilhadas pelo time, com o fluxo especificação → plano → execução integrado ao Linear.",
       ],
       resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
       links: [
-        { label: "Specs do Sealdown", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
+        { label: "Especificações do Sealdown", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
         { label: "Código do site", href: "https://github.com/TrainedLoop/danielporto-site" },
       ],
     },
@@ -884,7 +881,7 @@ const llms = {
   online: "Versão on-line",
 };
 
-const pt = { ...ui, meta, caseStudies, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
+const pt = { ...ui, meta, caseStudies, share, llms, story, profile, experience, projects, skillGroups, languages };
 
 /** The shape of the messages: en.ts must have exactly the same keys. */
 export type Messages = typeof pt;

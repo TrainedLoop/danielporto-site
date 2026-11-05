@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AtAGlance } from "./resume/AtAGlance";
-import { EarlyCareer } from "./resume/EarlyCareer";
 import { JobEntry } from "./resume/JobEntry";
 import { PersonalProjects } from "./resume/PersonalProjects";
 import { ProjectCard } from "./resume/ProjectCard";
@@ -18,7 +17,8 @@ function printResume(pdfTitle: string) {
 
 /**
  * The text version: header on top, a sticky side column (contact, skills) and the main column
- * (at a glance, experience, early career, selected projects, personal project). The DOM order is the phone order.
+ * (professional summary, experience, projects, personal projects). The DOM order is the phone order and the
+ * printed (one-column) order.
  */
 export function Resume() {
   const { t } = useTranslation();
@@ -43,7 +43,6 @@ export function Resume() {
             <JobEntry key={job.id} job={job} />
           ))}
         </section>
-        <EarlyCareer />
         <section id="projects" className="resume__section projects">
           <h2>{t("resume.projects")}</h2>
           <div className="projects__grid">

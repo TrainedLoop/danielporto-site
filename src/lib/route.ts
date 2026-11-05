@@ -59,7 +59,7 @@ const PATHS: Record<Lang, Record<Route, string>> = {
     story: "historia/",
     resume: "curriculo/",
     projects: "projetos/",
-    "case-ai-chat": "projetos/chat-de-ia/",
+    "case-ai-chat": "projetos/copiloto-de-ia/",
     "case-cicd-design-system": "projetos/ci-cd-design-system/",
     "case-ocr-extraction": "projetos/extracao-ocr-llm/",
     "case-sealdown": "projetos/sealdown/",
@@ -72,7 +72,7 @@ const PATHS: Record<Lang, Record<Route, string>> = {
     story: "en/story/",
     resume: "en/resume/",
     projects: "en/projects/",
-    "case-ai-chat": "en/projects/ai-chat/",
+    "case-ai-chat": "en/projects/ai-copilot/",
     "case-cicd-design-system": "en/projects/ci-cd-design-system/",
     "case-ocr-extraction": "en/projects/ocr-llm-extraction/",
     "case-sealdown": "en/projects/sealdown/",
@@ -84,11 +84,14 @@ const PATHS: Record<Lang, Record<Route, string>> = {
 
 /**
  * Old addresses that keep working: /en/curriculo/ was live for a few minutes before
- * /en/resume/. main.tsx sends visitors to the new address, and the build writes a
- * redirect-only page there (scripts/prerender.js).
+ * /en/resume/, and the AI copilot case was "chat de IA" / "AI chat" before it was renamed.
+ * main.tsx sends visitors to the new address, and the build writes a redirect-only page there
+ * (scripts/prerender.js). They are not pages of their own, so they stay out of the sitemap.
  */
 export const LEGACY_PATHS: Record<string, Page> = {
   "en/curriculo/": { route: "resume", lang: "en" },
+  "projetos/chat-de-ia/": { route: "case-ai-chat", lang: "pt" },
+  "en/projects/ai-chat/": { route: "case-ai-chat", lang: "en" },
 };
 
 /** Every page, in the order the build writes the static HTML. */

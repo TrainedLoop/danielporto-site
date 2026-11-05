@@ -97,8 +97,9 @@ test.describe("story ending", () => {
     ["/en/story/", "Message me on LinkedIn", "/en/resume/"],
   ]) {
     test(`${path} offers contact on LinkedIn and the résumé`, async ({ page, problems }) => {
-      await page.goto(path);
-      await page.evaluate(() => localStorage.setItem("story:progress", JSON.stringify({ phase: 8, items: [] })));
+      // Seed the progress before any page script runs: setting it after a first load raced with the
+      // story saving its own progress, which sometimes overwrote it before the reload.
+      await page.addInitScript(() => localStorage.setItem("story:progress", JSON.stringify({ phase: 8, items: [] })));
       await page.goto(path);
       const actions = page.locator(".next__actions");
       const linkedIn = actions.getByRole("link", { name: contact });

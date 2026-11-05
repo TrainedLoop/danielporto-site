@@ -59,7 +59,7 @@ export function checkStory(fileExists: (path: string) => boolean): string[] {
     if (phase.job) {
       for (const lang of LANGS) {
         const t = i18n.getFixedT(lang)
-        const ids = new Set([...t('experience'), ...t('earlyCareer')].map((job) => job.id))
+        const ids = new Set(t('experience').map((job) => job.id))
         if (!ids.has(phase.job)) problems.push(`${phase.id}: job ${phase.job} not found on the résumé (${lang})`)
       }
     }
@@ -79,7 +79,7 @@ export function checkHomeAchievements(): string[] {
   const problems: string[] = []
   for (const lang of LANGS) {
     const t = i18n.getFixedT(lang)
-    const anchors = new Set(['projects', ...[...t('experience'), ...t('earlyCareer')].map((job) => job.id)])
+    const anchors = new Set(['projects', ...t('experience').map((job) => job.id)])
     for (const achievement of t('home.achievements')) {
       if (!anchors.has(achievement.target)) {
         problems.push(`home: achievement ${achievement.id} target ${achievement.target} not found on the résumé (${lang})`)
@@ -95,7 +95,7 @@ const CASE_IDS: CaseId[] = ['ai-chat', 'cicd-design-system', 'ocr-extraction', '
 /** The OCR case is anonymous: no employer, client, year or "freelance" may appear in its text. */
 const OCR_FORBIDDEN = [/purple|fu2re|fulllab|hebara|freela/i, /\b(19|20)\d{2}\b/]
 
-/** Résumé anchors a case can point to besides the jobs: the selected projects and the personal project. */
+/** Résumé anchors a case can point to besides the jobs: the projects and the personal projects. */
 const SECTION_ANCHORS = ['projects', 'personal-project']
 
 /**
@@ -108,13 +108,13 @@ export function checkCaseStudies(fileExists: (path: string) => boolean = () => t
   for (const lang of LANGS) {
     const t = i18n.getFixedT(lang)
     const items = t('caseStudies.items')
-    const anchors = new Set([...SECTION_ANCHORS, ...[...t('experience'), ...t('earlyCareer')].map((job) => job.id)])
+    const anchors = new Set([...SECTION_ANCHORS, ...t('experience').map((job) => job.id)])
     if (items.map((item) => item.id).join() !== CASE_IDS.join()) {
       problems.push(`case studies: ids are ${items.map((item) => item.id).join(', ')}, expected ${CASE_IDS.join(', ')} (${lang})`)
     }
     for (const item of items) {
       const texts = [
-        item.title, item.result, item.role, item.context, item.problem,
+        item.title, item.summary, item.result, item.role, item.context, item.problem,
         ...item.stack, ...item.flow, ...item.outcome,
         ...item.decisions.map((decision) => decision.title),
       ]

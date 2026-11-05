@@ -90,8 +90,6 @@ function resumeMarkdown(lang: Lang): string[] {
     `### ${t("resume.glanceTitle")}`,
     "",
     ...glance.pitch.flatMap((sentence) => [sentence, ""]),
-    ...glance.stats.map((stat) => `- **${stat.value}** ${stat.label}`),
-    "",
     `### ${t("resume.experience")}`,
     "",
   ];
@@ -100,14 +98,13 @@ function resumeMarkdown(lang: Lang): string[] {
     if (job.description) lines.push(job.description, "");
     lines.push(...job.bullets.map((bullet) => `- ${bullet}`), "", `Stack: ${job.stack.join(" · ")}`, "");
   }
-  lines.push(`### ${t("resume.earlyCareer")}`, "");
-  lines.push(...t("earlyCareer").map((job) => `- **${job.company}** · ${job.role} · ${job.period} — ${job.line}`), "");
   // The projects block stays self-contained: no dates, clients or employers next to it.
   lines.push(`### ${t("resume.projects")}`, "");
   for (const project of t("projects")) {
-    lines.push(`#### ${project.title}`, "", project.did, "", project.result, "", `Stack: ${project.stack.join(" · ")}`, "");
+    const result = `${t("resume.projectResult")}: ${project.result}`;
+    lines.push(`#### ${project.title}`, "", project.did, "", result, "", `Stack: ${project.stack.join(" · ")}`, "");
   }
-  // The personal projects are listed apart from the selected projects, as on the page.
+  // The personal projects are listed apart from the résumé projects, as on the page.
   const personal = t("resume.personalProjects");
   lines.push(`### ${personal.title}`, "");
   for (const item of personal.items) {

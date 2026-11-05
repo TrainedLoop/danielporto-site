@@ -832,7 +832,7 @@ button {
 /*
  * Two columns on wide screens: the header across the top, a sticky side column (contact,
  * skills) on the left and the main column on the right. The DOM order (header, glance,
- * sidebar, main) is the single-column order used on phones.
+ * sidebar, main) is the single-column order used on phones and on paper.
  */
 .resume {
   --resume-muted: var(--muted-light);
@@ -999,43 +999,11 @@ button {
   color: var(--ink);
 }
 
-/* At a glance */
+/* Professional summary */
 
 .glance__pitch {
   margin: 0 0 12px;
   font-size: 18px;
-}
-
-.glance__stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin: 24px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.glance__stats li {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-  padding: 16px;
-  background: rgba(42, 33, 51, 0.6);
-  border-top: 4px solid var(--accent);
-}
-
-.glance__value {
-  font-family: var(--pixel-font);
-  font-size: 26px;
-  font-weight: 400;
-  line-height: 1.2;
-  color: var(--accent);
-}
-
-.glance__label {
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--resume-muted);
 }
 
 /* Sidebar */
@@ -1079,7 +1047,6 @@ button {
 
 /* Story links land here (/curriculo/#<id>): stop below the fixed top bar. */
 .job,
-.early-career__item,
 #projects,
 #personal-project {
   scroll-margin-top: var(--resume-sticky-top);
@@ -1131,28 +1098,7 @@ button {
   margin-top: 14px;
 }
 
-/* Early career */
-
-.early-career ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.early-career__item + .early-career__item {
-  margin-top: 16px;
-}
-
-.early-career__title,
-.early-career__line {
-  margin: 0;
-}
-
-.early-career__title .job__period {
-  white-space: nowrap;
-}
-
-/* Selected projects: the home cards' border, result on top. */
+/* Résumé projects: the home cards' border; title, what was done, then the result. */
 
 .projects__grid {
   display: grid;
@@ -1188,7 +1134,7 @@ button {
   font-size: 16px;
 }
 
-/* Personal projects: one line each, apart from the selected projects. */
+/* Personal projects: one line each, apart from the résumé projects. */
 .personal-project__line {
   margin: 0;
 }
@@ -1197,7 +1143,7 @@ button {
   margin-top: 8px;
 }
 
-/* Below 900px: one column (header, glance, compact sidebar, experience, projects). */
+/* Below 900px: one column (header, summary, compact sidebar, experience, projects). */
 @media (max-width: 900px) {
   .resume {
     grid-template-columns: minmax(0, 1fr);
@@ -1218,7 +1164,7 @@ button {
     width: 100%;
   }
 
-  /* The side column becomes a compact block between the glance and the experience. */
+  /* The side column becomes a compact block between the summary and the experience. */
   .resume__sidebar {
     position: static;
     max-height: none;
@@ -1245,22 +1191,6 @@ button {
 
   .skill-group + .skill-group {
     margin-top: 12px;
-  }
-}
-
-@media (max-width: 600px) {
-  .glance__stats {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .glance__stats li {
-    grid-template-columns: 96px 1fr;
-    align-items: center;
-  }
-
-  .glance__value {
-    font-size: 20px;
   }
 }
 
@@ -1657,7 +1587,7 @@ button {
 @media print {
   @page {
     size: A4;
-    margin: 14mm 12mm;
+    margin: 12mm;
   }
 
   .no-print {
@@ -1672,19 +1602,21 @@ button {
   }
 
   /*
-   * The printable width (~186mm) is under the 900px breakpoint, so the phone rules would apply:
-   * restore the two-column grid and a plain, un-sticky sidebar.
+   * One column on paper, in the DOM order: header, professional summary, contact and skills,
+   * experience, projects, personal projects. Applicant tracking systems and AI tools read the PDF
+   * as text, and two columns can interleave in that text. The printable width (~186mm) is under
+   * the 900px breakpoint, so the phone grid already applies; this strips its boxes and spacing.
    */
   .resume {
     --resume-muted: #444;
 
-    grid-template-columns: 55mm minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      'header header'
-      'sidebar glance'
-      'sidebar main';
-    grid-template-rows: auto auto 1fr;
-    column-gap: 7mm;
+      'header'
+      'glance'
+      'sidebar'
+      'main';
+    grid-template-rows: none;
     max-width: none;
     /* 1px on the right so borders flush with the page edge aren't clipped. */
     padding: 0 1px 0 0;
@@ -1696,26 +1628,73 @@ button {
     position: static;
     max-height: none;
     overflow: visible;
-    margin-top: 0;
+    margin-top: 9pt;
     padding: 0;
     background: none;
     border: 0;
   }
 
+  /* Contact and skills, compact: the contacts on one line, each skill group as "Group: a · b · c". */
   .resume__contact ul {
     display: block;
   }
 
-  .resume__contact li + li {
-    margin-top: 3pt;
+  .resume__contact li {
+    display: inline;
+  }
+
+  .resume__contact li + li::before {
+    content: ' · ';
   }
 
   .resume__sidebar section + section {
-    margin-top: 12pt;
+    margin-top: 9pt;
   }
 
   .skill-group + .skill-group {
-    margin-top: 8pt;
+    margin-top: 1pt;
+  }
+
+  .skill-group h3 {
+    display: inline;
+    margin: 0;
+    font-size: inherit;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .skill-group h3::after {
+    content: ': ';
+  }
+
+  /* Every tag list (skills, each job's and project's stack) prints as plain text: "a · b · c". */
+  .resume .chips {
+    display: inline;
+  }
+
+  .resume .chips li {
+    display: inline;
+    padding: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: #111;
+    background: none;
+    border: 0;
+  }
+
+  .resume .chips li + li::before {
+    content: ' · ';
+  }
+
+  .resume .job__stack,
+  .resume .project-card .chips {
+    display: block;
+    font-size: 8.5pt;
+  }
+
+  .resume .job__stack li,
+  .resume .project-card .chips li {
+    color: #444;
   }
 
   /* The id beats index.html's `#root > main a` rule, which paints links yellow. */
@@ -1754,7 +1733,6 @@ button {
   .job__role,
   .job__period,
   .job__description,
-  .glance__label,
   .skill-group h3,
   .project-card__did {
     color: #444;
@@ -1792,31 +1770,8 @@ button {
   }
 
   .glance__pitch {
-    margin-bottom: 6pt;
-    font-size: 11pt;
-  }
-
-  .glance__stats {
-    gap: 6pt;
-    margin-top: 8pt;
-  }
-
-  .glance__stats li {
-    gap: 4pt;
-    padding: 6pt 8pt;
-    background: none;
-    border: 1px solid #bbb;
-    border-top: 3px solid #3a2a6a;
-  }
-
-  .glance__value {
-    font-size: 15pt;
-    color: #3a2a6a;
-  }
-
-  .glance__label {
-    font-size: 8.5pt;
-    line-height: 1.3;
+    margin-bottom: 4pt;
+    font-size: 10.5pt;
   }
 
   .job + .job {
@@ -1844,42 +1799,28 @@ button {
     margin-top: 6pt;
   }
 
-  .early-career__item + .early-career__item {
-    margin-top: 6pt;
-  }
-
+  /* The project cards stack in one column too, as plain entries like the jobs (no boxes). */
   .projects__grid {
-    gap: 8pt;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7pt;
   }
 
   .project-card {
-    gap: 3pt;
-    padding: 6pt 8pt;
+    gap: 2pt;
+    padding: 0;
     background: none;
-    border: 1px solid #999;
+    border: 0;
     box-shadow: none;
   }
 
-  .project-card__result {
-    font-size: 9.5pt;
-  }
-
+  .project-card__result,
   .project-card__did {
-    font-size: 8.5pt;
+    font-size: 9.5pt;
     line-height: 1.3;
   }
 
   .project-card h3 {
     font-size: 10pt;
-  }
-
-  .resume .chips li {
-    padding: 0 4pt;
-    font-size: 8pt;
-    line-height: 1.5;
-    color: #111;
-    background: none;
-    border: 1px solid #999;
   }
 
   /* The personal projects are one line each on paper: keep them tight so the résumé stays on 2 pages. */
@@ -1900,10 +1841,15 @@ button {
     margin-top: 2pt;
   }
 
-  /* Jobs may flow across pages; bullets, cards and the at-a-glance block stay whole. */
+  /* A job's header and description stay with its first bullet. */
+  .job__header,
+  .job__description {
+    break-after: avoid;
+  }
+
+  /* Jobs may flow across pages; bullets, cards and the summary stay whole. */
   li,
   .project-card,
-  .early-career__item,
   .personal-project__line,
   .glance {
     break-inside: avoid;

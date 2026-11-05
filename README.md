@@ -17,8 +17,10 @@ currículo: `/curriculo/#<id do emprego>` (os ids são os mesmos nos dois idioma
 no topo leva para a mesma página no outro idioma, mantendo a fase da história e o emprego do
 currículo.
 
-Os links antigos continuam funcionando: os com hash (`#/curriculo`, `#/en/curriculo`) e o
-`/en/curriculo/`, que ficou no ar por alguns minutos, levam para o caminho novo.
+Os links antigos continuam funcionando: os com hash (`#/curriculo`, `#/en/curriculo`), o
+`/en/curriculo/`, que ficou no ar por alguns minutos, e os do estudo de caso do copiloto de IA
+antes de ganhar esse nome (`/projetos/chat-de-ia/`, `/en/projects/ai-chat/`) levam para o
+caminho novo. Eles ficam fora do sitemap.
 
 ## Rodar
 
@@ -46,8 +48,12 @@ pnpm test:e2e                           # ~10 s; relatório HTML: pnpm exec play
 
 O que é conferido: todas as páginas dos dois idiomas (a lista sai do `dist/sitemap.xml`) abrem
 com o `<html lang>` certo, um único `h1` e sem erro no console nem aviso de hidratação; nenhuma
-tem rolagem horizontal a 360 px; o seletor PT · EN no currículo e num estudo de caso; o PDF do
-currículo (impressão em A4) com no máximo 2 páginas; os links da home e dos estudos de caso
+tem rolagem horizontal a 360 px; o seletor PT · EN no currículo e num estudo de caso; os endereços antigos redirecionando para
+os novos (e fora do sitemap); o PDF do currículo (impressão em A4) com no máximo 2 páginas e
+numa coluna só (resumo, depois contato e competências, depois experiência), para leitores
+automáticos de currículo (ATS) e ferramentas de IA; no currículo, todos os empregos numa lista
+contínua, sem seção de início de carreira, e os cards de projeto na ordem título, o que foi feito
+e resultado; os cards da página de projetos com a frase de o que é cada projeto; os links da home e dos estudos de caso
 para o currículo param logo abaixo da barra do topo; o estudo de caso de OCR não cita empresa
 nem ano (nem no `<head>` e no JSON-LD); o link direto `/historia/?fase=3`; numa tela baixa
 de notebook (1366×768), a coluna lateral do currículo rola junto com a página; os botões de
@@ -84,7 +90,7 @@ relatório HTML fica como artefato da execução (`playwright-report`).
   imagem de compartilhamento em inglês (`og-image.en.png`). Também grava o `dist/404.html` (com
   `noindex`), que o GitHub Pages serve em caminhos desconhecidos: uma tela "GAME OVER" de página
   não encontrada, no idioma do prefixo do caminho (`/en/...` em inglês), uma página que só redireciona em cada endereço antigo
-  (`dist/en/curriculo/`) e o `dist/sitemap.xml`, com todas as páginas e as alternativas de
+  (`dist/en/curriculo/`, `dist/projetos/chat-de-ia/`, `dist/en/projects/ai-chat/`) e o `dist/sitemap.xml`, com todas as páginas e as alternativas de
   idioma. O build falha se alguma fala estiver sem texto ou se faltar algum sprite. No
   navegador, o React hidrata o HTML que já veio pronto.
 - Cada página leva dados estruturados (JSON-LD do schema.org) no idioma dela, gerados no build

@@ -5,6 +5,12 @@ test("the sitemap lists all 22 pages (11 routes × 2 languages)", () => {
   expect(SITE_PATHS.filter((path) => path.startsWith("/en/"))).toHaveLength(11);
 });
 
+test("the sitemap leaves out the old addresses that only redirect", () => {
+  for (const old of ["/en/curriculo/", "/projetos/chat-de-ia/", "/en/projects/ai-chat/"]) {
+    expect(SITE_PATHS).not.toContain(old);
+  }
+});
+
 for (const path of SITE_PATHS) {
   test.describe(path, () => {
     test("loads with the right lang, one h1 and no console errors", async ({ page, problems }) => {

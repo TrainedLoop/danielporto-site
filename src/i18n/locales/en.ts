@@ -1,7 +1,7 @@
 // English texts: the same keys as pt.ts (the Messages type enforces it), including the
 // pixel-art story and the credits.
 
-import type { Achievement, CaseId, CaseStudy, EarlyJob, Job, Messages, Project, SkillGroup } from "./pt";
+import type { Achievement, CaseId, CaseStudy, Job, Messages, Project, SkillGroup } from "./pt";
 
 const profile = {
   name: "Daniel Porto",
@@ -10,7 +10,7 @@ const profile = {
   location: "Rio de Janeiro, Brazil",
   headline: "React, TypeScript and C#/.NET · Applied AI: LLMs, agents and computer vision",
   intro:
-    "Senior full stack developer with over 10 years of experience building products. I take AI to production with what a company requires: per-user permissions, cost control, personal data protection and quality measured on real data.",
+    "Senior full stack developer with over 10 years of experience building digital products, from C#/.NET back ends to React and TypeScript front ends. I now specialize in bringing artificial intelligence into customer-facing products with the safeguards a company needs: each user only reaches the data they are allowed to see, the cost of each answer is controlled, personal data is protected and quality is measured on real data.",
   links: [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/daniel-porto/" },
     { label: "GitHub", href: "https://github.com/TrainedLoop" },
@@ -24,17 +24,17 @@ const experience: Job[] = [
     id: "purple-metrics-desenvolvedor-full-stack-senior",
     company: "Purple Metrics",
     role: "Senior Full Stack Developer",
-    period: "Sep 2022 – present",
+    period: "09/2022 – present",
     description:
-      "Marketing Mix Modeling (MMM) platform that shows brands how much each media channel actually drives results.",
+      "Marketing Mix Modeling (MMM) platform: it shows brands how much each media channel drives in sales, to guide where to invest.",
     bullets: [
-      "Responsible for the interface, the LLM integration and the prompts of the **AI chat** that answers questions about dashboard data and is in production with customers; it grew out of a prototype my team built in **3 days** at an internal hackathon.",
-      "Proposed the architecture that lets the AI **navigate and take actions** in the dashboard, the basis of the chat's new features.",
-      "Built Purple's proof of concept for the **MCP server**, connecting the platform's APIs to AI assistants.",
-      "Develop the product dashboard: budget allocation and optimization, simulation, saturation curves and data setup.",
-      "Led the adoption of **AI agents** in the team's development: skills and rules for Claude Code and Cursor, with a spec → plan → execution workflow integrated with Linear.",
-      "Extracted the **design system** into its own npm package, with **45+ versions** published; I am the main contributor.",
-      "Built the frontend **CI/CD** pipeline (lint, QA environments, automated review, E2E with Playwright, deploy to ECS): **800+ deploys** to production.",
+      "Developed the interface, the LLM (AI model) integration and the prompts of the dashboard's **AI copilot**, which answers customers' questions about their own data in plain language. It grew out of a prototype my team built in **3 days** at an internal hackathon and is now **in production**.",
+      "Proposed the architecture that lets the copilot **navigate and take actions** in the dashboard (open pages, change filters, build charts) instead of only answering in text. The initial implementation was done by another team member; I now evolve and maintain it.",
+      "Built Purple's proof of concept for an **MCP server**. MCP is an open standard for connecting AI assistants, such as Claude, to other systems; with it, those assistants query the platform directly.",
+      "Develop the dashboard's screens, such as budget planning and optimization, scenario simulation and customer data setup.",
+      "Led the development team's adoption of **AI agents** (assistants that write code, such as Claude Code and Cursor), with shared rules and a step-by-step workflow (specification, plan and execution) integrated with Linear, the team's task management tool.",
+      "Turned the product's visual components into a **design system**, an in-house library reused across the company's products, which now share the same look; I am its main contributor.",
+      "Built the front end's **CI/CD pipeline**, the automated process that tests, reviews and publishes every change (end-to-end tests with Playwright, on-demand test environments, deployment to AWS). Result: **far fewer errors reaching production**.",
     ],
     stack: [
       "React",
@@ -56,71 +56,67 @@ const experience: Job[] = [
     id: "fu2re-smart-solutions-desenvolvedor-full-stack-senior",
     company: "Fu2re Smart Solutions",
     role: "Senior Full Stack Developer",
-    period: "Aug 2019 – Jun 2023",
-    description: "Where I had my first serious contact with AI, before the boom.",
+    period: "08/2019 – 06/2023",
+    description: "Applied computer vision company: solutions that use AI to analyze images.",
     bullets: [
-      "Built the APIs of **SmartVision**, a computer vision training and inference platform, with the training and inference queue on Hangfire and CQRS (MySQL for writes, MongoDB for reads).",
-      "Worked on the software for a car that photographed the utility poles of Light, Rio's power company, around the city, like Google's cars.",
-      "Contributed to the **Urban** mobility app (React Native, Google Maps) and to the SmartVision front end (React, Redux).",
-      "Maintained and extended the SmartAssets platform (WebForms, DevExpress, MySQL).",
+      "Built the APIs of **SmartVision**, the company's platform for training computer vision models and applying them to new images, with a processing queue (Hangfire, CQRS, MySQL and MongoDB).",
+      "Developed the software that managed the images and the route of a car that drove around the city photographing the utility poles of **Light**, Rio's power company, to build an inventory of those poles. The photos fed SmartAssets.",
+      "Maintained and extended **SmartAssets** (WebForms, DevExpress, MySQL), the platform where the customer saw the results of image analyses from several sources, the car among them.",
+      "Developed the **Urban** mobility app (React Native, Google Maps) and SmartVision front-end screens (React, Redux).",
     ],
     stack: ["C# / .NET", "Hangfire", "MySQL", "MongoDB", "React", "Redux", "React Native"],
   },
   {
     id: "fulllab-retail-solutions-lider-tecnico",
     company: "Fulllab | retail solutions",
-    role: "Tech Lead",
-    period: "May 2017 – Aug 2019",
-    description: "Tech lead of a team of **4 people**.",
+    role: ".NET Developer and Tech Lead",
+    period: "09/2015 – 08/2019",
+    description:
+      "Software house partnered with VTEX, an e-commerce platform, building apps and integrations for online stores. I joined as a .NET developer and became tech lead in 2017.",
     bullets: [
-      "Restructured **Mobfiq** with an API common to all customers and dependency injection for new platforms.",
-      "Built a PHP plugin for Magento that controlled the store interface and the checkout flow.",
-      "**Danone** migration portal: business rules applied to managers' spreadsheets to feed the ERP.",
-      "Integrated stores without an API through reverse engineering (web scraping with Selenium), with APIs in .NET Core and MongoDB.",
+      "Led a team of **4 people** that developed the VTEX stores' apps end to end.",
+      "Integrated with VTEX before any public documentation existed.",
+      "Restructured **Mobfiq**, the app platform for stores, around a single API for all customers, which made it easier to connect new e-commerce platforms.",
+      "Built a PHP plugin for Magento that controlled the store's interface and checkout flow in the app.",
+      "Brought stores without an API, such as Sephora, into the app, with bots that read data straight from the website (web scraping with Selenium) and APIs in .NET Core and MongoDB.",
+      "Moved **Danone**'s international distribution spreadsheet into a system: managers now fill in an easier, faster panel that feeds the company's ERP.",
     ],
-    stack: [".NET Core", "Entity Framework Core", "MongoDB", "React", "PHP", "Selenium"],
-  },
-];
-
-/** Early career: one line per job. */
-const earlyCareer: EarlyJob[] = [
-  {
-    id: "fulllab-retail-solutions-desenvolvedor-net",
-    company: "Fulllab | retail solutions",
-    role: ".NET Developer",
-    period: "Sep 2015 – May 2017",
-    line: "VTEX integration before its documentation existed, and Sephora integration through web scraping (.NET, Dapper, MySQL, Selenium).",
+    stack: [".NET", ".NET Core", "Entity Framework Core", "Dapper", "MySQL", "MongoDB", "React", "PHP", "Selenium"],
   },
   {
     id: "hebara-distribuidora-de-produtos-lotericos-programador-junior",
     company: "Hebara Distribuidora de Produtos Lotéricos",
     role: "Junior Developer",
-    period: "Sep 2013 – Sep 2015",
-    line: "The company's intranet and portal, with my first production deploys (C#, .NET MVC, Oracle).",
+    period: "09/2013 – 09/2015",
+    description: "Distributor of lottery products.",
+    bullets: [
+      "Developed and maintained the company intranet and built new websites and applications, such as the Raspadinha do Rio and Rio de Prêmios websites (C#, .NET MVC, Oracle).",
+    ],
+    stack: ["C#", ".NET MVC", "Oracle"],
   },
 ];
 
-/** Selected projects. Never add dates, clients, employers or the word "freelance". */
+/** Résumé projects. Never add dates, clients, employers or the word "freelance". */
 const projects: Project[] = [
   {
-    id: "ai-copilot",
-    title: "AI copilot with permissions and LGPD (Brazil's data-protection law)",
-    did: "An agent that queries an analytics platform's data with the permissions of the person asking, only on the read replica, masking personal data before it reaches the model.",
-    result: "Cost capped per question.",
+    id: "data-agent",
+    title: "Data agent with permissions and LGPD (Brazil's data-protection law)",
+    did: "AI agent that answers questions about an analytics platform's data. It only reaches what the person asking is allowed to see, has no permission to change data and hides personal data before sending it to the model.",
+    result: "the cost of each question is capped and personal data stays out of the model's reach.",
     stack: ["Google ADK", "Gemini"],
   },
   {
     id: "computer-vision",
     title: "Computer vision in production",
-    did: "YOLO models trained on **~50,000 images**, served as ONNX on AWS and retrained with operators' corrections.",
-    result: "**~95%** precision and recall on validation.",
+    did: "AI models that recognize objects in images (YOLO), trained on about **50,000 images**, running on AWS and retrained with operators' corrections.",
+    result: "**~95%** accuracy (precision and recall) on validation.",
     stack: ["YOLO", "ONNX", "AWS"],
   },
   {
     id: "confidence-extraction",
-    title: "Confidence-based data extraction",
-    did: "Local OCR, cloud OCR and an LLM in a cascade to read measurement screens.",
-    result: "**377 of 380** fields correct, no wrong readings, paid service used on **< 3%** of fields.",
+    title: "Data extraction by confidence level",
+    did: "System that automatically reads the values on measuring-device screens in photos. It first uses the cheapest text reading (OCR) and only turns to an AI model (LLM) when needed.",
+    result: "**377 of 380** fields read correctly, no wrong readings, and the paid service used on under **3%** of fields.",
     stack: ["OCR", "Amazon Bedrock"],
   },
 ];
@@ -153,16 +149,11 @@ const languages = [
   { name: "English", code: "en" },
 ];
 
-/** At-a-glance block of the résumé: two pitch sentences and three headline figures. */
+/** Professional summary of the résumé (also the home pitch): two sentences. */
 const glance = {
   pitch: [
-    "Senior full stack developer with over 10 years building products: from C#/.NET back ends to React and TypeScript front ends.",
-    "I take AI to production with what a company requires: per-user permissions, cost control, personal data protection and quality measured on real data.",
-  ],
-  stats: [
-    { value: "10+", label: "years building products" },
-    { value: "800+", label: "production deploys from the pipeline I built" },
-    { value: "45+", label: "published versions of the design system I extracted" },
+    "Senior full stack developer with over 10 years of experience building digital products, from C#/.NET back ends to React and TypeScript front ends.",
+    "I now specialize in bringing artificial intelligence into customer-facing products with the safeguards a company needs: each user only reaches the data they are allowed to see, the cost of each answer is controlled, personal data is protected and quality is measured on real data.",
   ],
 };
 
@@ -184,25 +175,25 @@ const ui = {
     achievements: [
       {
         id: "ai-chat",
-        result: "**in production** with customers",
-        title: "AI chat in production",
-        text: "I was responsible for the interface, the LLM integration and the prompts of an AI chat that answers questions about the product's data; it started as a **3-day** prototype at an internal team hackathon.",
+        result: "**in production**, used by customers",
+        title: "AI copilot in the dashboard",
+        text: "I developed the interface, the LLM (AI model) integration and the prompts of an AI copilot that answers customers' questions about their own data. It grew out of a **3-day** prototype at an internal team hackathon.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
         caseStudy: "ai-chat",
       },
       {
         id: "ai-agents",
-        result: "**spec → plan → execution**",
+        result: "**specification → plan → execution**",
         title: "AI agents on the team",
-        text: "I led the adoption of AI agents in the team's development, with skills and rules for Claude Code and Cursor integrated with Linear.",
+        text: "I led the development team's adoption of AI agents (assistants that write code, such as Claude Code and Cursor), with shared rules and a workflow integrated with Linear.",
         target: "purple-metrics-desenvolvedor-full-stack-senior",
         caseStudy: "ai-workflow",
       },
       {
         id: "computer-vision",
-        result: "**~95%** precision and recall",
+        result: "**~95%** accuracy (precision and recall)",
         title: "Computer vision in production",
-        text: "YOLO models trained on ~50k images, served in production and retrained with the operators' corrections.",
+        text: "AI models that recognize objects in images (YOLO), trained on about 50,000 images, in production and retrained with the operators' corrections.",
         target: "projects",
       },
     ] satisfies Achievement[],
@@ -212,20 +203,20 @@ const ui = {
     playStory: "▶ play the story",
     printPdf: "print / save as PDF",
     pdfTitle: "Daniel Porto - Resume",
-    glanceTitle: "At a glance",
+    glanceTitle: "Professional summary",
     experience: "Experience",
-    earlyCareer: "Early career",
-    projects: "Selected projects",
+    projects: "Projects",
+    projectResult: "Result",
     personalProjects: {
       title: "Personal projects",
       items: [
         {
           case: "sealdown",
-          text: "Sealdown — Markdown and JSON by link, encrypted in the browser.",
+          text: "Sealdown — document sharing by link, encrypted in the browser.",
         },
         {
           case: "mailhub-mcp",
-          text: "mailhub-mcp — email for Claude that can't send or delete, all undoable.",
+          text: "mailhub-mcp — connects Claude to several mailboxes, with no way to send or delete.",
         },
       ] satisfies { case: CaseId; text: string }[],
     },
@@ -412,19 +403,19 @@ const meta = {
     name: "Projects",
     title: "Projects · Daniel Porto · Senior Full Stack Developer",
     description:
-      "Six projects from problem to outcome: an AI chat, CI/CD and a design system, extraction by confidence, Sealdown, mailhub-mcp and AI agents.",
+      "Six projects from problem to outcome: an AI copilot, CI/CD and a design system, extraction by confidence, Sealdown, mailhub-mcp and AI agents.",
   },
   "case-ai-chat": {
-    name: "AI chat in production",
-    title: "AI chat in production · Daniel Porto",
+    name: "AI copilot in the dashboard",
+    title: "AI copilot in the dashboard · Daniel Porto",
     description:
-      "How an AI chat that understands the page and acts on the dashboard went from a 3-day prototype to production with customers: problem, decisions and outcome.",
+      "How an AI copilot that answers customers' questions and acts on the dashboard went from a 3-day prototype to production: problem, decisions and outcome.",
   },
   "case-cicd-design-system": {
     name: "CI/CD and design system",
     title: "CI/CD and design system · Daniel Porto",
     description:
-      "800+ production deploys and a design system with 45+ versions: the problem, the decisions and the outcome of the CI/CD pipeline and the component package.",
+      "The automated process that tests and publishes every front-end change, and the component library shared by the products: problem, decisions and outcome.",
   },
   "case-ocr-extraction": {
     name: "Data extraction by confidence level",
@@ -445,10 +436,10 @@ const meta = {
       "An MCP server that gives Claude several mailboxes through one connector, with no sending or deleting, undoable changes and prompt-injection defenses.",
   },
   "case-ai-workflow": {
-    name: "Development with AI agents",
-    title: "Development with AI agents · Daniel Porto",
+    name: "Software development with AI agents",
+    title: "Software development with AI agents · Daniel Porto",
     description:
-      "How I use AI agents to write code with a process: spec, plan, one agent per task, review and tests that stop mistakes before the merge.",
+      "How I use AI agents to write code with a method: specification, plan, one agent per task, review and automated tests before any change goes in.",
   },
   credits: {
     name: "Credits",
@@ -484,90 +475,100 @@ const caseStudies = {
   items: [
     {
       id: "ai-chat",
-      title: "AI chat in production",
-      result: "An AI chat **in production with customers** that understands the page it is open on and acts on the dashboard.",
-      role: "Interface, LLM integration and prompts (refined with the data team); proposed the actions architecture.",
+      title: "AI copilot in the dashboard",
+      summary:
+        "A copilot that answers Purple Metrics customers' questions about their own data and takes actions in the dashboard.",
+      result:
+        "An AI copilot **used by Purple Metrics customers** that answers questions about their data and **takes actions** in the dashboard.",
+      role: "I developed the interface, the LLM integration and the prompts (refined with the data team) and proposed the actions architecture, which I now evolve and maintain.",
       stack: ["React", "TypeScript", "Python", "Claude"],
       context:
-        "Purple Metrics is a Marketing Mix Modeling platform that shows brands how much each media channel really delivers. Customers got their questions answered right in the dashboard, through the charts, or by asking the CS team.",
+        "Purple Metrics is a Marketing Mix Modeling platform: it shows brands how much each media channel drives in sales, to guide where to invest. Before the copilot, to answer a question, customers looked through the dashboard's charts or asked the customer success (CS) team for help.",
       problem:
-        "The data already existed, but the insights were not easy to reach. Many questions could only be answered by combining data spread across different charts or pages.",
+        "The data was in the dashboard, but the answer to many questions was spread across different charts and pages. To get to it, customers had to combine the information on their own or wait for the CS team, which slowed their analyses down and increased their reliance on support.",
       decisions: [
         {
           title: "Start with a prototype.",
-          text: "The chat grew out of a prototype my team built in **3 days** at an internal hackathon; I was responsible for the interface, the LLM integration and the prompts.",
+          text: "The copilot grew out of a prototype my team built in **3 days** at an internal hackathon, designed for this problem from the start. Testing the idea quickly showed it worked before investing in the full product.",
         },
         {
-          title: "Give the chat the customer's context.",
-          text: "The first version was a standalone chat, already holding all of the customer's context.",
+          title: "Give the copilot each customer's context.",
+          text: "From the first version, the copilot knows each customer's data, so it answers about that customer's account rather than in general terms.",
         },
         {
-          title: "Move past the standalone chat.",
-          text: "I proposed the architecture that gives the chat the **context of the page** it is open on and lets it **perform actions** on that page or outside it, instead of only answering in text.",
+          title: "Make the copilot act, not just answer.",
+          text: "I proposed an architecture in which the copilot knows which dashboard page it is open on and can **take actions**, such as opening a page, changing a filter or building a chart. That way the customer goes straight to the information instead of only getting text. The first version was implemented by another team member; I now evolve and maintain it.",
         },
         {
-          title: "Answers backed by real data.",
-          text: "The chat answers by generating SQL and calling Python APIs, with insights and charts.",
+          title: "Answer with the real data.",
+          text: "To answer, the copilot queries the customer's database (by generating SQL queries) and the platform's APIs, and returns analyses and charts.",
         },
       ],
       flow: [
-        "Question + page context",
-        "Backend",
-        "LLM decides: query data or perform an action",
+        "Customer's question + the open page",
+        "Server",
+        "The LLM decides: query the data or take an action",
         "The dashboard applies the action (open a page, change a filter, build a chart)",
       ],
       outcome: [
-        "Customers using it and **fast adoption**.",
-        "Customers happy with the result.",
-        "We discovered **questions we didn't know customers were asking**.",
-        "Today the actions structure is the foundation for new chat features.",
+        "Customers adopted the copilot **quickly** and now reach answers with less reliance on the CS team.",
+        "Customers were satisfied with the copilot's answers.",
+        "The questions asked to the copilot revealed **doubts the team didn't know customers had**, which helps decide what to improve in the product.",
+        "The actions structure became the foundation for the copilot's new features, which are built without redoing the architecture.",
       ],
       resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
     },
     {
       id: "cicd-design-system",
       title: "CI/CD and design system",
-      result: "**800+ deploys** to production and a design system with **45+ published versions**.",
-      role: "I built the front end's CI/CD pipeline and extracted the design system; I'm the package's main contributor.",
+      summary:
+        "The automated process that tests and publishes every front-end change, and the component library shared by the products.",
+      result: "**Far fewer errors** reaching production, and products with **the same look**.",
+      role: "I built the front end's CI/CD pipeline and turned the product's components into a design system, of which I am the main contributor.",
       stack: ["GitHub Actions", "AWS (ECR/ECS)", "Terraform", "Playwright", "React", "Radix UI", "Storybook"],
-      context: "A monolith kept turning into several similar projects that didn't guarantee matching components.",
+      context:
+        "CI/CD is the automated process that tests, reviews and publishes every code change; a design system is a library of visual components shared by the products. A single system (a monolith) kept splitting into several similar projects that didn't guarantee matching components.",
       problem:
-        "Products with different components for the same thing, and a delivery pipeline that needed more dynamic QA environments, tests at the right moment and traceable deploys.",
+        "Products with different components for the same thing, and a delivery process that needed more flexible test environments, tests at the right moment and traceable releases.",
       decisions: [
         {
-          title: "Design system as its own npm package.",
-          text: "It makes distribution across products easier, including for people who aren't programmers and want to build a POC or a quick AI project with the official components.",
+          title: "Publish the design system as its own package.",
+          text: "Its own npm package makes distribution across products easier, including for people who don't code and want to build a prototype or a quick AI project with the official components.",
         },
         {
-          title: "Tests at the right moment.",
-          text: "Tests when the PR is opened and E2E with Playwright before the deploy, as fast as possible.",
+          title: "Test at the right moment.",
+          text: "Tests run when a change is proposed (in the pull request), and the end-to-end tests with Playwright, which simulate real use of the product, run before release, as fast as possible.",
         },
-        { title: "On-demand QA environments.", text: "" },
         {
-          title: "Smoke tests on real customers.",
-          text: "To find errors before the customer does.",
+          title: "Create test environments on demand.",
+          text: "Every change gets its own test environment before it goes to production.",
+        },
+        {
+          title: "Run quick checks on real customers.",
+          text: "Quick verification tests (smoke tests) run on real customers, to find errors before the customer does.",
         },
       ],
       flow: [
-        "PR with tests",
-        "On-demand QA environment",
-        "E2E before the deploy",
-        "Traceable deploy",
+        "Change proposed, with tests",
+        "Test environment on demand",
+        "End-to-end tests before release",
+        "Traceable release",
         "Smoke tests on real customers",
       ],
       outcome: [
-        "**800+ deploys** to production, with more frequent and traceable deploys.",
+        "More frequent, traceable releases.",
         "Fewer bugs reaching customers.",
-        "Products that look the same: the design system made the components match.",
-        "People outside the development team building POCs with the design system.",
+        "Products with the same look: the design system made the components match.",
+        "People from other areas building prototypes with the official components, without depending on the development team.",
       ],
       resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
     },
     {
       id: "ocr-extraction",
       title: "Data extraction by confidence level",
+      summary: "A system that reads values from measuring-device screens in photos, combining OCR and AI at low cost.",
       result: "**377 of 380** fields correct, no wrong readings, and the paid service called on **under 3%** of fields.",
-      role: "I designed and built the pipeline and trained the two vision models (cropping and classification).",
+      role: "I designed and built the system and trained the two computer vision models (cropping and classification).",
       stack: ["YOLO", "OCR", "AWS Lambda", "Amazon Bedrock"],
       context:
         "People filled in spreadsheets and cropped images by hand to record readings from scales and other measuring equipment, at volumes of **thousands of images per day**.",
@@ -575,18 +576,18 @@ const caseStudies = {
       decisions: [
         {
           title: "Crop the way people cropped.",
-          text: "A YOLO model crops the image the way users were already doing it by hand.",
+          text: "A computer vision model (YOLO) crops the image the way users were already doing it by hand.",
         },
         {
           title: "Know what the image is before reading it.",
-          text: "A second YOLO model, with **4 classes**, identifies the image type (item, sticky note, scale and dimensioning device).",
+          text: "A second model, with **4 classes**, identifies the image type (item, sticky note, scale and dimensioning device).",
         },
         {
-          title: "A cascade by cost and confidence.",
-          text: "Our own OCR on a small AWS Lambda first; if the result doesn't pass the rules, a more robust cloud OCR; if it still fails, an LLM with the context of everything that happened before. Sending everything straight to the LLM would be expensive at this volume, and the layers gave **more confidence** than the LLM alone.",
+          title: "Read in a cascade, by cost and confidence.",
+          text: "Reading goes through steps, from the cheapest to the most expensive, and only moves on when the previous one isn't enough. First, our own OCR (automatic text reading) on a small AWS Lambda; if the result doesn't pass the rules, a more robust cloud OCR; if it still fails, an LLM with the context of everything that happened before. Sending everything straight to the LLM would be expensive at this volume, and the layers gave **more confidence** than the LLM alone.",
         },
         {
-          title: "Rules per equipment type.",
+          title: "Define rules per equipment type.",
           text: "Each type of scale or measuring device has its own set of rules to decide whether a reading is valid or moves on to the next step.",
         },
       ],
@@ -608,33 +609,35 @@ const caseStudies = {
     {
       id: "sealdown",
       title: "Sealdown: documents only people with the link can read",
+      summary: "An app for sharing documents by link, encrypted in the browser: not even the server can read them.",
       result:
         "Markdown and JSON shared by link and edited in real time, **encrypted in the browser**: the server **never reads** the content.",
       role: "Personal project: I conceived and built it on my own, with Claude Code.",
       stack: ["React", "TypeScript", "CodeMirror", "Yjs", "Web Crypto", "Supabase (Postgres, Realtime)", "Playwright", "Claude Code"],
-      context: "I wanted to share rendered Markdown, with Mermaid diagrams, through a private link, for free and without an account.",
+      context:
+        "I needed to share Markdown documents (formatted text), with Mermaid diagrams, through a private link, for free and without creating an account.",
       problem:
         "As a matter of principle, no one should be able to read a document without permission, not even the server that stores it. And in live documents, someone with only the read link must not be able to write.",
       decisions: [
         {
           title: "Encrypt in the browser.",
-          text: "Every document is encrypted with AES-GCM before it leaves the browser. The key goes in the link's fragment (after the #), which is never sent to a server. Supabase only stores ciphertext.",
+          text: "Every document is scrambled (encrypted) in the browser before it is sent; the key stays only in the link. Technically: AES-GCM, with the key in the link's fragment (after the #), which is never sent to a server. Supabase only stores ciphertext.",
         },
         {
-          title: "A password with no key in the link.",
-          text: "With a password, the key is derived in the browser itself (PBKDF2, **600,000 iterations**). Neither the password nor the key goes in the link.",
+          title: "Protect with a password, with no key in the link.",
+          text: "With a password, neither the password nor the key goes in the link: the key is generated from the password in the browser itself (PBKDF2, **600,000 iterations**).",
         },
         {
-          title: "Reading that can't write.",
-          text: "Every edit to a live document is signed with an **Ed25519** key derived from the edit token, which exists only in the edit link. The read link has only the public key: it verifies edits but can't create a valid one. The server stores only the token's hash.",
+          title: "Stop the read link from editing.",
+          text: "Only someone with the edit link can change a live document. Every edit to a live document is signed with an **Ed25519** key derived from the edit token, which exists only in the edit link. The read link has only the public key: it verifies edits but can't create a valid one. The server stores only the token's hash.",
         },
         {
-          title: "Real time without a server of my own.",
-          text: "In Markdown, several people edit at the same time with Yjs, and the edits travel encrypted and signed through Supabase Realtime. In JSON, the document saves after a pause and merges by path, asking for a choice only when two people changed the same value.",
+          title: "Edit in real time without a server of my own.",
+          text: "Several people can edit the same document at the same time. In Markdown, this uses Yjs, and the edits travel encrypted and signed through Supabase Realtime. In JSON, the document saves after a pause and combines the changes field by field, asking for a choice only when two people changed the same value.",
         },
         {
-          title: "AI with a process.",
-          text: "I built it with Claude Code in a spec → plan → execution flow: **7 specs and 7 plans**, one per phase of the project.",
+          title: "Develop with AI and with a method.",
+          text: "I built it with Claude Code in a specification → plan → execution flow: **7 specifications and 7 plans**, one per phase of the project.",
         },
       ],
       flow: [
@@ -646,8 +649,8 @@ const caseStudies = {
       ],
       outcome: [
         "Live, with the code open on GitHub.",
-        "**116 commits** over 6 days of work, all with Claude Code.",
-        "**About 430 tests**: ~220 unit, ~209 E2E, plus visual and database tests.",
+        "**116 commits** (recorded code changes) over 6 days of work, all with Claude Code.",
+        "**About 430 automated tests**: ~220 unit, ~209 end-to-end (E2E), plus visual and database tests.",
         "Real-time editing, history with named versions and a JSON mode, with no accounts and no server reading anything.",
       ],
       resumeTarget: "personal-project",
@@ -666,33 +669,34 @@ const caseStudies = {
     {
       id: "mailhub-mcp",
       title: "mailhub-mcp: safe email for AI agents",
+      summary: "Connects Claude to several mailboxes safely: it doesn't send, doesn't delete, and every change can be undone.",
       result:
-        "An MCP server that gives Claude **several mailboxes through one connector**, with no way to **send or delete** anything, and every change undoable.",
+        "An MCP server (an open standard that connects AI assistants to other systems) that gives Claude **several mailboxes through one connector**, with no way to **send or delete** anything, and every change undoable.",
       role: "Personal, open source project: I conceived and built it on my own, with Claude Code.",
       stack: ["Python", "FastMCP", "Gmail API", "OAuth", "Docker", "Tailscale Funnel", "GitHub Actions"],
       context:
-        "I wanted Claude to tell me every morning what needs my attention across all my mailboxes. The native Gmail connector takes one account at a time, and I didn't want to hand my email tokens to a third-party service. So I built my own, running on my own server.",
+        "I needed a daily summary of what requires attention across all my mailboxes. The native Gmail connector takes one account at a time, and I didn't want to hand my credentials to a third-party service. So I built a server of my own.",
       problem:
         "An agent that reads email reads text written by anyone, and any message can carry hidden instructions (prompt injection). The server has to stay safe even when the model is fooled.",
       decisions: [
         {
-          title: "No sending, no deleting.",
+          title: "Block sending and deleting email.",
           text: "The code never calls the send, trash or delete APIs, and **a test scans the code** to enforce it. Drafts only as replies to people already in the thread.",
         },
         {
-          title: "Every change can be undone.",
-          text: "Labels, archiving and read state go into a journal with each message's previous state: one batch, or everything since a given time, can be undone. Bulk changes show a preview first and have a daily cap.",
+          title: "Make every change reversible.",
+          text: "Every change can be undone. Labels, archiving and read status are recorded in a history (journal) with each message's previous state, so one batch, or everything since a given time, can be undone. Bulk changes show a preview first and have a daily cap.",
         },
         {
-          title: "Email is untrusted input.",
-          text: "Hidden HTML text and invisible characters are removed, the content is wrapped in markers with a random nonce, and likely injection attempts are flagged instead of acted on.",
+          title: "Treat email as untrusted input.",
+          text: "The content of each email is cleaned and isolated before it reaches the model. Hidden HTML text and invisible characters are removed, the content is wrapped in markers with a random code (nonce), and likely injection attempts are flagged instead of acted on.",
         },
         {
-          title: "Approval outside the chat.",
+          title: "Require approval outside the chat.",
           text: "Preferences that raise attention apply right away; those that lower it, like ignoring a sender, become a proposal only I can approve, out of the assistant's reach. Mailboxes are linked on a separate admin page.",
         },
         {
-          title: "Each layer within its limits.",
+          title: "Recognize each layer's limits.",
           text: "The server side is mitigated and keeps improving. The remaining risk sits in the client agent: if another tool in the same session can reach the machine or the internet, a malicious email can try to use it. That's why scheduled routines use a **read-only instance**.",
         },
       ],
@@ -706,7 +710,7 @@ const caseStudies = {
       outcome: [
         "I use it **every day on 5 mailboxes**.",
         "**156 commits**, all with Claude Code.",
-        "**1,151 tests**, including the one that forbids the send and delete calls.",
+        "**1,151 automated tests**, including the one that forbids the send and delete calls.",
         "**18 tools** (11 read-only), open source (MIT), in beta, with a published multi-architecture Docker image and a site with step-by-step install.",
       ],
       resumeTarget: "personal-project",
@@ -724,54 +728,55 @@ const caseStudies = {
     },
     {
       id: "ai-workflow",
-      title: "Development with AI agents",
+      title: "Software development with AI agents",
+      summary:
+        "The method I use so that AI agents write quality code: specification, plan, review and automated tests.",
       result:
-        "AI agents write the code; I decide what and why. A **spec → plan → execution** flow, with review at every step and tests that stop mistakes before the merge.",
-      role: "I led the adoption on the Purple Metrics team and use the same flow in my own projects, where the whole process is public.",
+        "A way of working in which AI agents write the code while I define what to do, **review every step** and ensure quality with **automated tests**.",
+      role: "I led the adoption on the Purple Metrics team and use the same method in my personal projects, whose code is public.",
       stack: ["Claude Code", "Cursor", "Linear", "GitHub Actions", "Playwright"],
       context:
-        "At Purple Metrics, I led the adoption of AI agents in the team's development, with skills and rules for Claude Code and Cursor integrated with Linear. In personal projects like Sealdown and mailhub-mcp I use the same flow, and there everything is visible: the specs, the commits and the tests.",
+        "AI agents, such as Claude Code and Cursor, are assistants that write code from instructions. At Purple Metrics, I led the development team's adoption of these tools, with shared rules and a workflow integrated with Linear, the team's task management tool. In my personal projects I use the same method, and the whole process can be checked in the code.",
       problem:
-        "An agent writes code fast, but without a process that speed turns into rework: decisions lost between one conversation and the next, code nobody really reviewed, and rules the agent forgets.",
+        "An agent writes code quickly, but without a method that speed turns into rework: decisions get lost from one conversation to the next, the code isn't reviewed carefully and the agent forgets agreed rules.",
       decisions: [
         {
-          title: "Spec before code.",
-          text: "Every change starts with a spec built in conversation: what changes, why and what stays out. I review it and correct the facts before any line of code.",
+          title: "Specify before coding.",
+          text: "Every change starts with a specification written with the agent: what changes, why and what stays out. I review and correct that specification before any code is written.",
         },
         {
-          title: "A plan of small tasks.",
-          text: "The spec becomes a plan of small tasks, each with the files it touches, the interfaces and how to check it worked.",
+          title: "Split the work into small tasks.",
+          text: "The specification becomes a plan of small tasks, each with the files involved and how to check that it is correct.",
         },
         {
-          title: "One agent per task, with review.",
-          text: "Each task goes to a subagent with a clean context, and its result is reviewed before the next one.",
+          title: "Use one agent per task, with review.",
+          text: "Each task is carried out by a separate agent that starts without the history of the previous ones, and the result is reviewed before the next one.",
         },
         {
-          title: "Rules become tests.",
-          text: "Whatever the agent might forget becomes a test or a build check. On this site, the build fails if confidential text shows up or a title goes out of bounds, and **100+ E2E tests** run on every PR.",
+          title: "Turn rules into automated tests.",
+          text: "Whatever the agent might forget becomes an automated test. On this site, publishing is blocked if confidential text shows up, and **over 100 tests** simulate real use of the pages on every change.",
         },
         {
-          title: "The merge is mine.",
-          text: "The agent opens the PR; I test it locally, review it and merge it.",
+          title: "Keep the final decision with me.",
+          text: "The agent prepares the change for review; I test it, review it and decide whether it goes in.",
         },
       ],
       flow: [
-        "Spec (reviewed by me)",
+        "Specification reviewed by me",
         "Plan of small tasks",
-        "Subagent per task + review",
-        "CI: lint, build and E2E tests",
-        "Local test and merge (me)",
+        "One agent per task, with review",
+        "Automated tests",
+        "Final test and approval (me)",
       ],
       outcome: [
-        "**Sealdown**: **7 specs and 7 plans** public in the repository, **116 commits** over 6 days of work and about **430 tests**.",
-        "**mailhub-mcp**: **156 commits**, **1,151 tests** and the design docs public in the repository.",
-        "**This site**: **25+ PRs**, each going through lint, a build with content checks and **100+ E2E tests**.",
-        "On the Purple Metrics team: shared skills and rules for Claude Code and Cursor, with the spec → plan → execution flow integrated with Linear.",
-        "The code of all three projects is open: the specs, the commits and the tests can be checked.",
+        "**Sealdown:** **7 specifications and 7 plans** made public, **116 commits** (recorded code changes) and about **430 automated tests**.",
+        "**mailhub-mcp:** **156 commits** and **1,151 automated tests**, with the design documents public.",
+        "**This site:** over **25 reviewed changes**, each checked by over **100 automated tests**.",
+        "**At Purple Metrics:** rules shared by the team, with the specification → plan → execution workflow integrated with Linear.",
       ],
       resumeTarget: "purple-metrics-desenvolvedor-full-stack-senior",
       links: [
-        { label: "Sealdown specs", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
+        { label: "Sealdown specifications", href: "https://github.com/TrainedLoop/sealdown/tree/main/docs/superpowers" },
         { label: "Site code", href: "https://github.com/TrainedLoop/danielporto-site" },
       ],
     },
@@ -795,5 +800,5 @@ const llms = {
   online: "Online version",
 };
 
-const en: Messages = { ...ui, meta, caseStudies, share, llms, story, profile, experience, earlyCareer, projects, skillGroups, languages };
+const en: Messages = { ...ui, meta, caseStudies, share, llms, story, profile, experience, projects, skillGroups, languages };
 export default en;

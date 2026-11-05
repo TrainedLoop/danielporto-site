@@ -34,3 +34,42 @@ test.describe("résumé sidebar", () => {
     await expect(page.locator(".resume__sidebar")).toHaveCSS("position", "sticky");
   });
 });
+
+test.describe("résumé content", () => {
+  for (const path of ["/curriculo/", "/en/resume/"]) {
+    test(`${path} lists every job, Hebara and the merged Fulllab entry included, with no early-career section`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator(".early-career")).toHaveCount(0);
+      const jobs = page.locator("article.job");
+      await expect(jobs).toHaveCount(4);
+      await expect(jobs.nth(2)).toHaveAttribute("id", "fulllab-retail-solutions-lider-tecnico");
+      await expect(jobs.nth(2).locator(".job__period")).toHaveText("09/2015 – 08/2019");
+      await expect(jobs.nth(3)).toHaveAttribute("id", "hebara-distribuidora-de-produtos-lotericos-programador-junior");
+      await expect(page.locator("#fulllab-retail-solutions-desenvolvedor-net")).toHaveCount(0);
+    });
+
+    test(`${path} has no headline figures and each project card reads title, then what was done, then the result`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator(".glance__stats")).toHaveCount(0);
+      const card = page.locator("#projects .project-card").first();
+      const classes = await card.evaluate((el) => [...el.children].map((child) => child.tagName === "H3" ? "h3" : child.className));
+      expect(classes.slice(0, 3)).toEqual(["h3", "project-card__did", "project-card__result"]);
+    });
+  }
+
+  test("in print, the résumé is a single column: summary, then contact and skills, then experience", async ({ page }) => {
+    await page.goto("/curriculo/");
+    await page.emulateMedia({ media: "print" });
+    const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
+    const summary = await box(".glance");
+    const contact = await box(".resume__contact");
+    const skills = await box(".resume__skills");
+    const experience = await box(".resume__main");
+    expect(contact.y).toBeGreaterThanOrEqual(summary.y + summary.height);
+    expect(skills.y).toBeGreaterThanOrEqual(contact.y + contact.height);
+    expect(experience.y).toBeGreaterThanOrEqual(skills.y + skills.height);
+    for (const block of [summary, contact, skills]) expect(Math.round(block.x)).toBe(Math.round(experience.x));
+    // Each skill group is a single inline line ("IA: a · b · c"), not a box of chips.
+    await expect(page.locator(".skill-group .chips").first()).toHaveCSS("display", "inline");
+  });
+});
