@@ -153,7 +153,6 @@ const experience: Job[] = [
     company: "Hebara Distribuidora de Produtos Lotéricos",
     role: "Programador júnior",
     period: "09/2013 – 09/2015",
-    description: "Distribuidora de produtos lotéricos.",
     bullets: [
       "Desenvolvi e mantive a intranet da empresa e criei novos sites e aplicações, como os sites da Raspadinha do Rio e do Rio de Prêmios (C#, .NET MVC, Oracle).",
     ],
