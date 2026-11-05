@@ -1,11 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { Highlight } from "../../components/Highlight";
 import { caseRoute } from "../../content/caseStudies";
 import { href, type Lang } from "../../lib/route";
 import { CaseImage } from "./CaseImage";
 
 /**
- * /projetos/: the case studies as cards (result on top, title, what it is, link), in order. A case
+ * /projetos/: the case studies as cards (title, then what it is in smaller text, link), in order. A case
  * with a screenshot gets a wide card of its own, with the image as a thumbnail.
  */
 export function ProjectsIndex() {
@@ -21,9 +20,6 @@ export function ProjectsIndex() {
           <article key={item.id} className={`project-card case-card${item.image ? " case-card--wide" : ""}`}>
             {item.image && <CaseImage image={item.image} className="case-card__image" sizes="(max-width: 720px) calc(100vw - 52px), 400px" />}
             <div className="case-card__body">
-              <p className="project-card__result">
-                <Highlight text={item.result} />
-              </p>
               <h2 id={`case-card-${item.id}`}>{item.title}</h2>
               <p className="project-card__did case-card__summary">{item.summary}</p>
               <a
