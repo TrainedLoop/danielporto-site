@@ -8,7 +8,7 @@ type Props = {
   onPrint: () => void;
 };
 
-/** Top of the résumé: who, where, the two actions and a small line with the date and the story link. */
+/** Top of the résumé: who, where, the two actions and a small line with the date and the story link; on paper, the contacts too. */
 export function ResumeHeader({ onPrint }: Props) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language as Lang;
@@ -22,6 +22,18 @@ export function ResumeHeader({ onPrint }: Props) {
           {profile.role} {t("resume.roleAt")} {profile.company}
         </p>
         <p className="resume__location">{profile.location}</p>
+        {/*
+         * On paper the contacts sit right under the name. They live here, in the header, so the
+         * PDF's text (what résumé parsers and AI tools read) has them before the summary too; the
+         * side column's contact block is hidden in print.
+         */}
+        <ul className="resume__print-contact">
+          {profile.links.map((link) => (
+            <li key={link.href}>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
       </div>
       <div className="resume__actions no-print">
         <button type="button" className="button button--secondary" onClick={onPrint}>

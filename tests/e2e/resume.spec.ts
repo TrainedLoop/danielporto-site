@@ -57,19 +57,34 @@ test.describe("résumé content", () => {
     });
   }
 
-  test("in print, the résumé is a single column: summary, then contact and skills, then experience", async ({ page }) => {
+  test("in print, the résumé is a single column: header with the contacts, summary, skills, experience", async ({ page }) => {
     await page.goto("/curriculo/");
     await page.emulateMedia({ media: "print" });
     const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
+    const contact = await box(".resume__print-contact");
     const summary = await box(".glance");
-    const contact = await box(".resume__contact");
     const skills = await box(".resume__skills");
     const experience = await box(".resume__main");
-    expect(contact.y).toBeGreaterThanOrEqual(summary.y + summary.height);
-    expect(skills.y).toBeGreaterThanOrEqual(contact.y + contact.height);
+    // The contacts are part of the header (first in the PDF's text too), and the side block is hidden.
+    await expect(page.locator(".resume__header .resume__print-contact a")).toHaveCount(3);
+    await expect(page.locator(".resume__contact")).toBeHidden();
+    expect(summary.y).toBeGreaterThanOrEqual(contact.y + contact.height);
+    expect(skills.y).toBeGreaterThanOrEqual(summary.y + summary.height);
     expect(experience.y).toBeGreaterThanOrEqual(skills.y + skills.height);
-    for (const block of [summary, contact, skills]) expect(Math.round(block.x)).toBe(Math.round(experience.x));
+    for (const block of [contact, summary, skills]) expect(Math.round(block.x)).toBe(Math.round(experience.x));
     // Each skill group is a single inline line ("IA: a · b · c"), not a box of chips.
     await expect(page.locator(".skill-group .chips").first()).toHaveCSS("display", "inline");
   });
+});
+
+test("résumé project cards sit one per row, full width", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 900 });
+  await page.goto("/curriculo/");
+  const grid = (await page.locator("#projects .projects__grid").boundingBox())!;
+  const cards = await page.locator("#projects .project-card").evaluateAll((els) => els.map((el) => el.getBoundingClientRect().toJSON()));
+  expect(cards).toHaveLength(3);
+  for (const card of cards) {
+    expect(Math.round(card.x)).toBe(Math.round(grid.x));
+    expect(Math.round(card.width)).toBe(Math.round(grid.width));
+  }
 });
