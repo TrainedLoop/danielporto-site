@@ -17,7 +17,8 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: "retain-on-failure",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  // A Portuguese browser, so the language suggestion bar stays out of the way on Portuguese pages.
+  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], locale: "pt-BR" } }],
   webServer: {
     command: `pnpm preview --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
