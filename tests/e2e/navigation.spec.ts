@@ -1,12 +1,12 @@
 import { expect, expectLandedBelowTopBar, test } from "./helpers.ts";
 
-/** Job the AI chat case points to on the résumé (same id in both languages). */
+/** Job the AI copilot case points to on the résumé (same id in both languages). */
 const AI_JOB = "purple-metrics-desenvolvedor-full-stack-senior";
 
 test.describe("PT · EN switch", () => {
   for (const [pt, en] of [
     ["/curriculo/", "/en/resume/"],
-    ["/projetos/chat-de-ia/", "/en/projects/ai-chat/"],
+    ["/projetos/copiloto-de-ia/", "/en/projects/ai-copilot/"],
   ]) {
     test(`${pt} ↔ ${en}`, async ({ page, problems }) => {
       await page.goto(pt);
@@ -31,7 +31,7 @@ test.describe("anchors land below the top bar", () => {
   });
 
   test("case page: see on résumé → résumé job", async ({ page }) => {
-    await page.goto("/projetos/chat-de-ia/");
+    await page.goto("/projetos/copiloto-de-ia/");
     await page.locator("a.case__resume").click();
     await expect(page).toHaveURL(`/curriculo/#${AI_JOB}`);
     await expectLandedBelowTopBar(page, AI_JOB);
@@ -41,6 +41,21 @@ test.describe("anchors land below the top bar", () => {
     await page.goto("/en/resume/#projects");
     await expectLandedBelowTopBar(page, "projects");
   });
+});
+
+test.describe("old addresses redirect to the new ones", () => {
+  for (const [old, current, title] of [
+    ["/projetos/chat-de-ia/", "/projetos/copiloto-de-ia/", "Copiloto de IA no dashboard"],
+    ["/en/projects/ai-chat/", "/en/projects/ai-copilot/", "AI copilot in the dashboard"],
+    ["/en/curriculo/", "/en/resume/", "Daniel Porto"],
+  ]) {
+    test(`${old} → ${current}`, async ({ page, problems }) => {
+      await page.goto(`${old}?ref=test#top`);
+      await expect(page).toHaveURL(`${current}?ref=test#top`);
+      await expect(page.locator("h1")).toHaveText(title);
+      expect(problems).toEqual([]);
+    });
+  }
 });
 
 test("story deep link /historia/?fase=3 opens phase 3 of 8", async ({ page, problems }) => {

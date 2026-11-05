@@ -7,14 +7,14 @@ const CASES = [
   {
     home: "/",
     path: "/projetos/desenvolvimento-com-agentes/",
-    title: "Desenvolvimento com agentes de IA",
+    title: "Desenvolvimento de software com agentes de IA",
     previous: "/projetos/mailhub-mcp/",
     resume: "/curriculo/#purple-metrics-desenvolvedor-full-stack-senior",
   },
   {
     home: "/en/",
     path: "/en/projects/ai-agent-development/",
-    title: "Development with AI agents",
+    title: "Software development with AI agents",
     previous: "/en/projects/mailhub-mcp/",
     resume: "/en/resume/#purple-metrics-desenvolvedor-full-stack-senior",
   },

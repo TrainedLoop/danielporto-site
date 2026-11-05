@@ -7,8 +7,8 @@ import { pageKey, pageOrNotFound, pathFromLegacyHash, pathFromLegacyPath } from 
 import { initAnalytics } from './lib/analytics'
 import './styles.css'
 
-// Old links (#/curriculo, /en/curriculo/) go to the real page (/curriculo/, /en/resume/),
-// which the build already rendered.
+// Old links (#/curriculo, /en/curriculo/, /projetos/chat-de-ia/) go to the real page
+// (/curriculo/, /en/resume/, /projetos/copiloto-de-ia/), which the build already rendered.
 const { pathname, search, hash } = window.location
 const legacy = pathFromLegacyHash(hash) ?? pathFromLegacyPath(pathname, search, hash)
 

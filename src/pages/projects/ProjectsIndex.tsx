@@ -5,7 +5,7 @@ import { href, type Lang } from "../../lib/route";
 import { CaseImage } from "./CaseImage";
 
 /**
- * /projetos/: the case studies as cards (result on top, title, the problem, link), in order. A case
+ * /projetos/: the case studies as cards (result on top, title, what it is, link), in order. A case
  * with a screenshot gets a wide card of its own, with the image as a thumbnail.
  */
 export function ProjectsIndex() {
@@ -25,7 +25,7 @@ export function ProjectsIndex() {
                 <Highlight text={item.result} />
               </p>
               <h2 id={`case-card-${item.id}`}>{item.title}</h2>
-              <p className="project-card__did">{item.problem}</p>
+              <p className="project-card__did case-card__summary">{item.summary}</p>
               <a
                 className="case-card__link"
                 href={href(caseRoute(item.id), lang)}
