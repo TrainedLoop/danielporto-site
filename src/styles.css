@@ -864,6 +864,10 @@ button {
   border-bottom: 2px solid rgba(184, 169, 140, 0.4);
 }
 
+.resume__print-contact {
+  display: none;
+}
+
 .resume__header h1 {
   margin: 0;
   font-family: var(--pixel-font);
@@ -1101,9 +1105,13 @@ button {
 
 /* Résumé projects: the home cards' border; title, what was done, then the result. */
 
+/*
+ * One card per row: in three narrow columns the longer texts ran tall, and the shorter cards
+ * stretched to match, leaving a gap above their result.
+ */
 .projects__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
 
@@ -1603,7 +1611,7 @@ button {
   }
 
   /*
-   * One column on paper, in the DOM order: header, professional summary, contact and skills,
+   * One column on paper, in the DOM order: header (with the contacts), professional summary, skills,
    * experience, projects, personal projects. Applicant tracking systems and AI tools read the PDF
    * as text, and two columns can interleave in that text. The printable width (~186mm) is under
    * the 900px breakpoint, so the phone grid already applies; this strips its boxes and spacing.
@@ -1635,16 +1643,24 @@ button {
     border: 0;
   }
 
-  /* Contact and skills, compact: the contacts on one line, each skill group as "Group: a · b · c". */
-  .resume__contact ul {
-    display: block;
+  /* The contacts print in the header instead (.resume__print-contact), on one line. */
+  .resume__contact {
+    display: none;
   }
 
-  .resume__contact li {
+  .resume__print-contact {
+    display: block;
+    margin: 4pt 0 0;
+    padding: 0;
+    font-size: 9pt;
+    list-style: none;
+  }
+
+  .resume__print-contact li {
     display: inline;
   }
 
-  .resume__contact li + li::before {
+  .resume__print-contact li + li::before {
     content: ' · ';
   }
 
@@ -1705,7 +1721,7 @@ button {
   }
 
   /* On paper a link can't be clicked: show the address next to the name. */
-  .resume__contact a[href^='http']::after {
+  .resume__print-contact a[href^='http']::after {
     content: ' (' attr(href) ')';
     font-size: 0.9em;
     color: #444;
